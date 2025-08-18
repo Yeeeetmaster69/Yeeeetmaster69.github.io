@@ -1,0 +1,4311 @@
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="theme-color" content="#19a974">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handyman Job Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0b0f0b;
+            color: #e6ffee;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #19a974;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #98bfa7;
+            font-size: 1.1rem;
+        }
+
+        .panel {
+            background: #0f1a0f;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #1f2a1f;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #98bfa7;
+            font-weight: 600;
+        }
+
+        .input {
+            background: #0f1a0f;
+            color: #e6ffee;
+            border: 1px solid #1f2a1f;
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            outline: none;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input:focus {
+            border-color: #19a974;
+        }
+
+        .button {
+            cursor: pointer;
+            background: #19a974;
+            color: #0b0f0b;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .button:hover {
+            background: #15a06a;
+            transform: translateY(-2px);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button-secondary {
+            background: #98bfa7;
+            color: #0b0f0b;
+        }
+
+        .button-secondary:hover {
+            background: #8bb09a;
+        }
+
+        .button-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .button-danger:hover {
+            background: #c82333;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .job-card {
+            background: #0f1a0f;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #1f2a1f;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            border-color: #19a974;
+        }
+
+        .job-title {
+            color: #19a974;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .job-info {
+            margin-bottom: 15px;
+        }
+
+        .job-info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #98bfa7;
+        }
+
+        .job-info-item strong {
+            color: #e6ffee;
+        }
+
+        .job-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .status-pending {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .status-in-progress {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .status-completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .job-actions .button {
+            flex: 1;
+            min-width: 120px;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #0f1a0f;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid #1f2a1f;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: #19a974;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #98bfa7;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .close-button:hover {
+            color: #e6ffee;
+        }
+
+        .error {
+            background: #dc3545;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .success {
+            background: #28a745;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #98bfa7;
+        }
+
+        .spinner {
+            border: 3px solid #1f2a1f;
+            border-top: 3px solid #19a974;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #0f1a0f;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #1f2a1f;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #19a974;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #98bfa7;
+            font-size: 0.9rem;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .user-info {
+            color: #98bfa7;
+        }
+
+        .user-info strong {
+            color: #19a974;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #1f2a1f;
+            padding-bottom: 0;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            color: #98bfa7;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            color: #e6ffee;
+            background: #1f2a1f;
+        }
+
+        .tab-button.active {
+            color: #19a974;
+            background: #0f1a0f;
+            border-bottom: 2px solid #19a974;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #19a974;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                max-width: 100%;
+            }
+            
+            .jobs-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            
+            .job-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .job-actions .button {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            
+            .tab-button {
+                flex: 1;
+                min-width: 100px;
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+            
+            .panel {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .modal-content {
+                margin: 10px;
+                padding: 20px;
+                max-width: calc(100vw - 20px);
+            }
+            
+            .job-card {
+                padding: 15px;
+            }
+            
+            .job-title {
+                font-size: 1.1rem;
+            }
+            
+            .job-info-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+            }
+            
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .input {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            #completedFilters > div:first-child {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            #completedFilters > div:last-child {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            #completedFilters .button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-button {
+                min-width: 80px;
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            
+            .modal-content {
+                margin: 5px;
+                padding: 15px;
+            }
+            
+            .job-card {
+                padding: 12px;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .top-bar > div:first-child {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Handyman Job Tracker</h1>
+            <p>Manage your jobs, track time, and get paid</p>
+        </div>
+
+        <!-- Loading Screen -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading your jobs...</p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="panel login-form" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #19a974;">Welcome Back</h2>
+            <div id="loginError" class="error" style="display: none;"></div>
+            
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="input" placeholder="Enter your username" autocomplete="username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="password" class="input" placeholder="Enter your password" style="padding-right: 45px;" autocomplete="current-password">
+                    <button type="button" id="togglePassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #98bfa7; cursor: pointer; font-size: 18px; padding: 5px;">👁️</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label style="display: flex; align-items: center; margin-bottom: 0; font-weight: normal; cursor: pointer;">
+                    <input type="checkbox" id="rememberDevice" style="margin-right: 8px;">
+                    Remember this device
+                </label>
+            </div>
+
+            <!-- Biometric Login Section -->
+            <div id="biometricSection" style="display: none; margin-bottom: 20px;">
+                <div style="text-align: center; padding: 20px; background: #1f2a1f; border-radius: 8px; border: 1px solid #19a974;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">🔐</div>
+                    <h4 style="color: #19a974; margin-bottom: 8px;">Quick Login Available</h4>
+                    <p style="color: #98bfa7; font-size: 14px; margin-bottom: 15px;">
+                        Use your fingerprint, face, or device PIN to sign in quickly
+                    </p>
+                    <button id="biometricLoginBtn" class="button" style="margin-bottom: 10px;">
+                        🔓 Use Biometric Login
+                    </button>
+                    <div>
+                        <button id="clearSavedLogin" class="button button-secondary" style="font-size: 12px; padding: 6px 12px;">
+                            Forget This Device
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="loginBtn" class="button">Sign In</button>
+        </div>
+
+        <!-- Main App -->
+        <div id="mainApp" style="display: none;">
+            <div class="top-bar">
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <div id="currentDate" style="color: #19a974; font-weight: 600; font-size: 0.9rem;"></div>
+                    <div class="user-info">
+                        Welcome back, <strong id="userName">Admin</strong>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button id="addJobBtn" class="button">+ Add New Job</button>
+                    <button id="geofenceToggle" class="button button-secondary">🌍 Enable Geofence</button>
+                    <button id="logoutBtn" class="button button-secondary">Logout</button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalJobs">0</div>
+                    <div class="stat-label">Total Jobs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeJobs">0</div>
+                    <div class="stat-label">Active Jobs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedJobs">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalEarnings">$0.00</div>
+                    <div class="stat-label">Total Earnings</div>
+                </div>
+                <div class="stat-card" id="geofenceStatus">
+                    <div class="stat-number" style="font-size: 1.5rem;">🌍</div>
+                    <div class="stat-label">Geofence OFF</div>
+                </div>
+            </div>
+
+            <!-- Main Navigation Tabs -->
+            <div class="tabs">
+                <button class="tab-button active" data-section="jobs">📋 Jobs</button>
+                <button class="tab-button" data-section="clients">👥 Clients</button>
+                <button class="tab-button" data-section="earnings">💰 Earnings</button>
+                <button class="tab-button" data-section="workers" id="workersTab" style="display: none;">👷 Worker Earnings</button>
+                <button class="tab-button" data-section="users" id="usersTab" style="display: none;">👤 Users</button>
+            </div>
+
+            <!-- Job Section -->
+            <div id="jobsSection">
+                <!-- Job Tabs -->
+                <div class="tabs" style="margin-top: 20px;">
+                    <button class="tab-button active" data-tab="all">All Jobs</button>
+                    <button class="tab-button" data-tab="active">Active</button>
+                    <button class="tab-button" data-tab="upcoming">Upcoming</button>
+                    <button class="tab-button" data-tab="completed">Completed</button>
+                </div>
+
+                <!-- Completed Jobs Filters -->
+                <div id="completedFilters" class="panel" style="display: none; margin-top: 20px;">
+                    <h4 style="color: #19a974; margin-bottom: 15px;">📋 Filter Completed Jobs</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="filterClient" style="font-size: 14px;">Client</label>
+                            <select id="filterClient" class="input" style="padding: 8px;">
+                                <option value="">All Clients</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="filterMonth" style="font-size: 14px;">Month</label>
+                            <select id="filterMonth" class="input" style="padding: 8px;">
+                                <option value="">All Months</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="filterYear" style="font-size: 14px;">Year</label>
+                            <select id="filterYear" class="input" style="padding: 8px;">
+                                <option value="">All Years</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="filterDateRange" style="font-size: 14px;">Date Range</label>
+                            <select id="filterDateRange" class="input" style="padding: 8px;">
+                                <option value="">Custom Range</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="quarter">This Quarter</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button id="clearFilters" class="button button-secondary" style="width: auto; padding: 8px 16px;">Clear Filters</button>
+                        <button id="exportExcel" class="button" style="width: auto; padding: 8px 16px; display: none;">📊 Export to Excel</button>
+                        <span id="filterResults" style="color: #98bfa7; font-size: 14px;"></span>
+                    </div>
+                </div>
+
+                <!-- Jobs Grid -->
+                <div id="jobsGrid" class="jobs-grid"></div>
+            </div>
+
+            <!-- Clients Section -->
+            <div id="clientsSection" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="color: #19a974; font-size: 1.3rem;">Client Directory</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button id="importContactsBtn" class="button button-secondary">📱 Import from Phone</button>
+                        <button id="addClientBtn" class="button">+ Add New Client</button>
+                    </div>
+                </div>
+                <div id="clientsGrid" class="jobs-grid"></div>
+            </div>
+
+            <!-- Earnings Section -->
+            <div id="earningsSection" style="display: none;">
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #19a974; font-size: 1.3rem; margin-bottom: 20px;">💰 Earnings Dashboard</h3>
+                    
+                    <!-- Completed Earnings -->
+                    <div class="panel">
+                        <h4 style="color: #19a974; margin-bottom: 20px; font-size: 1.2rem;">✅ Completed Earnings</h4>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="todayEarnings">$0.00</div>
+                                <div class="stat-label">Today</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="weekEarnings">$0.00</div>
+                                <div class="stat-label">This Week</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="monthEarnings">$0.00</div>
+                                <div class="stat-label">This Month</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="sixMonthEarnings">$0.00</div>
+                                <div class="stat-label">Last 6 Months</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Potential Earnings -->
+                    <div class="panel">
+                        <h4 style="color: #19a974; margin-bottom: 20px; font-size: 1.2rem;">🎯 Potential Earnings (Upcoming Jobs)</h4>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="potentialTodayEarnings">$0.00</div>
+                                <div class="stat-label">Today</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="potentialWeekEarnings">$0.00</div>
+                                <div class="stat-label">This Week</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="potentialMonthEarnings">$0.00</div>
+                                <div class="stat-label">This Month</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="potentialSixMonthEarnings">$0.00</div>
+                                <div class="stat-label">Next 6 Months</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Combined Projections -->
+                    <div class="panel">
+                        <h4 style="color: #19a974; margin-bottom: 20px; font-size: 1.2rem;">📈 Total Projections (Completed + Potential)</h4>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalTodayProjection">$0.00</div>
+                                <div class="stat-label">Today Total</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalWeekProjection">$0.00</div>
+                                <div class="stat-label">Week Total</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalMonthProjection">$0.00</div>
+                                <div class="stat-label">Month Total</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalSixMonthProjection">$0.00</div>
+                                <div class="stat-label">6-Month Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Worker Earnings Section -->
+            <div id="workersSection" style="display: none;">
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #19a974; font-size: 1.3rem; margin-bottom: 20px;">👷 Worker Earnings & Time Tracking</h3>
+                    
+                    <!-- Worker Earnings Filters -->
+                    <div class="panel">
+                        <h4 style="color: #19a974; margin-bottom: 15px;">📊 Filter Worker Data</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filterWorker" style="font-size: 14px;">Worker</label>
+                                <select id="filterWorker" class="input" style="padding: 8px;">
+                                    <option value="">All Workers</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filterWorkerMonth" style="font-size: 14px;">Month</label>
+                                <select id="filterWorkerMonth" class="input" style="padding: 8px;">
+                                    <option value="">All Months</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filterWorkerYear" style="font-size: 14px;">Year</label>
+                                <select id="filterWorkerYear" class="input" style="padding: 8px;">
+                                    <option value="">All Years</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filterWorkerDateRange" style="font-size: 14px;">Date Range</label>
+                                <select id="filterWorkerDateRange" class="input" style="padding: 8px;">
+                                    <option value="">Custom Range</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">This Week</option>
+                                    <option value="month">This Month</option>
+                                    <option value="quarter">This Quarter</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <button id="clearWorkerFilters" class="button button-secondary" style="width: auto; padding: 8px 16px;">Clear Filters</button>
+                            <button id="exportWorkerData" class="button" style="width: auto; padding: 8px 16px;">📊 Export Worker Data</button>
+                            <span id="workerFilterResults" style="color: #98bfa7; font-size: 14px;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Worker Summary Cards -->
+                    <div id="workerSummaryCards" class="stats"></div>
+
+                    <!-- Detailed Worker Breakdown -->
+                    <div id="workerDetailsGrid" class="jobs-grid"></div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="usersSection" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+                    <h3 style="color: #19a974; font-size: 1.3rem;">👤 User Management</h3>
+                    <button id="addUserBtn" class="button">+ Add New User</button>
+                </div>
+                <div id="usersGrid" class="jobs-grid"></div>
+            </div>
+
+
+        </div>
+
+        <!-- Add Job Modal -->
+        <div id="addJobModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add New Job</h3>
+                    <button class="close-button" onclick="closeModal()">&times;</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobTitle">Job Title</label>
+                    <input type="text" id="jobTitle" class="input" placeholder="e.g., Fix kitchen sink">
+                </div>
+                
+                <div class="form-group">
+                    <label for="pricingType">Pricing Type</label>
+                    <select id="pricingType" class="input" onchange="togglePricingFields()">
+                        <option value="hourly">Hourly Rate</option>
+                        <option value="fixed">Fixed Job Cost</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="hourlyRateField">
+                    <label for="jobPay">Hourly Rate ($)</label>
+                    <input type="number" id="jobPay" class="input" placeholder="25.00" step="0.01">
+                </div>
+                
+                <div class="form-group" id="fixedCostField" style="display: none;">
+                    <label for="jobFixedCost">Fixed Job Cost ($)</label>
+                    <input type="number" id="jobFixedCost" class="input" placeholder="150.00" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="startTime">Start Time</label>
+                    <input type="datetime-local" id="startTime" class="input">
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobAddress">Job Address *</label>
+                    <textarea id="jobAddress" class="input" rows="2" placeholder="123 Main St, City, State 12345"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobClient">Client (Optional)</label>
+                    <select id="jobClient" class="input">
+                        <option value="">Select a client</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="assignedWorker">Assign Worker (Optional)</label>
+                    <select id="assignedWorker" class="input">
+                        <option value="">Select a worker</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="recurring">Recurring Schedule</label>
+                    <select id="recurring" class="input">
+                        <option value="">One-time job</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Every 2 weeks</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="closeModal()" class="button button-secondary" style="flex: 1;">Cancel</button>
+                    <button onclick="addJob()" class="button" style="flex: 1;">Add Job</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Client Modal -->
+        <div id="addClientModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add New Client</h3>
+                    <button class="close-button" onclick="closeClientModal()">&times;</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientName">Full Name *</label>
+                    <input type="text" id="clientName" class="input" placeholder="John Smith">
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientPhone">Phone Number</label>
+                    <input type="tel" id="clientPhone" class="input" placeholder="(555) 123-4567">
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientEmail">Email Address</label>
+                    <input type="email" id="clientEmail" class="input" placeholder="john@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientAddress">Address</label>
+                    <textarea id="clientAddress" class="input" rows="3" placeholder="123 Main St, City, State 12345"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="billingDate">Monthly Billing Date</label>
+                    <select id="billingDate" class="input">
+                        <option value="">Select billing date</option>
+                        <option value="1">1st of the month</option>
+                        <option value="15">15th of the month</option>
+                        <option value="30">30th of the month</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="closeClientModal()" class="button button-secondary" style="flex: 1;">Cancel</button>
+                    <button onclick="addClient()" class="button" style="flex: 1;">Add Client</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add User Modal -->
+        <div id="addUserModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add New User</h3>
+                    <button class="close-button" onclick="closeUserModal()">&times;</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newUserName">Full Name *</label>
+                    <input type="text" id="newUserName" class="input" placeholder="John Worker">
+                </div>
+                
+                <div class="form-group">
+                    <label for="userUsername">Username *</label>
+                    <input type="text" id="userUsername" class="input" placeholder="johnworker">
+                </div>
+                
+                <div class="form-group">
+                    <label for="userPassword">Password *</label>
+                    <div style="position: relative;">
+                        <input type="password" id="userPassword" class="input" placeholder="Enter password" style="padding-right: 45px;">
+                        <button type="button" id="toggleUserPassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #98bfa7; cursor: pointer; font-size: 18px; padding: 5px;">👁️</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userRole">Role</label>
+                    <select id="userRole" class="input">
+                        <option value="worker">Worker</option>
+                        <option value="manager">Manager</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="userHourlyRate">Hourly Rate ($)</label>
+                    <input type="number" id="userHourlyRate" class="input" placeholder="15.00" step="0.01" min="0">
+                    <small style="color: #98bfa7; font-size: 12px; margin-top: 5px; display: block;">
+                        Set how much this worker earns per hour
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label style="margin-bottom: 15px; color: #19a974; font-weight: 600;">Permissions</label>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div>
+                            <h5 style="color: #98bfa7; margin-bottom: 10px; font-size: 14px;">📋 Jobs Access</h5>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canViewAllJobs" style="margin-right: 8px;">
+                                View All Jobs
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canViewUpcoming" style="margin-right: 8px;" checked>
+                                View Upcoming Jobs
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canViewActive" style="margin-right: 8px;">
+                                View Active Jobs
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canViewCompleted" style="margin-right: 8px;">
+                                View Completed Jobs
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <h5 style="color: #98bfa7; margin-bottom: 10px; font-size: 14px;">⚡ Job Actions</h5>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canStartJobs" style="margin-right: 8px;">
+                                Start Jobs
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canCompleteJobs" style="margin-right: 8px;">
+                                Complete Jobs
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canAddJobs" style="margin-right: 8px;">
+                                Add New Jobs
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canDeleteJobs" style="margin-right: 8px;">
+                                Delete Jobs
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <h5 style="color: #98bfa7; margin-bottom: 10px; font-size: 14px;">💰 Financial Access</h5>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canViewEarnings" style="margin-right: 8px;">
+                                View Earnings
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canViewHourlyRates" style="margin-right: 8px;">
+                                View Hourly Rates
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canExportData" style="margin-right: 8px;">
+                                Export Data
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <h5 style="color: #98bfa7; margin-bottom: 10px; font-size: 14px;">👥 Other Access</h5>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canViewClients" style="margin-right: 8px;">
+                                View Clients
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canManageClients" style="margin-right: 8px;">
+                                Manage Clients
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; cursor: pointer;">
+                                <input type="checkbox" id="canManageUsers" style="margin-right: 8px;">
+                                Manage Users
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button onclick="closeUserModal()" class="button button-secondary" style="flex: 1;">Cancel</button>
+                    <button onclick="addUser()" class="button" style="flex: 1;">Add User</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Modal -->
+        <div id="photoModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="photoModalTitle">Take Before Photo</h3>
+                    <button class="close-button" onclick="closePhotoModal()">&times;</button>
+                </div>
+                
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div id="cameraContainer" style="position: relative; display: inline-block;">
+                        <video id="cameraVideo" width="300" height="225" autoplay style="border-radius: 8px; background: #1f2a1f;"></video>
+                        <canvas id="photoCanvas" width="300" height="225" style="display: none;"></canvas>
+                    </div>
+                    
+                    <div id="photoPreview" style="display: none; margin-top: 15px;">
+                        <img id="capturedPhoto" style="max-width: 300px; border-radius: 8px; border: 2px solid #19a974;">
+                        <div style="margin-top: 10px;">
+                            <button onclick="retakePhoto()" class="button button-secondary" style="margin-right: 10px;">Retake Photo</button>
+                            <button onclick="confirmPhoto()" class="button">Use This Photo</button>
+                        </div>
+                    </div>
+                    
+                    <div id="cameraControls" style="margin-top: 15px;">
+                        <button onclick="capturePhoto()" class="button" style="padding: 15px 30px; font-size: 16px;">📸 Take Photo</button>
+                        <div style="margin-top: 10px;">
+                            <button onclick="skipPhoto()" class="button button-secondary">Skip Photo</button>
+                        </div>
+                    </div>
+                    
+                    <div id="cameraError" style="display: none; color: #dc3545; margin-top: 15px;">
+                        <p>Camera not available. You can still proceed without a photo.</p>
+                        <button onclick="skipPhoto()" class="button button-secondary">Continue Without Photo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Viewer Modal -->
+        <div id="photoViewerModal" class="modal" style="display: none;">
+            <div class="modal-content" style="max-width: 90vw; max-height: 90vh;">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="photoViewerTitle">Photo</h3>
+                    <button class="close-button" onclick="closePhotoViewer()">&times;</button>
+                </div>
+                
+                <div style="text-align: center;">
+                    <img id="photoViewerImage" style="max-width: 100%; max-height: 70vh; border-radius: 8px; border: 2px solid #19a974;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Contacts Modal -->
+        <div id="importContactsModal" class="modal" style="display: none;">
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3 class="modal-title">📱 Import Contacts from Phone</h3>
+                    <button class="close-button" onclick="closeImportModal()">&times;</button>
+                </div>
+                
+                <div id="contactsImportContent">
+                    <div style="margin-bottom: 20px; padding: 15px; background: #1f2a1f; border-radius: 8px;">
+                        <div style="color: #19a974; font-weight: 600; margin-bottom: 8px;">📋 How to Import:</div>
+                        <div style="color: #98bfa7; font-size: 14px; line-height: 1.5;">
+                            1. Click "Access Phone Contacts" below<br>
+                            2. Allow access when prompted by your browser<br>
+                            3. Select contacts you want to import as clients<br>
+                            4. Review and confirm the import
+                        </div>
+                    </div>
+
+                    <div id="contactsAccessStep" style="text-align: center; margin: 20px 0;">
+                        <button id="accessContactsBtn" class="button" style="padding: 15px 30px; font-size: 16px;">
+                            📱 Access Phone Contacts
+                        </button>
+                        <div style="color: #98bfa7; font-size: 12px; margin-top: 10px;">
+                            Your contacts stay private and secure
+                        </div>
+                    </div>
+
+                    <div id="contactsListStep" style="display: none;">
+                        <div style="margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <h4 style="color: #19a974; margin: 0;">Select Contacts to Import:</h4>
+                                <div>
+                                    <button id="selectAllContacts" class="button button-secondary" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">Select All</button>
+                                    <button id="clearAllContacts" class="button button-secondary" style="padding: 5px 10px; font-size: 12px;">Clear All</button>
+                                </div>
+                            </div>
+                            <div style="color: #98bfa7; font-size: 14px; margin-bottom: 15px;">
+                                <span id="selectedCount">0</span> contacts selected
+                            </div>
+                        </div>
+
+                        <div id="contactsList" style="max-height: 300px; overflow-y: auto; border: 1px solid #1f2a1f; border-radius: 8px; padding: 10px;">
+                            <!-- Contacts will be populated here -->
+                        </div>
+
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button onclick="closeImportModal()" class="button button-secondary" style="flex: 1;">Cancel</button>
+                            <button id="importSelectedBtn" class="button" style="flex: 1;" disabled>Import Selected</button>
+                        </div>
+                    </div>
+
+                    <div id="contactsErrorStep" style="display: none; text-align: center; color: #dc3545; margin: 20px 0;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">❌</div>
+                        <h4 style="margin-bottom: 10px;">Contact Access Not Available</h4>
+                        <p style="color: #98bfa7; margin-bottom: 20px;">
+                            Your browser doesn't support contact access, or you denied permission. 
+                            You can still add clients manually using the "Add New Client" button.
+                        </p>
+                        <button onclick="closeImportModal()" class="button">Got it</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        let currentUser = null;
+        let jobs = [];
+        let clients = [];
+        let users = [];
+        let isLoggedIn = false;
+        let currentTab = 'all';
+        let currentSection = 'jobs';
+        let completedJobsFilters = {
+            client: '',
+            month: '',
+            year: '',
+            dateRange: ''
+        };
+        let workerFilters = {
+            worker: '',
+            month: '',
+            year: '',
+            dateRange: ''
+        };
+        let currentJobId = null;
+        let currentPhotoType = null;
+        let cameraStream = null;
+        let capturedPhotoData = null;
+        let notificationPermission = false;
+        let geolocationWatchId = null;
+        let geofenceEnabled = false;
+        let lastKnownPosition = null;
+
+        // Utility Functions
+        function generateId() {
+            return 'job_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+        }
+
+        function formatMoney(amount) {
+            return `$${Number(amount || 0).toFixed(2)}`;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleString();
+        }
+
+        function getJobStatus(job) {
+            if (job.completedAt) return 'completed';
+            if (job.startedAt) return 'in-progress';
+            return 'pending';
+        }
+
+        function calculateJobEarnings(job) {
+            if (!job.startedAt) return 0;
+            
+            // Handle legacy jobs that don't have pricingType (assume hourly)
+            const pricingType = job.pricingType || 'hourly';
+            
+            if (pricingType === 'fixed') {
+                // For fixed pricing, return the fixed cost if job is completed
+                return job.completedAt ? (job.fixedCost || 0) : 0;
+            } else {
+                // For hourly pricing, calculate based on time worked
+                const endTime = job.completedAt ? new Date(job.completedAt) : new Date();
+                const startTime = new Date(job.startedAt);
+                const hoursWorked = (endTime - startTime) / (1000 * 60 * 60);
+                return hoursWorked * (job.hourlyRate || 0);
+            }
+        }
+
+        function calculateWorkerEarnings(job) {
+            if (!job.startedAt || !job.assignedWorkerId) return 0;
+            
+            const worker = users.find(u => u.id === job.assignedWorkerId);
+            if (!worker || !worker.hourlyRate) return 0;
+            
+            // Calculate hours worked
+            const endTime = job.completedAt ? new Date(job.completedAt) : new Date();
+            const startTime = new Date(job.startedAt);
+            const hoursWorked = (endTime - startTime) / (1000 * 60 * 60);
+            
+            return hoursWorked * worker.hourlyRate;
+        }
+
+        function getWorkerHoursWorked(job) {
+            if (!job.startedAt) return 0;
+            
+            const endTime = job.completedAt ? new Date(job.completedAt) : new Date();
+            const startTime = new Date(job.startedAt);
+            return (endTime - startTime) / (1000 * 60 * 60);
+        }
+
+        function calculateEarningsForPeriod(startDate, endDate) {
+            return jobs.filter(job => {
+                if (!job.completedAt) return false;
+                const completedDate = new Date(job.completedAt);
+                return completedDate >= startDate && completedDate <= endDate;
+            }).reduce((sum, job) => sum + calculateJobEarnings(job), 0);
+        }
+
+        function getEarningsTimeline() {
+            const now = new Date();
+            
+            // Today
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
+            
+            // This week (Monday to Sunday)
+            const dayOfWeek = now.getDay();
+            const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+            const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + mondayOffset);
+            const weekEnd = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
+            
+            // This month
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+            const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+            
+            // Last 6 months
+            const sixMonthsStart = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+            
+            return {
+                today: calculateEarningsForPeriod(todayStart, todayEnd),
+                week: calculateEarningsForPeriod(weekStart, weekEnd),
+                month: calculateEarningsForPeriod(monthStart, monthEnd),
+                sixMonths: calculateEarningsForPeriod(sixMonthsStart, now)
+            };
+        }
+
+        function calculatePotentialEarnings(job) {
+            // Handle legacy jobs that don't have pricingType (assume hourly)
+            const pricingType = job.pricingType || 'hourly';
+            
+            if (pricingType === 'fixed') {
+                return job.fixedCost || 0;
+            } else {
+                // For hourly jobs, estimate 2 hours of work as default
+                const estimatedHours = 2;
+                return estimatedHours * (job.hourlyRate || 0);
+            }
+        }
+
+        function calculatePotentialEarningsForPeriod(startDate, endDate) {
+            return jobs.filter(job => {
+                if (!job.scheduledStart || job.completedAt) return false;
+                const scheduledDate = new Date(job.scheduledStart);
+                return scheduledDate >= startDate && scheduledDate < endDate;
+            }).reduce((sum, job) => sum + calculatePotentialEarnings(job), 0);
+        }
+
+        function getPotentialEarningsTimeline() {
+            const now = new Date();
+            
+            // Today
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
+            
+            // This week (Monday to Sunday)
+            const dayOfWeek = now.getDay();
+            const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+            const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + mondayOffset);
+            const weekEnd = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
+            
+            // This month
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+            const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+            
+            // Next 6 months
+            const sixMonthsEnd = new Date(now.getFullYear(), now.getMonth() + 6, 1);
+            
+            return {
+                today: calculatePotentialEarningsForPeriod(todayStart, todayEnd),
+                week: calculatePotentialEarningsForPeriod(weekStart, weekEnd),
+                month: calculatePotentialEarningsForPeriod(monthStart, monthEnd),
+                sixMonths: calculatePotentialEarningsForPeriod(now, sixMonthsEnd)
+            };
+        }
+
+        // Storage Functions
+        function saveToStorage(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (e) {
+                console.error('Failed to save to storage:', e);
+            }
+        }
+
+        function loadFromStorage(key) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : null;
+            } catch (e) {
+                console.error('Failed to load from storage:', e);
+                return null;
+            }
+        }
+
+        // Authentication
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const rememberDevice = document.getElementById('rememberDevice').checked;
+            const errorDiv = document.getElementById('loginError');
+
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+
+            // Check admin login first
+            if (username === 'admin' && password === 'admin1234321') {
+                currentUser = { 
+                    username: 'admin', 
+                    name: 'Admin User', 
+                    role: 'admin',
+                    permissions: {
+                        canViewAllJobs: true,
+                        canViewUpcoming: true,
+                        canViewActive: true,
+                        canViewCompleted: true,
+                        canStartJobs: true,
+                        canCompleteJobs: true,
+                        canAddJobs: true,
+                        canDeleteJobs: true,
+                        canViewEarnings: true,
+                        canViewHourlyRates: true,
+                        canExportData: true,
+                        canViewClients: true,
+                        canManageClients: true,
+                        canManageUsers: true
+                    }
+                };
+                
+                completeLogin(rememberDevice);
+                return;
+            }
+
+            // Check user accounts
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                currentUser = user;
+                completeLogin(rememberDevice);
+            } else {
+                showError('Invalid username or password');
+            }
+        }
+
+        function completeLogin(rememberDevice) {
+            isLoggedIn = true;
+            saveToStorage('handyman_user', currentUser);
+            saveToStorage('handyman_logged_in', true);
+            
+            // Handle device remembering
+            if (rememberDevice) {
+                saveDeviceCredentials();
+            }
+            
+            showMainApp();
+            hideError();
+            clearLoginForm();
+        }
+
+        function clearLoginForm() {
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('rememberDevice').checked = false;
+        }
+
+        async function saveDeviceCredentials() {
+            try {
+                // Check if WebAuthn is supported for biometric authentication
+                if (window.PublicKeyCredential && navigator.credentials) {
+                    // Save encrypted credentials for biometric login
+                    const credentials = {
+                        username: currentUser.username,
+                        // Don't store actual password, use a token instead
+                        loginToken: generateSecureToken(),
+                        savedAt: new Date().toISOString(),
+                        deviceId: await getDeviceFingerprint()
+                    };
+                    
+                    saveToStorage('handyman_saved_credentials', credentials);
+                    saveToStorage('handyman_biometric_enabled', true);
+                    
+                    // Try to create a WebAuthn credential for future biometric login
+                    try {
+                        await createBiometricCredential();
+                    } catch (error) {
+                        console.log('Biometric credential creation failed, using fallback method');
+                    }
+                } else {
+                    // Fallback: Save encrypted credentials without biometric
+                    const credentials = {
+                        username: currentUser.username,
+                        loginToken: generateSecureToken(),
+                        savedAt: new Date().toISOString(),
+                        deviceId: await getDeviceFingerprint()
+                    };
+                    
+                    saveToStorage('handyman_saved_credentials', credentials);
+                }
+            } catch (error) {
+                console.error('Failed to save device credentials:', error);
+            }
+        }
+
+        function generateSecureToken() {
+            // Generate a secure random token for this session
+            const array = new Uint8Array(32);
+            crypto.getRandomValues(array);
+            return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function getDeviceFingerprint() {
+            // Create a simple device fingerprint
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.fillText('Device fingerprint', 2, 2);
+            
+            const fingerprint = [
+                navigator.userAgent,
+                navigator.language,
+                screen.width + 'x' + screen.height,
+                new Date().getTimezoneOffset(),
+                canvas.toDataURL()
+            ].join('|');
+            
+            // Hash the fingerprint
+            const encoder = new TextEncoder();
+            const data = encoder.encode(fingerprint);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function createBiometricCredential() {
+            if (!window.PublicKeyCredential) return;
+            
+            const credential = await navigator.credentials.create({
+                publicKey: {
+                    challenge: crypto.getRandomValues(new Uint8Array(32)),
+                    rp: {
+                        name: "Handyman Job Tracker",
+                        id: window.location.hostname,
+                    },
+                    user: {
+                        id: new TextEncoder().encode(currentUser.username),
+                        name: currentUser.username,
+                        displayName: currentUser.name || currentUser.username,
+                    },
+                    pubKeyCredParams: [{alg: -7, type: "public-key"}],
+                    authenticatorSelection: {
+                        authenticatorAttachment: "platform",
+                        userVerification: "required"
+                    },
+                    timeout: 60000,
+                    attestation: "direct"
+                }
+            });
+            
+            if (credential) {
+                saveToStorage('handyman_webauthn_credential', {
+                    id: credential.id,
+                    rawId: Array.from(new Uint8Array(credential.rawId)),
+                    type: credential.type
+                });
+            }
+        }
+
+        async function biometricLogin() {
+            try {
+                const savedCredentials = loadFromStorage('handyman_saved_credentials');
+                const webauthnCredential = loadFromStorage('handyman_webauthn_credential');
+                
+                if (!savedCredentials) {
+                    showError('No saved credentials found');
+                    return;
+                }
+                
+                // Verify device fingerprint
+                const currentDeviceId = await getDeviceFingerprint();
+                if (savedCredentials.deviceId !== currentDeviceId) {
+                    showError('Device verification failed. Please login manually.');
+                    clearSavedCredentials();
+                    return;
+                }
+                
+                // Try WebAuthn first if available
+                if (webauthnCredential && window.PublicKeyCredential) {
+                    try {
+                        const assertion = await navigator.credentials.get({
+                            publicKey: {
+                                challenge: crypto.getRandomValues(new Uint8Array(32)),
+                                allowCredentials: [{
+                                    id: new Uint8Array(webauthnCredential.rawId),
+                                    type: 'public-key'
+                                }],
+                                userVerification: 'required',
+                                timeout: 60000
+                            }
+                        });
+                        
+                        if (assertion) {
+                            // Biometric authentication successful
+                            await loginWithSavedCredentials(savedCredentials);
+                            return;
+                        }
+                    } catch (error) {
+                        console.log('WebAuthn failed, trying fallback');
+                    }
+                }
+                
+                // Fallback: Use saved credentials directly
+                await loginWithSavedCredentials(savedCredentials);
+                
+            } catch (error) {
+                console.error('Biometric login failed:', error);
+                showError('Biometric login failed. Please login manually.');
+            }
+        }
+
+        async function loginWithSavedCredentials(credentials) {
+            // Verify the saved credentials are still valid
+            if (credentials.username === 'admin') {
+                currentUser = { 
+                    username: 'admin', 
+                    name: 'Admin User', 
+                    role: 'admin',
+                    permissions: {
+                        canViewAllJobs: true,
+                        canViewUpcoming: true,
+                        canViewActive: true,
+                        canViewCompleted: true,
+                        canStartJobs: true,
+                        canCompleteJobs: true,
+                        canAddJobs: true,
+                        canDeleteJobs: true,
+                        canViewEarnings: true,
+                        canViewHourlyRates: true,
+                        canExportData: true,
+                        canViewClients: true,
+                        canManageClients: true,
+                        canManageUsers: true
+                    }
+                };
+            } else {
+                // Find user account
+                const user = users.find(u => u.username === credentials.username);
+                if (!user) {
+                    showError('User account no longer exists');
+                    clearSavedCredentials();
+                    return;
+                }
+                currentUser = user;
+            }
+            
+            isLoggedIn = true;
+            saveToStorage('handyman_user', currentUser);
+            saveToStorage('handyman_logged_in', true);
+            showMainApp();
+            hideError();
+        }
+
+        function clearSavedCredentials() {
+            localStorage.removeItem('handyman_saved_credentials');
+            localStorage.removeItem('handyman_biometric_enabled');
+            localStorage.removeItem('handyman_webauthn_credential');
+            checkForSavedCredentials();
+        }
+
+        function checkForSavedCredentials() {
+            const savedCredentials = loadFromStorage('handyman_saved_credentials');
+            const biometricSection = document.getElementById('biometricSection');
+            
+            if (savedCredentials) {
+                biometricSection.style.display = 'block';
+            } else {
+                biometricSection.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            isLoggedIn = false;
+            localStorage.removeItem('handyman_user');
+            localStorage.removeItem('handyman_logged_in');
+            showLoginForm();
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.style.display = 'none';
+        }
+
+        // UI Functions
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'none';
+        }
+
+        function showLoginForm() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('mainApp').style.display = 'none';
+        }
+
+        function showMainApp() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('userName').textContent = currentUser?.name || 'User';
+            updateCurrentDate();
+            loadJobs();
+            loadClients();
+            loadUsers();
+            applyUserPermissions();
+            renderJobs();
+            updateStats();
+            
+            // Request notification permission and schedule notifications
+            requestNotificationPermission().then(() => {
+                scheduleJobNotifications();
+            });
+        }
+
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const dateString = now.toLocaleDateString('en-US', options);
+            document.getElementById('currentDate').textContent = dateString;
+        }
+
+        // Job Management
+        function loadJobs() {
+            const savedJobs = loadFromStorage('handyman_jobs');
+            jobs = savedJobs || [];
+        }
+
+        function saveJobs() {
+            saveToStorage('handyman_jobs', jobs);
+        }
+
+        // Client Management
+        function loadClients() {
+            const savedClients = loadFromStorage('handyman_clients');
+            clients = savedClients || [];
+        }
+
+        function saveClients() {
+            saveToStorage('handyman_clients', clients);
+        }
+
+        // User Management
+        function loadUsers() {
+            const savedUsers = loadFromStorage('handyman_users');
+            users = savedUsers || [];
+        }
+
+        function saveUsers() {
+            saveToStorage('handyman_users', users);
+        }
+
+        function applyUserPermissions() {
+            if (!currentUser || !currentUser.permissions) return;
+
+            const permissions = currentUser.permissions;
+
+            // Show/hide main navigation tabs
+            document.getElementById('workersTab').style.display = permissions.canViewEarnings ? 'inline-block' : 'none';
+            document.getElementById('usersTab').style.display = permissions.canManageUsers ? 'inline-block' : 'none';
+            
+            // Show/hide earnings tab
+            const earningsTab = document.querySelector('[data-section="earnings"]');
+            if (earningsTab) {
+                earningsTab.style.display = permissions.canViewEarnings ? 'inline-block' : 'none';
+            }
+
+            // Show/hide clients tab
+            const clientsTab = document.querySelector('[data-section="clients"]');
+            if (clientsTab) {
+                clientsTab.style.display = permissions.canViewClients ? 'inline-block' : 'none';
+            }
+
+            // Show/hide add job button
+            const addJobBtn = document.getElementById('addJobBtn');
+            if (addJobBtn) {
+                addJobBtn.style.display = permissions.canAddJobs ? 'inline-block' : 'none';
+            }
+
+            // Show/hide add client button
+            const addClientBtn = document.getElementById('addClientBtn');
+            if (addClientBtn) {
+                addClientBtn.style.display = permissions.canManageClients ? 'inline-block' : 'none';
+            }
+
+            // Show/hide export button
+            const exportBtn = document.getElementById('exportExcel');
+            if (exportBtn) {
+                exportBtn.style.display = permissions.canExportData ? 'inline-block' : 'none';
+            }
+
+            // Filter available job tabs based on permissions
+            const jobTabs = document.querySelectorAll('[data-tab]');
+            jobTabs.forEach(tab => {
+                const tabType = tab.dataset.tab;
+                let shouldShow = false;
+
+                switch (tabType) {
+                    case 'all':
+                        shouldShow = permissions.canViewAllJobs;
+                        break;
+                    case 'upcoming':
+                        shouldShow = permissions.canViewUpcoming;
+                        break;
+                    case 'active':
+                        shouldShow = permissions.canViewActive;
+                        break;
+                    case 'completed':
+                        shouldShow = permissions.canViewCompleted;
+                        break;
+                }
+
+                tab.style.display = shouldShow ? 'inline-block' : 'none';
+            });
+
+            // Set default tab to first available tab
+            setDefaultTab();
+        }
+
+        function setDefaultTab() {
+            const permissions = currentUser.permissions;
+            let defaultTab = 'all';
+
+            if (!permissions.canViewAllJobs) {
+                if (permissions.canViewUpcoming) defaultTab = 'upcoming';
+                else if (permissions.canViewActive) defaultTab = 'active';
+                else if (permissions.canViewCompleted) defaultTab = 'completed';
+            }
+
+            // Update active tab
+            document.querySelectorAll('[data-tab]').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.tab === defaultTab && tab.style.display !== 'none') {
+                    tab.classList.add('active');
+                }
+            });
+
+            currentTab = defaultTab;
+        }
+
+        function addUser() {
+            const name = document.getElementById('newUserName').value;
+            const username = document.getElementById('userUsername').value;
+            const password = document.getElementById('userPassword').value;
+            const role = document.getElementById('userRole').value;
+            const hourlyRate = parseFloat(document.getElementById('userHourlyRate').value) || 0;
+
+            if (!name || !username || !password) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Check if username already exists
+            if (users.find(u => u.username === username) || username === 'admin') {
+                alert('Username already exists. Please choose a different username.');
+                return;
+            }
+
+            // Collect permissions
+            const permissions = {
+                canViewAllJobs: document.getElementById('canViewAllJobs').checked,
+                canViewUpcoming: document.getElementById('canViewUpcoming').checked,
+                canViewActive: document.getElementById('canViewActive').checked,
+                canViewCompleted: document.getElementById('canViewCompleted').checked,
+                canStartJobs: document.getElementById('canStartJobs').checked,
+                canCompleteJobs: document.getElementById('canCompleteJobs').checked,
+                canAddJobs: document.getElementById('canAddJobs').checked,
+                canDeleteJobs: document.getElementById('canDeleteJobs').checked,
+                canViewEarnings: document.getElementById('canViewEarnings').checked,
+                canViewHourlyRates: document.getElementById('canViewHourlyRates').checked,
+                canExportData: document.getElementById('canExportData').checked,
+                canViewClients: document.getElementById('canViewClients').checked,
+                canManageClients: document.getElementById('canManageClients').checked,
+                canManageUsers: document.getElementById('canManageUsers').checked
+            };
+
+            const newUser = {
+                id: generateId(),
+                name: name,
+                username: username,
+                password: password,
+                role: role,
+                hourlyRate: hourlyRate,
+                permissions: permissions,
+                createdAt: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            saveUsers();
+            renderUsers();
+            updateWorkerDropdown();
+            
+            // Refresh worker earnings if currently viewing that section
+            if (currentSection === 'workers') {
+                renderWorkerEarnings();
+            }
+            
+            closeUserModal();
+            
+            // Clear form
+            clearUserForm();
+        }
+
+        function clearUserForm() {
+            document.getElementById('newUserName').value = '';
+            document.getElementById('userUsername').value = '';
+            document.getElementById('userPassword').value = '';
+            document.getElementById('userRole').value = 'worker';
+            document.getElementById('userHourlyRate').value = '';
+            
+            // Reset all checkboxes
+            const checkboxes = document.querySelectorAll('#addUserModal input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = cb.id === 'canViewUpcoming'; // Only upcoming is checked by default
+            });
+        }
+
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user? They will no longer be able to access the system.')) {
+                users = users.filter(u => u.id !== userId);
+                saveUsers();
+                renderUsers();
+            }
+        }
+
+        function renderUsers() {
+            const grid = document.getElementById('usersGrid');
+            
+            if (users.length === 0) {
+                grid.innerHTML = `
+                    <div class="panel" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <h3 style="color: #98bfa7; margin-bottom: 10px;">No users yet</h3>
+                        <p style="color: #98bfa7;">Add your first user to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = users.map(user => {
+                const permissionCount = Object.values(user.permissions).filter(p => p).length;
+                const roleColors = {
+                    admin: '#dc3545',
+                    manager: '#ffc107',
+                    worker: '#17a2b8'
+                };
+
+                return `
+                    <div class="job-card">
+                        <div class="job-title">${user.name}</div>
+                        <div class="job-status" style="background: ${roleColors[user.role] || '#17a2b8'}; color: ${user.role === 'manager' ? '#000' : 'white'};">
+                            ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                        </div>
+                        
+                        <div class="job-info">
+                            <div class="job-info-item">
+                                <span>👤 Username:</span>
+                                <strong>${user.username}</strong>
+                            </div>
+                            <div class="job-info-item">
+                                <span>🔐 Permissions:</span>
+                                <strong>${permissionCount} enabled</strong>
+                            </div>
+                            <div class="job-info-item">
+                                <span>💰 Hourly Rate:</span>
+                                <strong>${formatMoney(user.hourlyRate || 0)}</strong>
+                            </div>
+                            <div class="job-info-item">
+                                <span>📅 Created:</span>
+                                <strong>${new Date(user.createdAt).toLocaleDateString()}</strong>
+                            </div>
+                            
+                            <div style="margin-top: 15px;">
+                                <h5 style="color: #19a974; margin-bottom: 8px; font-size: 14px;">Key Permissions:</h5>
+                                <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                                    ${user.permissions.canViewEarnings ? '<span style="background: #19a974; color: #0b0f0b; padding: 2px 6px; border-radius: 4px; font-size: 12px;">💰 Earnings</span>' : ''}
+                                    ${user.permissions.canAddJobs ? '<span style="background: #19a974; color: #0b0f0b; padding: 2px 6px; border-radius: 4px; font-size: 12px;">➕ Add Jobs</span>' : ''}
+                                    ${user.permissions.canManageClients ? '<span style="background: #19a974; color: #0b0f0b; padding: 2px 6px; border-radius: 4px; font-size: 12px;">👥 Manage Clients</span>' : ''}
+                                    ${user.permissions.canManageUsers ? '<span style="background: #19a974; color: #0b0f0b; padding: 2px 6px; border-radius: 4px; font-size: 12px;">👤 Manage Users</span>' : ''}
+                                    ${!user.permissions.canViewEarnings && !user.permissions.canAddJobs && !user.permissions.canManageClients && !user.permissions.canManageUsers ? '<span style="background: #98bfa7; color: #0b0f0b; padding: 2px 6px; border-radius: 4px; font-size: 12px;">📋 View Only</span>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="job-actions">
+                            <button onclick="deleteUser('${user.id}')" class="button button-danger">Delete User</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addClient() {
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const email = document.getElementById('clientEmail').value;
+            const address = document.getElementById('clientAddress').value;
+            const billingDate = document.getElementById('billingDate').value;
+
+            if (!name) {
+                alert('Please enter the client name');
+                return;
+            }
+
+            const newClient = {
+                id: generateId(),
+                name: name,
+                phone: phone || '',
+                email: email || '',
+                address: address || '',
+                billingDate: billingDate || '',
+                createdAt: new Date().toISOString()
+            };
+
+            clients.push(newClient);
+            saveClients();
+            renderClients();
+            updateClientDropdown();
+            closeClientModal();
+            
+            // Clear form
+            document.getElementById('clientName').value = '';
+            document.getElementById('clientPhone').value = '';
+            document.getElementById('clientEmail').value = '';
+            document.getElementById('clientAddress').value = '';
+            document.getElementById('billingDate').value = '';
+        }
+
+        function deleteClient(clientId) {
+            if (confirm('Are you sure you want to delete this client? This will not affect existing jobs.')) {
+                clients = clients.filter(c => c.id !== clientId);
+                saveClients();
+                renderClients();
+                updateClientDropdown();
+            }
+        }
+
+        function updateClientDropdown() {
+            const select = document.getElementById('jobClient');
+            select.innerHTML = '<option value="">Select a client</option>';
+            
+            clients.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.id;
+                option.textContent = client.name;
+                select.appendChild(option);
+            });
+        }
+
+        function updateWorkerDropdown() {
+            const select = document.getElementById('assignedWorker');
+            if (!select) return;
+            
+            select.innerHTML = '<option value="">Select a worker</option>';
+            
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.id;
+                option.textContent = `${user.name} (${formatMoney(user.hourlyRate || 0)}/hr)`;
+                select.appendChild(option);
+            });
+        }
+
+        function togglePricingFields() {
+            const pricingType = document.getElementById('pricingType').value;
+            const hourlyField = document.getElementById('hourlyRateField');
+            const fixedField = document.getElementById('fixedCostField');
+            
+            if (pricingType === 'hourly') {
+                hourlyField.style.display = 'block';
+                fixedField.style.display = 'none';
+                document.getElementById('jobFixedCost').value = '';
+            } else {
+                hourlyField.style.display = 'none';
+                fixedField.style.display = 'block';
+                document.getElementById('jobPay').value = '';
+            }
+        }
+
+        function addJob() {
+            const title = document.getElementById('jobTitle').value;
+            const address = document.getElementById('jobAddress').value;
+            const pricingType = document.getElementById('pricingType').value;
+            const hourlyRate = parseFloat(document.getElementById('jobPay').value) || 0;
+            const fixedCost = parseFloat(document.getElementById('jobFixedCost').value) || 0;
+            const startTime = document.getElementById('startTime').value;
+            const clientId = document.getElementById('jobClient').value;
+            const assignedWorkerId = document.getElementById('assignedWorker').value;
+            const recurring = document.getElementById('recurring').value;
+
+            if (!title || !address) {
+                alert('Please fill in the job title and address');
+                return;
+            }
+
+            if (pricingType === 'hourly' && (!hourlyRate || hourlyRate <= 0)) {
+                alert('Please enter a valid hourly rate');
+                return;
+            }
+
+            if (pricingType === 'fixed' && (!fixedCost || fixedCost <= 0)) {
+                alert('Please enter a valid fixed job cost');
+                return;
+            }
+
+            const newJob = {
+                id: generateId(),
+                title: title,
+                address: address,
+                pricingType: pricingType,
+                hourlyRate: pricingType === 'hourly' ? hourlyRate : 0,
+                fixedCost: pricingType === 'fixed' ? fixedCost : 0,
+                scheduledStart: startTime,
+                clientId: clientId || null,
+                assignedWorkerId: assignedWorkerId || null,
+                recurring: recurring || null,
+                createdAt: new Date().toISOString(),
+                startedAt: null,
+                completedAt: null,
+                geofenceTriggered: false
+            };
+
+            jobs.push(newJob);
+            saveJobs();
+            renderJobs();
+            updateStats();
+            scheduleJobNotifications(); // Reschedule notifications for new job
+            closeModal();
+            
+            // Clear form
+            document.getElementById('jobTitle').value = '';
+            document.getElementById('jobAddress').value = '';
+            document.getElementById('jobPay').value = '';
+            document.getElementById('jobFixedCost').value = '';
+            document.getElementById('startTime').value = '';
+            document.getElementById('jobClient').value = '';
+            document.getElementById('assignedWorker').value = '';
+            document.getElementById('recurring').value = '';
+            document.getElementById('pricingType').value = 'hourly';
+            togglePricingFields();
+        }
+
+        function startJob(jobId) {
+            currentJobId = jobId;
+            openPhotoModal('before');
+        }
+
+        function actuallyStartJob(jobId, beforePhoto = null) {
+            const job = jobs.find(j => j.id === jobId);
+            if (job && !job.startedAt) {
+                job.startedAt = new Date().toISOString();
+                if (beforePhoto) {
+                    job.beforePhoto = beforePhoto;
+                }
+                saveJobs();
+                renderJobs();
+                updateStats();
+            }
+        }
+
+        function completeJob(jobId) {
+            currentJobId = jobId;
+            openPhotoModal('after');
+        }
+
+        function actuallyCompleteJob(jobId, afterPhoto = null) {
+            const job = jobs.find(j => j.id === jobId);
+            if (job && job.startedAt && !job.completedAt) {
+                job.completedAt = new Date().toISOString();
+                if (afterPhoto) {
+                    job.afterPhoto = afterPhoto;
+                }
+                
+                // Send completion SMS to client if they have a phone number
+                const client = job.clientId ? clients.find(c => c.id === job.clientId) : null;
+                if (client && client.phone) {
+                    sendCompletionSMS(client, job);
+                }
+                
+                // Create next recurring job if applicable
+                if (job.recurring) {
+                    createNextRecurringJob(job);
+                }
+                
+                saveJobs();
+                renderJobs();
+                updateStats();
+            }
+        }
+
+        function createNextRecurringJob(completedJob) {
+            const nextStartDate = new Date(completedJob.scheduledStart);
+            
+            switch (completedJob.recurring) {
+                case 'weekly':
+                    nextStartDate.setDate(nextStartDate.getDate() + 7);
+                    break;
+                case 'biweekly':
+                    nextStartDate.setDate(nextStartDate.getDate() + 14);
+                    break;
+                case 'monthly':
+                    nextStartDate.setMonth(nextStartDate.getMonth() + 1);
+                    break;
+                default:
+                    return; // No recurring schedule
+            }
+
+            const nextJob = {
+                id: generateId(),
+                title: completedJob.title,
+                hourlyRate: completedJob.hourlyRate,
+                scheduledStart: nextStartDate.toISOString().slice(0, 16),
+                clientId: completedJob.clientId || null,
+                recurring: completedJob.recurring,
+                createdAt: new Date().toISOString(),
+                startedAt: null,
+                completedAt: null
+            };
+
+            jobs.push(nextJob);
+        }
+
+        function deleteJob(jobId) {
+            if (confirm('Are you sure you want to delete this job?')) {
+                jobs = jobs.filter(j => j.id !== jobId);
+                saveJobs();
+                renderJobs();
+                updateStats();
+            }
+        }
+
+        function getFilteredJobs() {
+            const now = new Date();
+            let filteredJobs = [];
+            
+            switch (currentTab) {
+                case 'active':
+                    filteredJobs = jobs.filter(job => getJobStatus(job) === 'in-progress');
+                    break;
+                case 'completed':
+                    filteredJobs = jobs.filter(job => getJobStatus(job) === 'completed');
+                    // Apply additional filters for completed jobs
+                    filteredJobs = applyCompletedJobsFilters(filteredJobs);
+                    break;
+                case 'upcoming':
+                    filteredJobs = jobs.filter(job => {
+                        if (!job.scheduledStart) return false;
+                        const scheduledDate = new Date(job.scheduledStart);
+                        return scheduledDate > now && getJobStatus(job) === 'pending';
+                    });
+                    break;
+                case 'all':
+                default:
+                    filteredJobs = jobs;
+                    break;
+            }
+            
+            return filteredJobs;
+        }
+
+        function applyCompletedJobsFilters(completedJobs) {
+            let filtered = completedJobs;
+
+            // Filter by client
+            if (completedJobsFilters.client) {
+                filtered = filtered.filter(job => job.clientId === completedJobsFilters.client);
+            }
+
+            // Filter by date range
+            if (completedJobsFilters.dateRange) {
+                const now = new Date();
+                let startDate, endDate;
+
+                switch (completedJobsFilters.dateRange) {
+                    case 'today':
+                        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                        endDate = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
+                        break;
+                    case 'week':
+                        const dayOfWeek = now.getDay();
+                        const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + mondayOffset);
+                        endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+                        break;
+                    case 'month':
+                        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                        break;
+                    case 'quarter':
+                        const quarter = Math.floor(now.getMonth() / 3);
+                        startDate = new Date(now.getFullYear(), quarter * 3, 1);
+                        endDate = new Date(now.getFullYear(), quarter * 3 + 3, 1);
+                        break;
+                }
+
+                if (startDate && endDate) {
+                    filtered = filtered.filter(job => {
+                        if (!job.completedAt) return false;
+                        const completedDate = new Date(job.completedAt);
+                        return completedDate >= startDate && completedDate < endDate;
+                    });
+                }
+            } else {
+                // Filter by specific month/year if no date range is selected
+                if (completedJobsFilters.month || completedJobsFilters.year) {
+                    filtered = filtered.filter(job => {
+                        if (!job.completedAt) return false;
+                        const completedDate = new Date(job.completedAt);
+                        
+                        if (completedJobsFilters.year && completedDate.getFullYear().toString() !== completedJobsFilters.year) {
+                            return false;
+                        }
+                        
+                        if (completedJobsFilters.month && completedDate.getMonth().toString() !== completedJobsFilters.month) {
+                            return false;
+                        }
+                        
+                        return true;
+                    });
+                }
+            }
+
+            return filtered;
+        }
+
+        function populateFilterDropdowns() {
+            const completedJobs = jobs.filter(job => getJobStatus(job) === 'completed');
+            
+            // Populate client filter
+            const clientSelect = document.getElementById('filterClient');
+            clientSelect.innerHTML = '<option value="">All Clients</option>';
+            const clientsWithJobs = [...new Set(completedJobs.map(job => job.clientId).filter(id => id))];
+            clientsWithJobs.forEach(clientId => {
+                const client = clients.find(c => c.id === clientId);
+                if (client) {
+                    const option = document.createElement('option');
+                    option.value = clientId;
+                    option.textContent = client.name;
+                    clientSelect.appendChild(option);
+                }
+            });
+
+            // Populate month filter
+            const monthSelect = document.getElementById('filterMonth');
+            monthSelect.innerHTML = '<option value="">All Months</option>';
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+            const monthsWithJobs = [...new Set(completedJobs.map(job => new Date(job.completedAt).getMonth()))];
+            monthsWithJobs.sort((a, b) => a - b).forEach(monthIndex => {
+                const option = document.createElement('option');
+                option.value = monthIndex.toString();
+                option.textContent = months[monthIndex];
+                monthSelect.appendChild(option);
+            });
+
+            // Populate year filter
+            const yearSelect = document.getElementById('filterYear');
+            yearSelect.innerHTML = '<option value="">All Years</option>';
+            const yearsWithJobs = [...new Set(completedJobs.map(job => new Date(job.completedAt).getFullYear()))];
+            yearsWithJobs.sort((a, b) => b - a).forEach(year => {
+                const option = document.createElement('option');
+                option.value = year.toString();
+                option.textContent = year.toString();
+                yearSelect.appendChild(option);
+            });
+        }
+
+        function updateFilterResults() {
+            if (currentTab === 'completed') {
+                const filteredJobs = getFilteredJobs();
+                const totalEarnings = filteredJobs.reduce((sum, job) => sum + calculateJobEarnings(job), 0);
+                document.getElementById('filterResults').textContent = 
+                    `Showing ${filteredJobs.length} jobs • Total: ${formatMoney(totalEarnings)}`;
+            }
+        }
+
+        function clearCompletedFilters() {
+            completedJobsFilters = {
+                client: '',
+                month: '',
+                year: '',
+                dateRange: ''
+            };
+            
+            document.getElementById('filterClient').value = '';
+            document.getElementById('filterMonth').value = '';
+            document.getElementById('filterYear').value = '';
+            document.getElementById('filterDateRange').value = '';
+            
+            renderJobs();
+            updateFilterResults();
+        }
+
+        function exportToExcel() {
+            const filteredJobs = getFilteredJobs();
+            
+            if (filteredJobs.length === 0) {
+                alert('No jobs to export. Please adjust your filters or add some completed jobs.');
+                return;
+            }
+
+            // Prepare data for export
+            const exportData = filteredJobs.map(job => {
+                const client = job.clientId ? clients.find(c => c.id === job.clientId) : null;
+                const earnings = calculateJobEarnings(job);
+                const hoursWorked = job.startedAt && job.completedAt ? 
+                    ((new Date(job.completedAt) - new Date(job.startedAt)) / (1000 * 60 * 60)).toFixed(2) : '0';
+
+                const pricingType = job.pricingType || 'hourly';
+                
+                return {
+                    'Job Title': job.title,
+                    'Client': client ? client.name : 'No Client',
+                    'Pricing Type': pricingType === 'fixed' ? 'Fixed Cost' : 'Hourly Rate',
+                    'Rate/Cost': pricingType === 'fixed' ? `$${(job.fixedCost || 0).toFixed(2)}` : `$${(job.hourlyRate || 0).toFixed(2)}`,
+                    'Hours Worked': pricingType === 'hourly' ? hoursWorked : 'N/A',
+                    'Total Earnings': `$${earnings.toFixed(2)}`,
+                    'Started': job.startedAt ? new Date(job.startedAt).toLocaleString() : '',
+                    'Completed': job.completedAt ? new Date(job.completedAt).toLocaleString() : '',
+                    'Recurring': job.recurring || 'One-time',
+                    'Status': getJobStatus(job)
+                };
+            });
+
+            // Create CSV content
+            const headers = Object.keys(exportData[0]);
+            const csvContent = [
+                headers.join(','),
+                ...exportData.map(row => 
+                    headers.map(header => `"${row[header]}"`).join(',')
+                )
+            ].join('\n');
+
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            
+            const now = new Date();
+            const timestamp = now.toISOString().slice(0, 10);
+            link.setAttribute('download', `handyman-jobs-${timestamp}.csv`);
+            
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function renderJobs() {
+            const grid = document.getElementById('jobsGrid');
+            const filteredJobs = getFilteredJobs();
+            
+            if (filteredJobs.length === 0) {
+                const messages = {
+                    all: 'No jobs yet. Click "Add New Job" to get started!',
+                    active: 'No active jobs. Start a job to see it here.',
+                    completed: 'No completed jobs yet. Complete some jobs to build your archive.',
+                    upcoming: 'No upcoming jobs scheduled.'
+                };
+                
+                grid.innerHTML = `
+                    <div class="panel" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <h3 style="color: #98bfa7; margin-bottom: 10px;">No ${currentTab} jobs</h3>
+                        <p style="color: #98bfa7;">${messages[currentTab]}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredJobs.map(job => {
+                const status = getJobStatus(job);
+                const earnings = calculateJobEarnings(job);
+                const isUpcoming = job.scheduledStart && new Date(job.scheduledStart) > new Date();
+                const client = job.clientId ? clients.find(c => c.id === job.clientId) : null;
+                
+                return `
+                    <div class="job-card">
+                        <div class="job-title">${job.title}</div>
+                        <div class="job-status status-${status}">
+                            ${status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ')}
+                            ${isUpcoming ? ' (Upcoming)' : ''}
+                        </div>
+                        
+                        <div class="job-info">
+                            ${job.address ? `
+                                <div class="job-info-item">
+                                    <span>📍 Address:</span>
+                                    <strong>${job.address}</strong>
+                                </div>
+                            ` : ''}
+                            ${client ? `
+                                <div class="job-info-item">
+                                    <span>👤 Client:</span>
+                                    <strong>${client.name}</strong>
+                                </div>
+                            ` : ''}
+                            ${job.assignedWorkerId ? `
+                                <div class="job-info-item">
+                                    <span>👷 Worker:</span>
+                                    <strong>${users.find(u => u.id === job.assignedWorkerId)?.name || 'Unknown'}</strong>
+                                </div>
+                            ` : ''}
+                            ${currentUser.permissions.canViewHourlyRates ? `
+                                <div class="job-info-item">
+                                    <span>💰 ${job.pricingType === 'fixed' ? 'Fixed Cost:' : 'Hourly Rate:'}</span>
+                                    <strong>${formatMoney(job.pricingType === 'fixed' ? job.fixedCost : job.hourlyRate)}</strong>
+                                </div>
+                            ` : ''}
+                            ${job.recurring ? `
+                                <div class="job-info-item">
+                                    <span>Recurring:</span>
+                                    <strong>${job.recurring.charAt(0).toUpperCase() + job.recurring.slice(1)}</strong>
+                                </div>
+                            ` : ''}
+                            ${job.scheduledStart ? `
+                                <div class="job-info-item">
+                                    <span>Scheduled:</span>
+                                    <strong>${formatDate(job.scheduledStart)}</strong>
+                                </div>
+                            ` : ''}
+                            ${job.startedAt ? `
+                                <div class="job-info-item">
+                                    <span>Started:</span>
+                                    <strong>${formatDate(job.startedAt)}</strong>
+                                </div>
+                            ` : ''}
+                            ${job.completedAt ? `
+                                <div class="job-info-item">
+                                    <span>Completed:</span>
+                                    <strong>${formatDate(job.completedAt)}</strong>
+                                </div>
+                            ` : ''}
+                            ${earnings > 0 && currentUser.permissions.canViewEarnings ? `
+                                <div class="job-info-item">
+                                    <span>Earnings:</span>
+                                    <strong>${formatMoney(earnings)}</strong>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        ${job.smsLog && job.smsLog.length > 0 ? `
+                            <div style="margin: 15px 0;">
+                                <h5 style="color: #19a974; margin-bottom: 10px; font-size: 14px;">📱 SMS Notifications</h5>
+                                ${job.smsLog.map(sms => `
+                                    <div style="background: #1f2a1f; padding: 8px; border-radius: 6px; margin-bottom: 8px; font-size: 12px;">
+                                        <div style="color: #19a974; font-weight: 600;">${sms.type === 'arrival' ? '✅ Arrival Notice' : '📨 SMS'}</div>
+                                        <div style="color: #98bfa7; margin: 4px 0;">To: ${sms.sentTo}</div>
+                                        <div style="color: #e6ffee;">"${sms.message}"</div>
+                                        <div style="color: #98bfa7; font-size: 11px; margin-top: 4px;">${new Date(sms.sentAt).toLocaleString()}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+
+                        ${job.beforePhoto || job.afterPhoto ? `
+                            <div style="margin: 15px 0;">
+                                <h5 style="color: #19a974; margin-bottom: 10px; font-size: 14px;">📸 Photos</h5>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    ${job.beforePhoto ? `
+                                        <div style="text-align: center;">
+                                            <img src="${job.beforePhoto}" alt="Before" style="width: 80px; height: 60px; object-fit: cover; border-radius: 6px; border: 2px solid #19a974; cursor: pointer;" onclick="viewPhoto('${job.beforePhoto}', 'Before Photo')">
+                                            <div style="font-size: 12px; color: #98bfa7; margin-top: 4px;">Before</div>
+                                        </div>
+                                    ` : ''}
+                                    ${job.afterPhoto ? `
+                                        <div style="text-align: center;">
+                                            <img src="${job.afterPhoto}" alt="After" style="width: 80px; height: 60px; object-fit: cover; border-radius: 6px; border: 2px solid #19a974; cursor: pointer;" onclick="viewPhoto('${job.afterPhoto}', 'After Photo')">
+                                            <div style="font-size: 12px; color: #98bfa7; margin-top: 4px;">After</div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="job-actions">
+                            ${status === 'pending' && !isUpcoming && currentUser.permissions.canStartJobs ? `
+                                <button onclick="startJob('${job.id}')" class="button">Start Job</button>
+                            ` : ''}
+                            ${status === 'in-progress' && currentUser.permissions.canCompleteJobs ? `
+                                <button onclick="completeJob('${job.id}')" class="button">Complete</button>
+                            ` : ''}
+                            ${currentUser.permissions.canDeleteJobs ? `
+                                <button onclick="deleteJob('${job.id}')" class="button button-danger">Delete</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderClients() {
+            const grid = document.getElementById('clientsGrid');
+            
+            if (clients.length === 0) {
+                grid.innerHTML = `
+                    <div class="panel" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <h3 style="color: #98bfa7; margin-bottom: 10px;">No clients yet</h3>
+                        <p style="color: #98bfa7;">Add your first client to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = clients.map(client => {
+                const clientJobs = jobs.filter(job => job.clientId === client.id);
+                const completedJobs = clientJobs.filter(job => getJobStatus(job) === 'completed');
+                const totalEarnings = completedJobs.reduce((sum, job) => sum + calculateJobEarnings(job), 0);
+                
+                return `
+                    <div class="job-card">
+                        <div class="job-title">${client.name}</div>
+                        
+                        <div class="job-info">
+                            ${client.phone ? `
+                                <div class="job-info-item">
+                                    <span>📞 Phone:</span>
+                                    <strong>${client.phone}</strong>
+                                </div>
+                            ` : ''}
+                            ${client.email ? `
+                                <div class="job-info-item">
+                                    <span>📧 Email:</span>
+                                    <strong>${client.email}</strong>
+                                </div>
+                            ` : ''}
+                            ${client.address ? `
+                                <div class="job-info-item">
+                                    <span>📍 Address:</span>
+                                    <strong>${client.address}</strong>
+                                </div>
+                            ` : ''}
+                            ${client.billingDate ? `
+                                <div class="job-info-item">
+                                    <span>💳 Billing:</span>
+                                    <strong>${client.billingDate}${client.billingDate === '1' ? 'st' : client.billingDate === '15' ? 'th' : 'th'} of month</strong>
+                                </div>
+                            ` : ''}
+                            <div class="job-info-item">
+                                <span>Total Jobs:</span>
+                                <strong>${clientJobs.length}</strong>
+                            </div>
+                            <div class="job-info-item">
+                                <span>Total Earnings:</span>
+                                <strong>${formatMoney(totalEarnings)}</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="job-actions">
+                            <button onclick="deleteClient('${client.id}')" class="button button-danger">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const totalJobs = jobs.length;
+            const activeJobs = jobs.filter(j => getJobStatus(j) === 'in-progress').length;
+            const completedJobs = jobs.filter(j => getJobStatus(j) === 'completed').length;
+            const now = new Date();
+            const upcomingJobs = jobs.filter(j => {
+                if (!j.scheduledStart) return false;
+                const scheduledDate = new Date(j.scheduledStart);
+                return scheduledDate > now && getJobStatus(j) === 'pending';
+            }).length;
+            const totalEarnings = jobs.reduce((sum, job) => sum + calculateJobEarnings(job), 0);
+
+            // Get earnings timelines
+            const earningsTimeline = getEarningsTimeline();
+            const potentialEarningsTimeline = getPotentialEarningsTimeline();
+
+            document.getElementById('totalJobs').textContent = totalJobs;
+            document.getElementById('activeJobs').textContent = activeJobs;
+            document.getElementById('completedJobs').textContent = completedJobs;
+            document.getElementById('totalEarnings').textContent = currentUser.permissions.canViewEarnings ? formatMoney(totalEarnings) : 'Hidden';
+            
+            // Update completed earnings timeline
+            document.getElementById('todayEarnings').textContent = formatMoney(earningsTimeline.today);
+            document.getElementById('weekEarnings').textContent = formatMoney(earningsTimeline.week);
+            document.getElementById('monthEarnings').textContent = formatMoney(earningsTimeline.month);
+            document.getElementById('sixMonthEarnings').textContent = formatMoney(earningsTimeline.sixMonths);
+            
+            // Update potential earnings timeline
+            document.getElementById('potentialTodayEarnings').textContent = formatMoney(potentialEarningsTimeline.today);
+            document.getElementById('potentialWeekEarnings').textContent = formatMoney(potentialEarningsTimeline.week);
+            document.getElementById('potentialMonthEarnings').textContent = formatMoney(potentialEarningsTimeline.month);
+            document.getElementById('potentialSixMonthEarnings').textContent = formatMoney(potentialEarningsTimeline.sixMonths);
+            
+            // Update total projections (completed + potential)
+            document.getElementById('totalTodayProjection').textContent = formatMoney(earningsTimeline.today + potentialEarningsTimeline.today);
+            document.getElementById('totalWeekProjection').textContent = formatMoney(earningsTimeline.week + potentialEarningsTimeline.week);
+            document.getElementById('totalMonthProjection').textContent = formatMoney(earningsTimeline.month + potentialEarningsTimeline.month);
+            document.getElementById('totalSixMonthProjection').textContent = formatMoney(earningsTimeline.sixMonths + potentialEarningsTimeline.sixMonths);
+            
+            // Update tab badges
+            updateTabBadges(totalJobs, activeJobs, upcomingJobs, completedJobs);
+        }
+
+        function updateTabBadges(total, active, upcoming, completed) {
+            const tabs = document.querySelectorAll('.tab-button');
+            tabs.forEach(tab => {
+                const tabType = tab.dataset.tab;
+                let count = 0;
+                
+                switch (tabType) {
+                    case 'all': count = total; break;
+                    case 'active': count = active; break;
+                    case 'upcoming': count = upcoming; break;
+                    case 'completed': count = completed; break;
+                }
+                
+                // Remove existing badge
+                const existingBadge = tab.querySelector('.tab-badge');
+                if (existingBadge) existingBadge.remove();
+                
+                // Add new badge if count > 0
+                if (count > 0) {
+                    const badge = document.createElement('span');
+                    badge.className = 'tab-badge';
+                    badge.textContent = count;
+                    badge.style.cssText = `
+                        background: #19a974;
+                        color: #0b0f0b;
+                        border-radius: 10px;
+                        padding: 2px 6px;
+                        font-size: 12px;
+                        font-weight: 700;
+                        margin-left: 8px;
+                        min-width: 18px;
+                        text-align: center;
+                    `;
+                    tab.appendChild(badge);
+                }
+            });
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Update active tab button for job tabs only
+            document.querySelectorAll('.tab-button[data-tab]').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Show/hide completed jobs filters
+            const filtersPanel = document.getElementById('completedFilters');
+            if (tabName === 'completed') {
+                filtersPanel.style.display = 'block';
+                populateFilterDropdowns();
+                updateFilterResults();
+            } else {
+                filtersPanel.style.display = 'none';
+            }
+            
+            renderJobs();
+        }
+
+        function switchSection(sectionName) {
+            currentSection = sectionName;
+            
+            // Update active section button
+            document.querySelectorAll('.tab-button[data-section]').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.section === sectionName) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Show/hide sections
+            document.getElementById('jobsSection').style.display = sectionName === 'jobs' ? 'block' : 'none';
+            document.getElementById('clientsSection').style.display = sectionName === 'clients' ? 'block' : 'none';
+            document.getElementById('earningsSection').style.display = sectionName === 'earnings' ? 'block' : 'none';
+            document.getElementById('workersSection').style.display = sectionName === 'workers' ? 'block' : 'none';
+            document.getElementById('usersSection').style.display = sectionName === 'users' ? 'block' : 'none';
+            
+            if (sectionName === 'clients') {
+                renderClients();
+            } else if (sectionName === 'earnings') {
+                updateStats(); // Refresh earnings data when viewing earnings section
+            } else if (sectionName === 'workers') {
+                renderWorkerEarnings();
+            } else if (sectionName === 'users') {
+                renderUsers();
+            } else {
+                renderJobs();
+            }
+        }
+
+        function renderWorkerEarnings() {
+            // Refresh user data to ensure sync
+            loadUsers();
+            populateWorkerFilterDropdowns();
+            renderWorkerSummary();
+            renderWorkerDetails();
+            updateWorkerFilterResults();
+        }
+
+        function populateWorkerFilterDropdowns() {
+            const workerJobs = jobs.filter(job => job.assignedWorkerId && job.startedAt);
+            
+            // Populate worker filter
+            const workerSelect = document.getElementById('filterWorker');
+            workerSelect.innerHTML = '<option value="">All Workers</option>';
+            const workersWithJobs = [...new Set(workerJobs.map(job => job.assignedWorkerId))];
+            workersWithJobs.forEach(workerId => {
+                const worker = users.find(u => u.id === workerId);
+                if (worker) {
+                    const option = document.createElement('option');
+                    option.value = workerId;
+                    option.textContent = worker.name;
+                    workerSelect.appendChild(option);
+                }
+            });
+
+            // Populate month filter
+            const monthSelect = document.getElementById('filterWorkerMonth');
+            monthSelect.innerHTML = '<option value="">All Months</option>';
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+            const monthsWithJobs = [...new Set(workerJobs.map(job => new Date(job.startedAt).getMonth()))];
+            monthsWithJobs.sort((a, b) => a - b).forEach(monthIndex => {
+                const option = document.createElement('option');
+                option.value = monthIndex.toString();
+                option.textContent = months[monthIndex];
+                monthSelect.appendChild(option);
+            });
+
+            // Populate year filter
+            const yearSelect = document.getElementById('filterWorkerYear');
+            yearSelect.innerHTML = '<option value="">All Years</option>';
+            const yearsWithJobs = [...new Set(workerJobs.map(job => new Date(job.startedAt).getFullYear()))];
+            yearsWithJobs.sort((a, b) => b - a).forEach(year => {
+                const option = document.createElement('option');
+                option.value = year.toString();
+                option.textContent = year.toString();
+                yearSelect.appendChild(option);
+            });
+        }
+
+        function getFilteredWorkerJobs() {
+            let filteredJobs = jobs.filter(job => job.assignedWorkerId && job.startedAt);
+
+            // Filter by worker
+            if (workerFilters.worker) {
+                filteredJobs = filteredJobs.filter(job => job.assignedWorkerId === workerFilters.worker);
+            }
+
+            // Filter by date range
+            if (workerFilters.dateRange) {
+                const now = new Date();
+                let startDate, endDate;
+
+                switch (workerFilters.dateRange) {
+                    case 'today':
+                        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                        endDate = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
+                        break;
+                    case 'week':
+                        const dayOfWeek = now.getDay();
+                        const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + mondayOffset);
+                        endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+                        break;
+                    case 'month':
+                        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                        break;
+                    case 'quarter':
+                        const quarter = Math.floor(now.getMonth() / 3);
+                        startDate = new Date(now.getFullYear(), quarter * 3, 1);
+                        endDate = new Date(now.getFullYear(), quarter * 3 + 3, 1);
+                        break;
+                }
+
+                if (startDate && endDate) {
+                    filteredJobs = filteredJobs.filter(job => {
+                        const jobDate = new Date(job.startedAt);
+                        return jobDate >= startDate && jobDate < endDate;
+                    });
+                }
+            } else {
+                // Filter by specific month/year if no date range is selected
+                if (workerFilters.month || workerFilters.year) {
+                    filteredJobs = filteredJobs.filter(job => {
+                        const jobDate = new Date(job.startedAt);
+                        
+                        if (workerFilters.year && jobDate.getFullYear().toString() !== workerFilters.year) {
+                            return false;
+                        }
+                        
+                        if (workerFilters.month && jobDate.getMonth().toString() !== workerFilters.month) {
+                            return false;
+                        }
+                        
+                        return true;
+                    });
+                }
+            }
+
+            return filteredJobs;
+        }
+
+        function renderWorkerSummary() {
+            const filteredJobs = getFilteredWorkerJobs();
+            const summaryContainer = document.getElementById('workerSummaryCards');
+            
+            // Group jobs by worker
+            const workerStats = {};
+            filteredJobs.forEach(job => {
+                const workerId = job.assignedWorkerId;
+                const worker = users.find(u => u.id === workerId);
+                
+                if (!worker) return;
+                
+                if (!workerStats[workerId]) {
+                    workerStats[workerId] = {
+                        name: worker.name,
+                        hourlyRate: worker.hourlyRate || 0,
+                        totalHours: 0,
+                        totalEarnings: 0,
+                        jobCount: 0,
+                        completedJobs: 0
+                    };
+                }
+                
+                const hours = getWorkerHoursWorked(job);
+                const earnings = calculateWorkerEarnings(job);
+                
+                workerStats[workerId].totalHours += hours;
+                workerStats[workerId].totalEarnings += earnings;
+                workerStats[workerId].jobCount += 1;
+                
+                if (job.completedAt) {
+                    workerStats[workerId].completedJobs += 1;
+                }
+            });
+            
+            // Calculate totals
+            const totalWorkers = Object.keys(workerStats).length;
+            const totalHours = Object.values(workerStats).reduce((sum, worker) => sum + worker.totalHours, 0);
+            const totalEarnings = Object.values(workerStats).reduce((sum, worker) => sum + worker.totalEarnings, 0);
+            const totalJobs = Object.values(workerStats).reduce((sum, worker) => sum + worker.jobCount, 0);
+            
+            summaryContainer.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${totalWorkers}</div>
+                    <div class="stat-label">Active Workers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${totalHours.toFixed(1)}</div>
+                    <div class="stat-label">Total Hours</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${formatMoney(totalEarnings)}</div>
+                    <div class="stat-label">Total Earnings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${totalJobs}</div>
+                    <div class="stat-label">Total Jobs</div>
+                </div>
+            `;
+        }
+
+        function renderWorkerDetails() {
+            const filteredJobs = getFilteredWorkerJobs();
+            const detailsContainer = document.getElementById('workerDetailsGrid');
+            
+            // Group jobs by worker
+            const workerData = {};
+            filteredJobs.forEach(job => {
+                const workerId = job.assignedWorkerId;
+                const worker = users.find(u => u.id === workerId);
+                
+                if (!worker) return;
+                
+                if (!workerData[workerId]) {
+                    workerData[workerId] = {
+                        worker: worker,
+                        jobs: []
+                    };
+                }
+                
+                workerData[workerId].jobs.push(job);
+            });
+            
+            if (Object.keys(workerData).length === 0) {
+                detailsContainer.innerHTML = `
+                    <div class="panel" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <h3 style="color: #98bfa7; margin-bottom: 10px;">No worker data found</h3>
+                        <p style="color: #98bfa7;">Assign workers to jobs and track their time to see earnings data here.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            detailsContainer.innerHTML = Object.values(workerData).map(({ worker, jobs }) => {
+                const totalHours = jobs.reduce((sum, job) => sum + getWorkerHoursWorked(job), 0);
+                const totalEarnings = jobs.reduce((sum, job) => sum + calculateWorkerEarnings(job), 0);
+                const completedJobs = jobs.filter(job => job.completedAt).length;
+                const activeJobs = jobs.filter(job => job.startedAt && !job.completedAt).length;
+                
+                return `
+                    <div class="job-card">
+                        <div class="job-title">${worker.name}</div>
+                        <div class="job-status" style="background: #19a974; color: #0b0f0b;">
+                            ${formatMoney(worker.hourlyRate || 0)}/hour
+                        </div>
+                        
+                        <div class="job-info">
+                            <div class="job-info-item">
+                                <span>⏰ Total Hours:</span>
+                                <strong>${totalHours.toFixed(1)} hrs</strong>
+                            </div>
+                            <div class="job-info-item">
+                                <span>💰 Total Earnings:</span>
+                                <strong>${formatMoney(totalEarnings)}</strong>
+                            </div>
+                            <div class="job-info-item">
+                                <span>📋 Total Jobs:</span>
+                                <strong>${jobs.length}</strong>
+                            </div>
+                            <div class="job-info-item">
+                                <span>✅ Completed:</span>
+                                <strong>${completedJobs}</strong>
+                            </div>
+                            <div class="job-info-item">
+                                <span>🔄 Active:</span>
+                                <strong>${activeJobs}</strong>
+                            </div>
+                            <div class="job-info-item">
+                                <span>📊 Avg Hours/Job:</span>
+                                <strong>${jobs.length > 0 ? (totalHours / jobs.length).toFixed(1) : '0'} hrs</strong>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 15px;">
+                            <h5 style="color: #19a974; margin-bottom: 10px; font-size: 14px;">Recent Jobs:</h5>
+                            <div style="max-height: 150px; overflow-y: auto;">
+                                ${jobs.slice(-5).reverse().map(job => {
+                                    const hours = getWorkerHoursWorked(job);
+                                    const earnings = calculateWorkerEarnings(job);
+                                    const status = getJobStatus(job);
+                                    
+                                    return `
+                                        <div style="background: #1f2a1f; padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 12px;">
+                                            <div style="color: #19a974; font-weight: 600;">${job.title}</div>
+                                            <div style="color: #98bfa7; margin: 2px 0;">
+                                                ${hours.toFixed(1)} hrs • ${formatMoney(earnings)} • ${status}
+                                            </div>
+                                            <div style="color: #98bfa7; font-size: 11px;">
+                                                ${job.startedAt ? new Date(job.startedAt).toLocaleDateString() : 'Not started'}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateWorkerFilterResults() {
+            const filteredJobs = getFilteredWorkerJobs();
+            const totalEarnings = filteredJobs.reduce((sum, job) => sum + calculateWorkerEarnings(job), 0);
+            const totalHours = filteredJobs.reduce((sum, job) => sum + getWorkerHoursWorked(job), 0);
+            
+            document.getElementById('workerFilterResults').textContent = 
+                `Showing ${filteredJobs.length} jobs • ${totalHours.toFixed(1)} hours • ${formatMoney(totalEarnings)}`;
+        }
+
+        function clearWorkerFilters() {
+            workerFilters = {
+                worker: '',
+                month: '',
+                year: '',
+                dateRange: ''
+            };
+            
+            document.getElementById('filterWorker').value = '';
+            document.getElementById('filterWorkerMonth').value = '';
+            document.getElementById('filterWorkerYear').value = '';
+            document.getElementById('filterWorkerDateRange').value = '';
+            
+            renderWorkerEarnings();
+        }
+
+        function exportWorkerData() {
+            const filteredJobs = getFilteredWorkerJobs();
+            
+            if (filteredJobs.length === 0) {
+                alert('No worker data to export. Please adjust your filters or assign workers to jobs.');
+                return;
+            }
+
+            // Prepare data for export
+            const exportData = filteredJobs.map(job => {
+                const worker = users.find(u => u.id === job.assignedWorkerId);
+                const client = job.clientId ? clients.find(c => c.id === job.clientId) : null;
+                const hours = getWorkerHoursWorked(job);
+                const earnings = calculateWorkerEarnings(job);
+
+                return {
+                    'Worker Name': worker ? worker.name : 'Unknown',
+                    'Worker Rate': worker ? `$${(worker.hourlyRate || 0).toFixed(2)}` : '$0.00',
+                    'Job Title': job.title,
+                    'Client': client ? client.name : 'No Client',
+                    'Hours Worked': hours.toFixed(2),
+                    'Worker Earnings': `$${earnings.toFixed(2)}`,
+                    'Job Rate': job.pricingType === 'fixed' ? `$${(job.fixedCost || 0).toFixed(2)} (Fixed)` : `$${(job.hourlyRate || 0).toFixed(2)}/hr`,
+                    'Started': job.startedAt ? new Date(job.startedAt).toLocaleString() : '',
+                    'Completed': job.completedAt ? new Date(job.completedAt).toLocaleString() : 'In Progress',
+                    'Status': getJobStatus(job)
+                };
+            });
+
+            // Create CSV content
+            const headers = Object.keys(exportData[0]);
+            const csvContent = [
+                headers.join(','),
+                ...exportData.map(row => 
+                    headers.map(header => `"${row[header]}"`).join(',')
+                )
+            ].join('\n');
+
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            
+            const now = new Date();
+            const timestamp = now.toISOString().slice(0, 10);
+            link.setAttribute('download', `worker-earnings-${timestamp}.csv`);
+            
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Photo Functions
+        async function openPhotoModal(photoType) {
+            currentPhotoType = photoType;
+            const modal = document.getElementById('photoModal');
+            const title = document.getElementById('photoModalTitle');
+            
+            title.textContent = photoType === 'before' ? 'Take Before Photo' : 'Take After Photo';
+            modal.style.display = 'flex';
+            
+            // Reset modal state
+            document.getElementById('cameraContainer').style.display = 'block';
+            document.getElementById('photoPreview').style.display = 'none';
+            document.getElementById('cameraControls').style.display = 'block';
+            document.getElementById('cameraError').style.display = 'none';
+            capturedPhotoData = null;
+            
+            // Try to start camera
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: 300, 
+                        height: 225,
+                        facingMode: 'environment' // Use back camera on mobile
+                    } 
+                });
+                document.getElementById('cameraVideo').srcObject = cameraStream;
+            } catch (error) {
+                console.error('Camera access denied:', error);
+                document.getElementById('cameraContainer').style.display = 'none';
+                document.getElementById('cameraControls').style.display = 'none';
+                document.getElementById('cameraError').style.display = 'block';
+            }
+        }
+
+        function closePhotoModal() {
+            const modal = document.getElementById('photoModal');
+            modal.style.display = 'none';
+            
+            // Stop camera stream
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            
+            currentJobId = null;
+            currentPhotoType = null;
+            capturedPhotoData = null;
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.getElementById('photoCanvas');
+            const context = canvas.getContext('2d');
+            
+            // Draw video frame to canvas
+            context.drawImage(video, 0, 0, 300, 225);
+            
+            // Convert to base64
+            capturedPhotoData = canvas.toDataURL('image/jpeg', 0.8);
+            
+            // Show preview
+            document.getElementById('capturedPhoto').src = capturedPhotoData;
+            document.getElementById('cameraContainer').style.display = 'none';
+            document.getElementById('cameraControls').style.display = 'none';
+            document.getElementById('photoPreview').style.display = 'block';
+        }
+
+        function retakePhoto() {
+            document.getElementById('cameraContainer').style.display = 'block';
+            document.getElementById('cameraControls').style.display = 'block';
+            document.getElementById('photoPreview').style.display = 'none';
+            capturedPhotoData = null;
+        }
+
+        function confirmPhoto() {
+            if (currentPhotoType === 'before') {
+                actuallyStartJob(currentJobId, capturedPhotoData);
+            } else if (currentPhotoType === 'after') {
+                actuallyCompleteJob(currentJobId, capturedPhotoData);
+            }
+            closePhotoModal();
+        }
+
+        function skipPhoto() {
+            if (currentPhotoType === 'before') {
+                actuallyStartJob(currentJobId, null);
+            } else if (currentPhotoType === 'after') {
+                actuallyCompleteJob(currentJobId, null);
+            }
+            closePhotoModal();
+        }
+
+        // Geofence Functions
+        function toggleGeofence() {
+            console.log('Geofence toggle clicked, current state:', geofenceEnabled);
+            if (geofenceEnabled) {
+                disableGeofence();
+            } else {
+                enableGeofence();
+            }
+        }
+
+        async function enableGeofence() {
+            console.log('Attempting to enable geofence...');
+            
+            if (!navigator.geolocation) {
+                alert('❌ Geolocation is not supported by this browser. Please use a modern browser like Chrome, Safari, or Firefox.');
+                return;
+            }
+
+            try {
+                // Show loading state
+                const button = document.getElementById('geofenceToggle');
+                button.textContent = '🔄 Enabling...';
+                button.disabled = true;
+
+                // Request location permission with better timeout
+                console.log('Requesting location permission...');
+                const position = await getCurrentPosition();
+                console.log('Location permission granted:', position);
+                lastKnownPosition = position;
+                
+                // Start watching position
+                geolocationWatchId = navigator.geolocation.watchPosition(
+                    handlePositionUpdate,
+                    handleGeolocationError,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 15000,
+                        maximumAge: 60000
+                    }
+                );
+                
+                geofenceEnabled = true;
+                console.log('Geofence enabled successfully');
+                updateGeofenceButton();
+                
+                // Show success message
+                alert('✅ Geofence enabled successfully! You will be automatically checked in when you arrive at job locations.');
+                
+            } catch (error) {
+                console.error('Failed to enable geofence:', error);
+                
+                // Reset button state
+                const button = document.getElementById('geofenceToggle');
+                button.disabled = false;
+                button.textContent = '🌍 Enable Geofence';
+                
+                // Show specific error messages
+                if (error.code === 1) {
+                    alert('❌ Location access denied. Please:\n\n1. Click the location icon in your browser\'s address bar\n2. Select "Allow" for location access\n3. Refresh the page and try again');
+                } else if (error.code === 2) {
+                    alert('❌ Location unavailable. Please:\n\n1. Make sure you\'re connected to the internet\n2. Enable location services on your device\n3. Try again in a few moments');
+                } else if (error.code === 3) {
+                    alert('❌ Location request timed out. Please:\n\n1. Make sure you have a good internet connection\n2. Enable high accuracy location if available\n3. Try again');
+                } else {
+                    alert('❌ Failed to enable geofence. Please check your location settings and try again.');
+                }
+            }
+        }
+
+        function disableGeofence() {
+            if (geolocationWatchId) {
+                navigator.geolocation.clearWatch(geolocationWatchId);
+                geolocationWatchId = null;
+            }
+            
+            geofenceEnabled = false;
+            updateGeofenceButton();
+            
+            console.log('Geofence disabled');
+        }
+
+        function getCurrentPosition() {
+            return new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    enableHighAccuracy: true,
+                    timeout: 15000, // Extended timeout
+                    maximumAge: 60000
+                });
+            });
+        }
+
+        function handlePositionUpdate(position) {
+            lastKnownPosition = position;
+            checkJobProximity(position);
+        }
+
+        function handleGeolocationError(error) {
+            console.error('Geolocation error:', error);
+            
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert('Location access denied. Please enable location permissions to use geofence.');
+                    disableGeofence();
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    console.log('Location information unavailable.');
+                    break;
+                case error.TIMEOUT:
+                    console.log('Location request timed out.');
+                    break;
+            }
+        }
+
+        async function checkJobProximity(position) {
+            const currentLat = position.coords.latitude;
+            const currentLng = position.coords.longitude;
+            
+            // Check all pending jobs with addresses
+            const pendingJobs = jobs.filter(job => 
+                getJobStatus(job) === 'pending' && 
+                job.address && 
+                !job.geofenceTriggered
+            );
+            
+            for (const job of pendingJobs) {
+                try {
+                    const jobCoords = await geocodeAddress(job.address);
+                    if (jobCoords) {
+                        const distance = calculateDistance(currentLat, currentLng, jobCoords.lat, jobCoords.lng);
+                        
+                        // If within 100 meters (0.1 km) of job location
+                        if (distance <= 0.1) {
+                            await triggerGeofenceArrival(job);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error checking job proximity:', error);
+                }
+            }
+        }
+
+        async function geocodeAddress(address) {
+            // Using a simple geocoding approach with OpenStreetMap Nominatim
+            // In production, you might want to use Google Maps API or similar
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`);
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    return {
+                        lat: parseFloat(data[0].lat),
+                        lng: parseFloat(data[0].lon)
+                    };
+                }
+                return null;
+            } catch (error) {
+                console.error('Geocoding error:', error);
+                return null;
+            }
+        }
+
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            const R = 6371; // Earth's radius in kilometers
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; // Distance in kilometers
+        }
+
+        async function triggerGeofenceArrival(job) {
+            // Mark job as geofence triggered to prevent multiple triggers
+            job.geofenceTriggered = true;
+            
+            // Start the job automatically
+            actuallyStartJob(job.id, null);
+            
+            // Send SMS to client if they have a phone number
+            const client = job.clientId ? clients.find(c => c.id === job.clientId) : null;
+            if (client && client.phone) {
+                await sendArrivalSMS(client, job);
+            }
+            
+            // Show notification to user
+            if (notificationPermission) {
+                new Notification('Geofence Triggered!', {
+                    body: `Automatically started "${job.title}" - You've arrived at the job location!`,
+                    icon: '/favicon.ico',
+                    requireInteraction: true
+                });
+            }
+            
+            // Update UI
+            renderJobs();
+            updateStats();
+            
+            console.log(`Geofence triggered for job: ${job.title}`);
+        }
+
+        async function sendArrivalSMS(client, job) {
+            const message = `${currentUser.name} from Handyman Southern Utah has arrived at the service address.`;
+            
+            try {
+                // Clean phone number (remove any formatting)
+                const cleanPhone = client.phone.replace(/\D/g, '');
+                
+                // Create SMS URL that opens the phone's messaging app
+                const smsUrl = `sms:${cleanPhone}?body=${encodeURIComponent(message)}`;
+                
+                // Open SMS app with pre-loaded message
+                window.open(smsUrl, '_self');
+                
+                // Show notification to user
+                if (notificationPermission) {
+                    new Notification('SMS Ready!', {
+                        body: `Opening SMS to ${client.name} - Just hit send!`,
+                        icon: '/favicon.ico'
+                    });
+                }
+                
+                // Store SMS log in job
+                if (!job.smsLog) job.smsLog = [];
+                job.smsLog.push({
+                    type: 'arrival',
+                    message: message,
+                    sentTo: client.phone,
+                    sentAt: new Date().toISOString(),
+                    status: 'ready_to_send'
+                });
+                
+                saveJobs();
+                
+            } catch (error) {
+                console.error('Failed to open SMS:', error);
+            }
+        }
+
+        async function sendCompletionSMS(client, job) {
+            const hoursWorked = job.startedAt && job.completedAt ? 
+                ((new Date(job.completedAt) - new Date(job.startedAt)) / (1000 * 60 * 60)).toFixed(1) : '0';
+            
+            const message = `${currentUser.name} from Handyman Southern Utah has completed "${job.title}". Work time: ${hoursWorked} hours. Thank you for choosing our services!`;
+            
+            try {
+                // Clean phone number (remove any formatting)
+                const cleanPhone = client.phone.replace(/\D/g, '');
+                
+                // Create SMS URL that opens the phone's messaging app
+                const smsUrl = `sms:${cleanPhone}?body=${encodeURIComponent(message)}`;
+                
+                // Open SMS app with pre-loaded message
+                window.open(smsUrl, '_self');
+                
+                // Show notification to user about SMS
+                if (notificationPermission) {
+                    new Notification('Completion SMS Ready!', {
+                        body: `Opening completion SMS to ${client.name} - Just hit send!`,
+                        icon: '/favicon.ico'
+                    });
+                }
+                
+                // If there are photos, prepare them for sharing
+                if (job.beforePhoto || job.afterPhoto) {
+                    setTimeout(() => {
+                        shareJobPhotos(client, job);
+                    }, 2000); // Wait 2 seconds after SMS to share photos
+                }
+                
+                // Store SMS log in job
+                if (!job.smsLog) job.smsLog = [];
+                job.smsLog.push({
+                    type: 'completion',
+                    message: message,
+                    sentTo: client.phone,
+                    sentAt: new Date().toISOString(),
+                    status: 'ready_to_send'
+                });
+                
+                saveJobs();
+                
+            } catch (error) {
+                console.error('Failed to open completion SMS:', error);
+            }
+        }
+
+        async function shareJobPhotos(client, job) {
+            try {
+                const photosToShare = [];
+                
+                if (job.beforePhoto) {
+                    photosToShare.push({
+                        type: 'before',
+                        data: job.beforePhoto
+                    });
+                }
+                
+                if (job.afterPhoto) {
+                    photosToShare.push({
+                        type: 'after',
+                        data: job.afterPhoto
+                    });
+                }
+                
+                if (photosToShare.length === 0) return;
+                
+                // Check if Web Share API is available (works on mobile)
+                if (navigator.share && navigator.canShare) {
+                    // Convert base64 images to files for sharing
+                    const files = [];
+                    
+                    for (let i = 0; i < photosToShare.length; i++) {
+                        const photo = photosToShare[i];
+                        const response = await fetch(photo.data);
+                        const blob = await response.blob();
+                        const file = new File([blob], `${job.title}_${photo.type}_photo.jpg`, { type: 'image/jpeg' });
+                        files.push(file);
+                    }
+                    
+                    if (navigator.canShare({ files })) {
+                        await navigator.share({
+                            title: `${job.title} - Before/After Photos`,
+                            text: `Photos from your completed job: ${job.title}`,
+                            files: files
+                        });
+                        
+                        // Log photo sharing
+                        if (!job.smsLog) job.smsLog = [];
+                        job.smsLog.push({
+                            type: 'photos_shared',
+                            message: `Shared ${photosToShare.length} photo(s) via device sharing`,
+                            sentTo: client.phone,
+                            sentAt: new Date().toISOString(),
+                            status: 'shared'
+                        });
+                        
+                        saveJobs();
+                        return;
+                    }
+                }
+                
+                // Fallback: Show photos in a modal for manual sharing
+                showPhotosForSharing(client, job, photosToShare);
+                
+            } catch (error) {
+                console.error('Error sharing photos:', error);
+                // Fallback to manual sharing
+                showPhotosForSharing(client, job, photosToShare);
+            }
+        }
+
+        function showPhotosForSharing(client, job, photosToShare) {
+            // Create a temporary modal for photo sharing
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'flex';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 90vw;">
+                    <div class="modal-header">
+                        <h3 class="modal-title">📸 Share Job Photos with ${client.name}</h3>
+                        <button class="close-button" onclick="this.closest('.modal').remove()">&times;</button>
+                    </div>
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <p style="color: #98bfa7; margin-bottom: 15px;">
+                            Long-press on each photo to save and share with your client:
+                        </p>
+                        
+                        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                            ${photosToShare.map(photo => `
+                                <div style="text-align: center;">
+                                    <img src="${photo.data}" alt="${photo.type} photo" 
+                                         style="max-width: 200px; max-height: 200px; border-radius: 8px; border: 2px solid #19a974; cursor: pointer;"
+                                         onclick="window.open('${photo.data}', '_blank')">
+                                    <div style="color: #19a974; font-weight: 600; margin-top: 8px; text-transform: capitalize;">
+                                        ${photo.type} Photo
+                                    </div>
+                                    <div style="color: #98bfa7; font-size: 12px; margin-top: 4px;">
+                                        Tap to open • Long-press to save
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: #1f2a1f; border-radius: 8px;">
+                            <div style="color: #19a974; font-weight: 600; margin-bottom: 8px;">💡 Sharing Tips:</div>
+                            <div style="color: #98bfa7; font-size: 14px; text-align: left;">
+                                • Long-press each photo and select "Save to Photos"<br>
+                                • Open your messaging app<br>
+                                • Send to: ${client.phone}<br>
+                                • Attach the saved photos from your gallery
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="this.closest('.modal').remove()" class="button" style="width: 100%;">
+                        Got it!
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Auto-remove modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+            
+            // Log that photos were shown for sharing
+            if (!job.smsLog) job.smsLog = [];
+            job.smsLog.push({
+                type: 'photos_ready',
+                message: `${photosToShare.length} photo(s) prepared for manual sharing`,
+                sentTo: client.phone,
+                sentAt: new Date().toISOString(),
+                status: 'ready_for_manual_share'
+            });
+            
+            saveJobs();
+        }
+
+        function updateGeofenceButton() {
+            const button = document.getElementById('geofenceToggle');
+            const statusCard = document.getElementById('geofenceStatus');
+            
+            if (geofenceEnabled) {
+                button.textContent = '🌍 Geofence ON';
+                button.classList.remove('button-secondary');
+                button.classList.add('button');
+                button.style.background = '#28a745';
+                button.disabled = false;
+                
+                // Update status card
+                statusCard.querySelector('.stat-number').textContent = '🟢';
+                statusCard.querySelector('.stat-label').textContent = 'Geofence ON';
+                statusCard.style.borderColor = '#28a745';
+            } else {
+                button.textContent = '🌍 Enable Geofence';
+                button.classList.remove('button');
+                button.classList.add('button-secondary');
+                button.style.background = '';
+                button.disabled = false;
+                
+                // Update status card
+                statusCard.querySelector('.stat-number').textContent = '🌍';
+                statusCard.querySelector('.stat-label').textContent = 'Geofence OFF';
+                statusCard.style.borderColor = '';
+            }
+        }
+
+        // Notification Functions
+        async function requestNotificationPermission() {
+            if ('Notification' in window) {
+                const permission = await Notification.requestPermission();
+                notificationPermission = permission === 'granted';
+                return notificationPermission;
+            }
+            return false;
+        }
+
+        function scheduleJobNotifications() {
+            if (!notificationPermission) return;
+            
+            const now = new Date();
+            const upcomingJobs = jobs.filter(job => {
+                if (!job.scheduledStart || job.startedAt || job.completedAt) return false;
+                const scheduledTime = new Date(job.scheduledStart);
+                const timeDiff = scheduledTime.getTime() - now.getTime();
+                // Schedule notifications for jobs within the next 24 hours
+                return timeDiff > 0 && timeDiff <= 24 * 60 * 60 * 1000;
+            });
+
+            upcomingJobs.forEach(job => {
+                const scheduledTime = new Date(job.scheduledStart);
+                const notificationTime = new Date(scheduledTime.getTime() - 20 * 60 * 1000); // 20 minutes before
+                const timeUntilNotification = notificationTime.getTime() - now.getTime();
+
+                if (timeUntilNotification > 0) {
+                    setTimeout(() => {
+                        if ('serviceWorker' in navigator && 'PushManager' in window) {
+                            // Use service worker for background notifications
+                            navigator.serviceWorker.ready.then(registration => {
+                                registration.showNotification('Upcoming Job Reminder', {
+                                    body: `"${job.title}" starts in 20 minutes`,
+                                    icon: '/favicon.ico',
+                                    badge: '/favicon.ico',
+                                    tag: `job-${job.id}`,
+                                    requireInteraction: true,
+                                    actions: [
+                                        { action: 'view', title: 'View Job' },
+                                        { action: 'dismiss', title: 'Dismiss' }
+                                    ]
+                                });
+                            });
+                        } else {
+                            // Fallback to regular notification
+                            new Notification('Upcoming Job Reminder', {
+                                body: `"${job.title}" starts in 20 minutes`,
+                                icon: '/favicon.ico',
+                                tag: `job-${job.id}`
+                            });
+                        }
+                    }, timeUntilNotification);
+                }
+            });
+        }
+
+        // Modal Functions
+        function openModal() {
+            document.getElementById('addJobModal').style.display = 'flex';
+            // Set default start time to now
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('startTime').value = now.toISOString().slice(0, 16);
+            updateClientDropdown();
+        }
+
+        function closeModal() {
+            document.getElementById('addJobModal').style.display = 'none';
+        }
+
+        function openClientModal() {
+            document.getElementById('addClientModal').style.display = 'flex';
+        }
+
+        function closeClientModal() {
+            document.getElementById('addClientModal').style.display = 'none';
+        }
+
+        function openUserModal() {
+            document.getElementById('addUserModal').style.display = 'flex';
+        }
+
+        function closeUserModal() {
+            document.getElementById('addUserModal').style.display = 'none';
+        }
+
+        function viewPhoto(photoSrc, title) {
+            document.getElementById('photoViewerTitle').textContent = title;
+            document.getElementById('photoViewerImage').src = photoSrc;
+            document.getElementById('photoViewerModal').style.display = 'flex';
+        }
+
+        function closePhotoViewer() {
+            document.getElementById('photoViewerModal').style.display = 'none';
+        }
+
+        // Contact Import Functions
+        let availableContacts = [];
+        let selectedContacts = [];
+
+        async function openImportModal() {
+            document.getElementById('importContactsModal').style.display = 'flex';
+            
+            // Reset modal state
+            document.getElementById('contactsAccessStep').style.display = 'block';
+            document.getElementById('contactsListStep').style.display = 'none';
+            document.getElementById('contactsErrorStep').style.display = 'none';
+            availableContacts = [];
+            selectedContacts = [];
+        }
+
+        function closeImportModal() {
+            document.getElementById('importContactsModal').style.display = 'none';
+        }
+
+        async function accessPhoneContacts() {
+            try {
+                // Check if Contacts API is supported
+                if ('contacts' in navigator && 'ContactsManager' in window) {
+                    // Request contact access
+                    const contacts = await navigator.contacts.select(['name', 'tel', 'address'], {
+                        multiple: true
+                    });
+                    
+                    availableContacts = contacts.map(contact => ({
+                        id: Math.random().toString(36).substr(2, 9),
+                        name: contact.name && contact.name.length > 0 ? contact.name[0] : 'Unknown',
+                        phone: contact.tel && contact.tel.length > 0 ? contact.tel[0] : '',
+                        address: contact.address && contact.address.length > 0 ? 
+                            `${contact.address[0].addressLine || ''} ${contact.address[0].city || ''} ${contact.address[0].region || ''} ${contact.address[0].postalCode || ''}`.trim() : ''
+                    })).filter(contact => contact.name !== 'Unknown' || contact.phone); // Filter out empty contacts
+                    
+                    if (availableContacts.length > 0) {
+                        showContactsList();
+                    } else {
+                        showNoContactsMessage();
+                    }
+                } else {
+                    // Fallback: Show file input for manual import
+                    showManualImportOption();
+                }
+            } catch (error) {
+                console.error('Contact access error:', error);
+                showContactsError();
+            }
+        }
+
+        function showContactsList() {
+            document.getElementById('contactsAccessStep').style.display = 'none';
+            document.getElementById('contactsListStep').style.display = 'block';
+            
+            renderContactsList();
+        }
+
+        function showContactsError() {
+            document.getElementById('contactsAccessStep').style.display = 'none';
+            document.getElementById('contactsErrorStep').style.display = 'block';
+        }
+
+        function showNoContactsMessage() {
+            document.getElementById('contactsAccessStep').style.display = 'none';
+            document.getElementById('contactsErrorStep').style.display = 'block';
+            document.getElementById('contactsErrorStep').innerHTML = `
+                <div style="text-align: center; color: #98bfa7; margin: 20px 0;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">📱</div>
+                    <h4 style="margin-bottom: 10px;">No Contacts Found</h4>
+                    <p style="margin-bottom: 20px;">
+                        No contacts were found on your device, or they don't have the required information (name/phone).
+                    </p>
+                    <button onclick="closeImportModal()" class="button">Got it</button>
+                </div>
+            `;
+        }
+
+        function showManualImportOption() {
+            document.getElementById('contactsAccessStep').innerHTML = `
+                <div style="margin-bottom: 20px; padding: 15px; background: #1f2a1f; border-radius: 8px;">
+                    <div style="color: #19a974; font-weight: 600; margin-bottom: 8px;">📄 Manual Import Option:</div>
+                    <div style="color: #98bfa7; font-size: 14px; line-height: 1.5; margin-bottom: 15px;">
+                        Your browser doesn't support automatic contact access. You can manually import contacts by uploading a CSV file with columns: Name, Phone, Address
+                    </div>
+                    <input type="file" id="csvFileInput" accept=".csv,.txt" class="input" style="margin-bottom: 10px;">
+                    <button id="uploadCsvBtn" class="button" style="width: 100%;">Upload CSV File</button>
+                </div>
+                <div style="text-align: center;">
+                    <button onclick="closeImportModal()" class="button button-secondary">Cancel</button>
+                </div>
+            `;
+            
+            // Add CSV upload functionality
+            document.getElementById('uploadCsvBtn').addEventListener('click', handleCsvUpload);
+        }
+
+        function handleCsvUpload() {
+            const fileInput = document.getElementById('csvFileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a CSV file first.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csv = e.target.result;
+                    const lines = csv.split('\n');
+                    const contacts = [];
+                    
+                    // Skip header row if it exists
+                    const startIndex = lines[0].toLowerCase().includes('name') ? 1 : 0;
+                    
+                    for (let i = startIndex; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const columns = line.split(',').map(col => col.trim().replace(/"/g, ''));
+                        if (columns.length >= 2) {
+                            contacts.push({
+                                id: Math.random().toString(36).substr(2, 9),
+                                name: columns[0] || 'Unknown',
+                                phone: columns[1] || '',
+                                address: columns[2] || ''
+                            });
+                        }
+                    }
+                    
+                    if (contacts.length > 0) {
+                        availableContacts = contacts;
+                        showContactsList();
+                    } else {
+                        alert('No valid contacts found in the CSV file. Please check the format.');
+                    }
+                } catch (error) {
+                    console.error('CSV parsing error:', error);
+                    alert('Error reading CSV file. Please check the format.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function renderContactsList() {
+            const container = document.getElementById('contactsList');
+            
+            container.innerHTML = availableContacts.map(contact => `
+                <div style="display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #1f2a1f; cursor: pointer;" 
+                     onclick="toggleContactSelection('${contact.id}')" id="contact-${contact.id}">
+                    <input type="checkbox" id="checkbox-${contact.id}" style="margin-right: 12px; cursor: pointer;" 
+                           onchange="toggleContactSelection('${contact.id}')">
+                    <div style="flex: 1;">
+                        <div style="color: #e6ffee; font-weight: 600; margin-bottom: 4px;">${contact.name}</div>
+                        ${contact.phone ? `<div style="color: #98bfa7; font-size: 14px;">📞 ${contact.phone}</div>` : ''}
+                        ${contact.address ? `<div style="color: #98bfa7; font-size: 12px; margin-top: 2px;">📍 ${contact.address}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            updateSelectedCount();
+        }
+
+        function toggleContactSelection(contactId) {
+            const checkbox = document.getElementById(`checkbox-${contactId}`);
+            const contactDiv = document.getElementById(`contact-${contactId}`);
+            
+            if (selectedContacts.includes(contactId)) {
+                selectedContacts = selectedContacts.filter(id => id !== contactId);
+                checkbox.checked = false;
+                contactDiv.style.background = '';
+            } else {
+                selectedContacts.push(contactId);
+                checkbox.checked = true;
+                contactDiv.style.background = '#1f2a1f';
+            }
+            
+            updateSelectedCount();
+        }
+
+        function selectAllContacts() {
+            selectedContacts = [...availableContacts.map(c => c.id)];
+            availableContacts.forEach(contact => {
+                const checkbox = document.getElementById(`checkbox-${contact.id}`);
+                const contactDiv = document.getElementById(`contact-${contact.id}`);
+                checkbox.checked = true;
+                contactDiv.style.background = '#1f2a1f';
+            });
+            updateSelectedCount();
+        }
+
+        function clearAllContacts() {
+            selectedContacts = [];
+            availableContacts.forEach(contact => {
+                const checkbox = document.getElementById(`checkbox-${contact.id}`);
+                const contactDiv = document.getElementById(`contact-${contact.id}`);
+                checkbox.checked = false;
+                contactDiv.style.background = '';
+            });
+            updateSelectedCount();
+        }
+
+        function updateSelectedCount() {
+            document.getElementById('selectedCount').textContent = selectedContacts.length;
+            document.getElementById('importSelectedBtn').disabled = selectedContacts.length === 0;
+        }
+
+        function importSelectedContacts() {
+            const contactsToImport = availableContacts.filter(contact => 
+                selectedContacts.includes(contact.id)
+            );
+            
+            let importedCount = 0;
+            let skippedCount = 0;
+            
+            contactsToImport.forEach(contact => {
+                // Check if client already exists (by name or phone)
+                const existingClient = clients.find(client => 
+                    client.name.toLowerCase() === contact.name.toLowerCase() ||
+                    (contact.phone && client.phone === contact.phone)
+                );
+                
+                if (existingClient) {
+                    skippedCount++;
+                } else {
+                    const newClient = {
+                        id: generateId(),
+                        name: contact.name,
+                        phone: contact.phone || '',
+                        email: '', // Not available from contacts
+                        address: contact.address || '',
+                        billingDate: '', // User can set this later
+                        createdAt: new Date().toISOString(),
+                        importedFromContacts: true
+                    };
+                    
+                    clients.push(newClient);
+                    importedCount++;
+                }
+            });
+            
+            saveClients();
+            renderClients();
+            updateClientDropdown();
+            closeImportModal();
+            
+            // Show success message
+            const message = `Import complete! Added ${importedCount} new clients.${skippedCount > 0 ? ` Skipped ${skippedCount} duplicates.` : ''}`;
+            
+            // Create temporary success notification
+            const notification = document.createElement('div');
+            notification.className = 'success';
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '10000';
+            notification.style.maxWidth = '300px';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        function togglePasswordVisibility(inputId, buttonId) {
+            const input = document.getElementById(inputId);
+            const button = document.getElementById(buttonId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('loginBtn').addEventListener('click', login);
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('addJobBtn').addEventListener('click', openModal);
+        document.getElementById('addClientBtn').addEventListener('click', openClientModal);
+        document.getElementById('addUserBtn').addEventListener('click', openUserModal);
+        document.getElementById('importContactsBtn').addEventListener('click', openImportModal);
+        
+        // Geofence button with debugging
+        document.getElementById('geofenceToggle').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Geofence button clicked!');
+            toggleGeofence();
+        });
+        document.getElementById('clearFilters').addEventListener('click', clearCompletedFilters);
+        
+        // Export button might not exist for all users
+        const exportBtn = document.getElementById('exportExcel');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', exportToExcel);
+        }
+
+        // Worker earnings filters
+        const clearWorkerFiltersBtn = document.getElementById('clearWorkerFilters');
+        if (clearWorkerFiltersBtn) {
+            clearWorkerFiltersBtn.addEventListener('click', clearWorkerFilters);
+        }
+
+        const exportWorkerDataBtn = document.getElementById('exportWorkerData');
+        if (exportWorkerDataBtn) {
+            exportWorkerDataBtn.addEventListener('click', exportWorkerData);
+        }
+
+        // Worker filter change listeners
+        const filterWorker = document.getElementById('filterWorker');
+        if (filterWorker) {
+            filterWorker.addEventListener('change', function(e) {
+                workerFilters.worker = e.target.value;
+                renderWorkerEarnings();
+            });
+        }
+
+        const filterWorkerMonth = document.getElementById('filterWorkerMonth');
+        if (filterWorkerMonth) {
+            filterWorkerMonth.addEventListener('change', function(e) {
+                workerFilters.month = e.target.value;
+                if (e.target.value) {
+                    document.getElementById('filterWorkerDateRange').value = '';
+                    workerFilters.dateRange = '';
+                }
+                renderWorkerEarnings();
+            });
+        }
+
+        const filterWorkerYear = document.getElementById('filterWorkerYear');
+        if (filterWorkerYear) {
+            filterWorkerYear.addEventListener('change', function(e) {
+                workerFilters.year = e.target.value;
+                if (e.target.value) {
+                    document.getElementById('filterWorkerDateRange').value = '';
+                    workerFilters.dateRange = '';
+                }
+                renderWorkerEarnings();
+            });
+        }
+
+        const filterWorkerDateRange = document.getElementById('filterWorkerDateRange');
+        if (filterWorkerDateRange) {
+            filterWorkerDateRange.addEventListener('change', function(e) {
+                workerFilters.dateRange = e.target.value;
+                if (e.target.value) {
+                    document.getElementById('filterWorkerMonth').value = '';
+                    document.getElementById('filterWorkerYear').value = '';
+                    workerFilters.month = '';
+                    workerFilters.year = '';
+                }
+                renderWorkerEarnings();
+            });
+        }
+
+        // Filter change listeners
+        document.getElementById('filterClient').addEventListener('change', function(e) {
+            completedJobsFilters.client = e.target.value;
+            renderJobs();
+            updateFilterResults();
+        });
+
+        document.getElementById('filterMonth').addEventListener('change', function(e) {
+            completedJobsFilters.month = e.target.value;
+            if (e.target.value) {
+                document.getElementById('filterDateRange').value = '';
+                completedJobsFilters.dateRange = '';
+            }
+            renderJobs();
+            updateFilterResults();
+        });
+
+        document.getElementById('filterYear').addEventListener('change', function(e) {
+            completedJobsFilters.year = e.target.value;
+            if (e.target.value) {
+                document.getElementById('filterDateRange').value = '';
+                completedJobsFilters.dateRange = '';
+            }
+            renderJobs();
+            updateFilterResults();
+        });
+
+        document.getElementById('filterDateRange').addEventListener('change', function(e) {
+            completedJobsFilters.dateRange = e.target.value;
+            if (e.target.value) {
+                document.getElementById('filterMonth').value = '';
+                document.getElementById('filterYear').value = '';
+                completedJobsFilters.month = '';
+                completedJobsFilters.year = '';
+            }
+            renderJobs();
+            updateFilterResults();
+        });
+        
+        // Tab and section switching
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('tab-button')) {
+                if (e.target.dataset.tab) {
+                    switchTab(e.target.dataset.tab);
+                } else if (e.target.dataset.section) {
+                    switchSection(e.target.dataset.section);
+                }
+            }
+        });
+
+        // Handle Enter key in login form
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+
+        // Password toggle event listeners
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            togglePasswordVisibility('password', 'togglePassword');
+        });
+
+        document.getElementById('toggleUserPassword').addEventListener('click', function() {
+            togglePasswordVisibility('userPassword', 'toggleUserPassword');
+        });
+
+        // Contact import modal event listeners
+        document.getElementById('accessContactsBtn').addEventListener('click', accessPhoneContacts);
+        document.getElementById('selectAllContacts').addEventListener('click', selectAllContacts);
+        document.getElementById('clearAllContacts').addEventListener('click', clearAllContacts);
+        document.getElementById('importSelectedBtn').addEventListener('click', importSelectedContacts);
+
+        // Biometric login event listeners
+        document.getElementById('biometricLoginBtn').addEventListener('click', biometricLogin);
+        document.getElementById('clearSavedLogin').addEventListener('click', clearSavedCredentials);
+
+        // Close modal when clicking outside
+        document.getElementById('addJobModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.getElementById('addClientModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeClientModal();
+            }
+        });
+
+        document.getElementById('addUserModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeUserModal();
+            }
+        });
+
+        document.getElementById('importContactsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImportModal();
+            }
+        });
+
+        document.getElementById('photoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePhotoModal();
+            }
+        });
+
+        document.getElementById('photoViewerModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePhotoViewer();
+            }
+        });
+
+        // Initialize App
+        function initApp() {
+            showLoading();
+            
+            // Load immediately
+            const savedUser = loadFromStorage('handyman_user');
+            const loggedIn = loadFromStorage('handyman_logged_in');
+            
+            if (savedUser && loggedIn) {
+                currentUser = savedUser;
+                isLoggedIn = true;
+                showMainApp();
+            } else {
+                showLoginForm();
+                // Check for saved credentials after showing login form
+                setTimeout(checkForSavedCredentials, 100);
+            }
+        }
+
+        // Start the app
+        initApp();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9714499c56937ca7',t:'MTc1NTU1MDI2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+</script>
