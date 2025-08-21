@@ -8,7 +8,7 @@ const bar = document.getElementById('roleBar');
 const fab = document.getElementById('roleMgrFab');
 const label = document.getElementById('roleViewLabel');
 
-let currentView = localStorage.getItem(VIEW_KEY) || 'admin';
+let currentView = localStorage.getItem(VIEW_KEY) || 'client';
 
 function applyRoleView(role) {
   currentView = role;
