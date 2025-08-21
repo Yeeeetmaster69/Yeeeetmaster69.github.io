@@ -3067,7 +3067,7 @@
                     jobCoords.lng
                 );
 
-                console.log(` Distance to ${job.title}: ${(distance/1000).toFixed(2)}km`);
+                console.log(` Distance to ${job.title}: ${(distance/1609.34).toFixed(2)}mi`);
 
                 if (distance < minDistance) {
                     minDistance = distance;
@@ -3091,10 +3091,10 @@
                 hideGeofenceWarning();
                 console.log(' User is at job location');
             } else if (closestJob) {
-                const distanceKm = (minDistance / 1000).toFixed(1);
-                updateLocationStatus('', `${distanceKm}km from ${closestJob.title}`, 'outside');
+                const distanceMi = (minDistance / 1609.34).toFixed(1);
+                updateLocationStatus('', `${distanceMi}mi from ${closestJob.title}`, 'outside');
                 showGeofenceWarning();
-                console.log(` User is ${distanceKm}km from nearest job`);
+                console.log(` User is ${distanceKm}mi from nearest job`);
             } else {
                 updateLocationStatus('', 'Location status unknown', 'unknown');
                 console.log(' Could not determine location status');
