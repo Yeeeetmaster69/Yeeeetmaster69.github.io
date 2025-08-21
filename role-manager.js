@@ -58,6 +58,7 @@ function toggleRole() {
 }
 
 function initRoleManager() {
+  applyRoleView(currentView);
   if (fab) fab.addEventListener('click', toggleRole);
 
   const auth = getAuth();
