@@ -962,10 +962,6 @@
       }
     </style>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
 
 </head>
 <body>
@@ -5792,19 +5788,14 @@ document.addEventListener('DOMContentLoaded', function(){
   });
   });
   </script>
-  <script type="module" src="role-manager.js"></script>
-</body>
-</html>
-
-
 
 <!-- ================= APP SCRIPT ================= -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 // Import messaging functions for Firebase Cloud Messaging (FCM)
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js";
+import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-messaging.js";
 
 // Firebase Config
 const firebaseConfig = {
@@ -6113,7 +6104,9 @@ document.addEventListener("DOMContentLoaded", () => {
 // Removed overrides for legacy sign-up buttons.  Event handlers are now set
 // directly on the buttons when the registration modal script loads.
 </script>
-
+<script type="module" src="role-manager.js"></script>
+</body>
+</html>
 
 
 
