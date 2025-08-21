@@ -5718,7 +5718,6 @@ Recent Activity: ${workerEntries.length} time entries
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
   const auth = getAuth();
   const bar = document.getElementById('roleBar');
-  const btn = document.getElementById('roleMgrFab');
   function hide(){ bar && bar.classList.add('hidden'); }
   onAuthStateChanged(auth, async (user) => {
     if (!user) return hide();
