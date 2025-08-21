@@ -711,7 +711,7 @@
             gap: 5px;
             /*
              * Disable pointer events on the geofence/location status banner so it
-             * doesnâ€™t intercept clicks or taps on mobile devices. Without
+             * doesnt intercept clicks or taps on mobile devices. Without
              * pointer-events: none the banner can block underlying UI
              * interactions, especially on small screens.
              */
@@ -949,18 +949,18 @@
 <body>
     <!-- Database Status Indicator -->
     <div id="dbStatus" class="db-status" style="display: none;">
-        ðŸ’¾ Database Ready
+         Database Ready
     </div>
 
     <!-- Location Status Indicator -->
     <div id="locationStatus" class="location-status" style="display: none;">
-        <span id="locationIcon">ðŸ“</span>
+        <span id="locationIcon"></span>
         <span id="locationText">Checking location...</span>
     </div>
 
     <div class="container">
         <div class="header">
-            <h1>ðŸ”§ Handyman Southern Utah Job Tracker</h1>
+            <h1> &#128295; Handyman Southern Utah Job Tracker</h1>
             <p>Manage your jobs, track time, and get paid</p>
         </div>
 
@@ -984,7 +984,7 @@
                 <label for="password">Password</label>
                 <div style="position: relative;">
                     <input type="password" id="password" class="input" placeholder="Enter your password" style="padding-right: 45px;" autocomplete="current-password">
-                    <button type="button" id="togglePassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #98bfa7; cursor: pointer; font-size: 18px; padding: 5px;">ðŸ‘ï¸</button>
+                    <button type="button" id="togglePassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #98bfa7; cursor: pointer; font-size: 18px; padding: 5px;">ï¸</button>
                 </div>
             </div>
 
@@ -1000,8 +1000,8 @@
             <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #1f2a1f;">
                 <p style="color: #98bfa7; margin-bottom: 15px;">Need help with your account?</p>
                 <div style="display: flex; gap: 10px; flex-direction: column;">
-                    <button id="forgotPasswordBtn" class="button button-secondary">ðŸ”‘ Forgot Password</button>
-                    <button id="showRegisterBtn" class="button button-secondary">ðŸ†• New Client - Create Account</button>
+                    <button id="forgotPasswordBtn" class="button button-secondary"> Forgot Password</button>
+                    <button id="showRegisterBtn" class="button button-secondary"> New Client - Create Account</button>
                     <!-- Removed first-time login button to avoid confusion; existing clients should use the main login -->
                 </div>
             </div>
@@ -1012,7 +1012,7 @@
             <div class="modal-content" style="background: #0c1a0c; padding: 20px; border-radius: 8px; color: #e6ffee; position: relative; max-width: 500px; width: 90%;">
                 <!-- Close icon -->
                 <span id="registerModalClose" style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px;" onclick="window.closeRegisterModal()">&times;</span>
-                <h3 style="margin-top: 0; margin-bottom: 15px; color: #19a974;">New Client â€“ Create Account</h3>
+                <h3 style="margin-top: 0; margin-bottom: 15px; color: #19a974;">New Client  Create Account</h3>
                 <!-- Registration form fields -->
                 <div class="form-group">
                     <label for="regFullName">Full Name *</label>
@@ -1085,18 +1085,18 @@
             const password = document.getElementById('regPassword').value;
             // Basic validation
             if (!fullName || !phone || !street || !city || !state || !zip || !email || !password) {
-                showSuccess('âš ï¸ Please fill out all required registration fields.');
+                showSuccess('ï¸ Please fill out all required registration fields.');
                 return;
             }
             // Normalize phone
             const phoneDigits = phone.replace(/\D/g, '');
             if (phoneDigits.length < 10) {
-                showSuccess('âš ï¸ Please enter a valid phone number (at least 10 digits).');
+                showSuccess('ï¸ Please enter a valid phone number (at least 10 digits).');
                 return;
             }
             // Email regex
             if (!/^\S+@\S+\.\S+$/.test(email)) {
-                showSuccess('âš ï¸ Please enter a valid email address.');
+                showSuccess('ï¸ Please enter a valid email address.');
                 return;
             }
             try {
@@ -1136,7 +1136,7 @@
                 showSuccess('Account created! Please sign in.');
                 window.closeRegisterModal();
             } catch (err) {
-                showSuccess('âš ï¸ ' + (err.message || 'Error creating account.'));
+                showSuccess('ï¸ ' + (err.message || 'Error creating account.'));
             }
         }
         // Attach event listeners after DOM load
@@ -1161,12 +1161,12 @@
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <!-- Cloud Setup button removed -->
                     <button id="requestNotificationBtn" class="button button-secondary" style="position: relative;">
-                        ðŸ”” Requests
+                         Requests
                         <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
                     </button>
                     <!-- Test Location button removed -->
                     <button id="addJobBtn" class="button">+ Add New Job</button>
-                    <button id="clientViewBtn" class="button button-secondary">ðŸ‘ï¸ Client View</button>
+                    <button id="clientViewBtn" class="button button-secondary">&#128280; Client View</button>
                     <button id="logoutBtn" class="button button-secondary">Logout</button>
                 </div>
             </div>
@@ -1193,10 +1193,10 @@
 
             <!-- Main Navigation Tabs -->
             <div class="tabs">
-                <button class="tab-button active" data-section="jobs">ðŸ“‹ Jobs</button>
-                <button class="tab-button" data-section="clients">ðŸ‘¥ Clients</button>
-                <button class="tab-button" data-section="workers">ðŸ‘· Workers</button>
-                <button class="tab-button" data-section="earnings">ðŸ’° Earnings</button>
+                <button class="tab-button active" data-section="jobs"> Jobs</button>
+                <button class="tab-button" data-section="clients"> Clients</button>
+                <button class="tab-button" data-section="workers"> Workers</button>
+                <button class="tab-button" data-section="earnings"> Earnings</button>
             </div>
 
             <!-- Job Section -->
@@ -1227,10 +1227,10 @@
             <!-- Workers Section -->
             <div id="workersSection" style="display: none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0; flex-wrap: wrap; gap: 10px;">
-                    <h3 style="color: #19a974; font-size: 1.3rem;">ðŸ‘· Worker Management</h3>
+                    <h3 style="color: #19a974; font-size: 1.3rem;"> Worker Management</h3>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <button id="addWorkerBtn" class="button">+ Add New Worker</button>
-                        <button id="manageGoalsBtn" class="button button-secondary">ðŸŽ¯ Manage Goals</button>
+                        <button id="manageGoalsBtn" class="button button-secondary"> Manage Goals</button>
                     </div>
                 </div>
                 
@@ -1260,11 +1260,11 @@
             <!-- Earnings Section -->
             <div id="earningsSection" style="display: none;">
                 <div style="margin: 20px 0;">
-                    <h3 style="color: #19a974; font-size: 1.3rem; margin-bottom: 20px;">ðŸ’° Earnings Dashboard</h3>
+                    <h3 style="color: #19a974; font-size: 1.3rem; margin-bottom: 20px;"> Earnings Dashboard</h3>
                     
                     <!-- Completed Earnings -->
                     <div class="panel">
-                        <h4 style="color: #19a974; margin-bottom: 20px; font-size: 1.2rem;">âœ… Completed Earnings</h4>
+                        <h4 style="color: #19a974; margin-bottom: 20px; font-size: 1.2rem;"> Completed Earnings</h4>
                         <div class="stats">
                             <div class="stat-card">
                                 <div class="stat-number" id="todayEarnings">$0.00</div>
@@ -1287,7 +1287,7 @@
 
                     <!-- Potential Earnings -->
                     <div class="panel">
-                        <h4 style="color: #19a974; margin-bottom: 20px; font-size: 1.2rem;">ðŸŽ¯ Potential Earnings (Upcoming Jobs)</h4>
+                        <h4 style="color: #19a974; margin-bottom: 20px; font-size: 1.2rem;"> Potential Earnings (Upcoming Jobs)</h4>
                         <div class="stats">
                             <div class="stat-card">
                                 <div class="stat-number" id="potentialTodayEarnings">$0.00</div>
@@ -1310,7 +1310,7 @@
 
                     <!-- Combined Projections -->
                     <div class="panel">
-                        <h4 style="color: #19a974; margin-bottom: 20px; font-size: 1.2rem;">ðŸ“ˆ Total Projections (Completed + Potential)</h4>
+                        <h4 style="color: #19a974; margin-bottom: 20px; font-size: 1.2rem;"> Total Projections (Completed + Potential)</h4>
                         <div class="stats">
                             <div class="stat-card">
                                 <div class="stat-number" id="totalTodayProjection">$0.00</div>
@@ -1340,7 +1340,7 @@
         <div id="clientPortal" style="display: none;">
             <div class="container">
                 <div class="header">
-                    <h1>ðŸ  My Home Services</h1>
+                    <h1> My Home Services</h1>
                     <p>All your service needs in one place</p>
                 </div>
 
@@ -1352,8 +1352,8 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button onclick="callHandyman()" class="button" style="background: #28a745;">ðŸ“ž Call Now</button>
-                        <button onclick="textHandyman()" class="button" style="background: #17a2b8;">ðŸ’¬ Text Now</button>
+                        <button onclick="callHandyman()" class="button" style="background: #28a745;"> Call Now</button>
+                        <button onclick="textHandyman()" class="button" style="background: #17a2b8;"> Text Now</button>
                         <!--
                           Add inline click handlers so these buttons respond on all
                           platforms (desktop, mobile, WebView) even if event
@@ -1362,10 +1362,10 @@
                           display:none style on returnToAdminBtn is still
                           controlled by JavaScript.
                         -->
-                        <button id="requestEstimateBtn" class="button" onclick="showEstimateModal()">ðŸ“‹ Request Estimate</button>
-                        <button id="scheduleServiceBtn" class="button" onclick="showServiceModal()">ðŸ”§ Schedule Service</button>
-                        <button id="testNotificationBtn" class="button" style="background: #ffc107; color: #000;">ðŸ§ª Test Notification</button>
-                        <button id="returnToAdminBtn" class="button" style="display: none;" onclick="returnToAdmin()">ðŸ”™ Return to Admin</button>
+                        <button id="requestEstimateBtn" class="button" onclick="showEstimateModal()"> Request Estimate</button>
+                        <button id="scheduleServiceBtn" class="button" onclick="showServiceModal()"> Schedule Service</button>
+                        <button id="testNotificationBtn" class="button" style="background: #ffc107; color: #000;"> Test Notification</button>
+                        <button id="returnToAdminBtn" class="button" style="display: none;" onclick="returnToAdmin()"> Return to Admin</button>
                         <button id="clientLogoutBtn" class="button button-secondary" onclick="handleClientLogout()">Logout</button>
                     </div>
                 </div>
@@ -1392,10 +1392,10 @@
 
                 <!-- Client Navigation Tabs -->
                 <div class="tabs">
-                    <button class="tab-button active" data-client-section="services">ðŸ”§ My Services</button>
-                    <button class="tab-button" data-client-section="browse">ðŸ› ï¸ Browse Services</button>
-                    <button class="tab-button" data-client-section="estimates">ðŸ“‹ Estimates</button>
-                    <button class="tab-button" data-client-section="profile">ðŸ‘¤ My Profile</button>
+                    <button class="tab-button active" data-client-section="services"> My Services</button>
+                    <button class="tab-button" data-client-section="browse">ï¸ Browse Services</button>
+                    <button class="tab-button" data-client-section="estimates"> Estimates</button>
+                    <button class="tab-button" data-client-section="profile"> My Profile</button>
                 </div>
 
                 <!-- Services Section -->
@@ -1413,10 +1413,10 @@
                 <!-- Browse Services Section -->
                 <div id="clientBrowseSection" style="display: none;">
                     <div style="margin: 20px 0;">
-                        <h3 style="color: #19a974; font-size: 1.3rem; margin-bottom: 20px;">ðŸ› ï¸ Available Services</h3>
+                        <h3 style="color: #19a974; font-size: 1.3rem; margin-bottom: 20px;">ï¸ Available Services</h3>
                         
                         <div style="margin-bottom: 20px; padding: 15px; background: #1f2a1f; border-radius: 8px;">
-                            <div style="color: #19a974; font-weight: 600; margin-bottom: 8px;">ðŸ“‹ Browse Our Services</div>
+                            <div style="color: #19a974; font-weight: 600; margin-bottom: 8px;"> Browse Our Services</div>
                             <div style="color: #98bfa7; font-size: 14px; line-height: 1.5;">
                                 Browse our available services and request estimates or schedule appointments. You can also submit a custom request if you don't see what you need.
                             </div>
@@ -1424,7 +1424,7 @@
 
                         <!-- Custom Request Section -->
                         <div class="panel" style="margin-bottom: 20px;">
-                            <h4 style="color: #19a974; margin-bottom: 15px;">âœï¸ Custom Service Request</h4>
+                            <h4 style="color: #19a974; margin-bottom: 15px;">ï¸ Custom Service Request</h4>
                             <div style="margin-bottom: 15px; color: #98bfa7; font-size: 14px;">
                                 Don't see what you need? Describe your custom service request below:
                             </div>
@@ -1456,7 +1456,7 @@
                             </div>
                             
                             <button onclick="submitCustomServiceRequest()" class="button" style="width: 100%; margin-top: 15px;">
-                                ðŸ“‹ Submit Custom Request
+                                 Submit Custom Request
                             </button>
                         </div>
                         
@@ -1467,7 +1467,7 @@
                 <!-- Estimates Section -->
                 <div id="clientEstimatesSection" style="display: none;">
                     <div style="margin: 20px 0;">
-                        <h3 style="color: #19a974; font-size: 1.3rem; margin-bottom: 20px;">ðŸ“‹ My Estimates</h3>
+                        <h3 style="color: #19a974; font-size: 1.3rem; margin-bottom: 20px;"> My Estimates</h3>
                         <div id="clientEstimatesGrid" class="jobs-grid"></div>
                     </div>
                 </div>
@@ -1475,7 +1475,7 @@
                 <!-- Profile Section -->
                 <div id="clientProfileSection" style="display: none;">
                     <div style="margin: 20px 0;">
-                        <h3 style="color: #19a974; font-size: 1.3rem; margin-bottom: 20px;">ðŸ‘¤ My Profile</h3>
+                        <h3 style="color: #19a974; font-size: 1.3rem; margin-bottom: 20px;"> My Profile</h3>
                         
                         <div class="panel">
                             <h4 style="color: #19a974; margin-bottom: 20px;">Contact Information</h4>
@@ -1496,7 +1496,7 @@
         <div id="clientRequestsModal" class="modal" style="display: none;">
             <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
                 <div class="modal-header">
-                    <h3 class="modal-title">ðŸ”” Client Requests</h3>
+                    <h3 class="modal-title"> Client Requests</h3>
                     <button class="close-button" onclick="closeRequestsModal()">&times;</button>
                 </div>
                 
@@ -1544,7 +1544,7 @@
         <div id="requestEstimateModal" class="modal" style="display: none;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">ðŸ“‹ Request Estimate</h3>
+                    <h3 class="modal-title"> Request Estimate</h3>
                     <button class="close-button" onclick="closeEstimateModal()">&times;</button>
                 </div>
                 
@@ -1584,7 +1584,7 @@
         <div id="scheduleServiceModal" class="modal" style="display: none;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">ðŸ”§ Schedule Service</h3>
+                    <h3 class="modal-title"> Schedule Service</h3>
                     <button class="close-button" onclick="closeServiceModal()">&times;</button>
                 </div>
                 
@@ -1624,7 +1624,7 @@
         <div id="addJobModal" class="modal" style="display: none;">
             <div class="modal-content" style="max-width: 600px;">
                 <div class="modal-header">
-                    <h3 class="modal-title">âž• Add New Job</h3>
+                    <h3 class="modal-title"> Add New Job</h3>
                     <button class="close-button" onclick="closeAddJobModal()">&times;</button>
                 </div>
                 
@@ -1734,7 +1734,7 @@
         <div id="addClientModal" class="modal" style="display: none;">
             <div class="modal-content" style="max-width: 500px;">
                 <div class="modal-header">
-                    <h3 class="modal-title">ðŸ‘¤ Add New Client</h3>
+                    <h3 class="modal-title"> Add New Client</h3>
                     <button class="close-button" onclick="closeAddClientModal()">&times;</button>
                 </div>
                 
@@ -1819,7 +1819,7 @@
         <div id="addWorkerModal" class="modal" style="display: none;">
             <div class="modal-content" style="max-width: 500px;">
                 <div class="modal-header">
-                    <h3 class="modal-title">ðŸ‘· Add New Worker</h3>
+                    <h3 class="modal-title"> Add New Worker</h3>
                     <button class="close-button" onclick="closeAddWorkerModal()">&times;</button>
                 </div>
                 
@@ -1884,7 +1884,7 @@
         <div id="manageGoalsModal" class="modal" style="display: none;">
             <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
                 <div class="modal-header">
-                    <h3 class="modal-title">ðŸŽ¯ Manage Goals</h3>
+                    <h3 class="modal-title"> Manage Goals</h3>
                     <button class="close-button" onclick="closeManageGoalsModal()">&times;</button>
                 </div>
                 
@@ -1951,26 +1951,26 @@
         <div id="cloudSetupModal" class="modal" style="display: none;">
             <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
                 <div class="modal-header">
-                    <h3 class="modal-title">â˜ï¸ Cloud Storage Setup</h3>
+                    <h3 class="modal-title">ï¸ Cloud Storage Setup</h3>
                     <button class="close-button" onclick="closeCloudSetupModal()">&times;</button>
                 </div>
                 
                 <div style="margin-bottom: 20px;">
                     <div style="background: #1f2a1f; padding: 20px; border-radius: 8px; border-left: 4px solid #19a974; margin-bottom: 20px;">
-                        <div style="color: #19a974; font-weight: 600; margin-bottom: 10px;">ðŸš€ Enable Cloud Sync</div>
+                        <div style="color: #19a974; font-weight: 600; margin-bottom: 10px;"> Enable Cloud Sync</div>
                         <div style="color: #98bfa7; font-size: 14px; line-height: 1.5;">
                             Connect your app to Firebase for real-time cloud storage. Your data will sync across all devices and be safely backed up in Google's cloud infrastructure.
                         </div>
                     </div>
                     
                     <div id="cloudStatus" style="padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #dc3545; color: white;">
-                        <div style="font-weight: 600; margin-bottom: 5px;">âŒ Cloud Storage: Disabled</div>
+                        <div style="font-weight: 600; margin-bottom: 5px;"> Cloud Storage: Disabled</div>
                         <div style="font-size: 14px;">Currently using local storage only. Set up Firebase to enable cloud sync.</div>
                     </div>
                 </div>
                 
                 <div id="setupInstructions" style="margin-bottom: 20px;">
-                    <h4 style="color: #19a974; margin-bottom: 15px;">ðŸ“‹ Setup Instructions</h4>
+                    <h4 style="color: #19a974; margin-bottom: 15px;"> Setup Instructions</h4>
                     
                     <div style="background: #0f1a0f; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
                         <div style="color: #19a974; font-weight: 600; margin-bottom: 10px;">Step 1: Create Firebase Project</div>
@@ -2017,7 +2017,7 @@
                 </div>
                 
                 <div style="background: #1f2a1f; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="color: #19a974; margin-bottom: 15px;">ðŸ”§ Firebase Configuration</h4>
+                    <h4 style="color: #19a974; margin-bottom: 15px;"> Firebase Configuration</h4>
                     
                     <div class="form-group">
                         <label for="firebaseApiKey">API Key *</label>
@@ -2050,8 +2050,8 @@
                     </div>
                     
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button onclick="testFirebaseConnection()" class="button button-secondary" style="flex: 1;">ðŸ§ª Test Connection</button>
-                        <button onclick="saveFirebaseConfig()" class="button" style="flex: 1;">ðŸ’¾ Save & Enable Cloud</button>
+                        <button onclick="testFirebaseConnection()" class="button button-secondary" style="flex: 1;"> Test Connection</button>
+                        <button onclick="saveFirebaseConfig()" class="button" style="flex: 1;"> Save & Enable Cloud</button>
                     </div>
                 </div>
                 
@@ -2060,7 +2060,7 @@
                 </div>
                 
                 <div style="background: #0f1a0f; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <div style="color: #19a974; font-weight: 600; margin-bottom: 8px;">ðŸ’¡ Pro Tips</div>
+                    <div style="color: #19a974; font-weight: 600; margin-bottom: 8px;"> Pro Tips</div>
                     <ul style="color: #98bfa7; font-size: 14px; line-height: 1.5; margin-left: 20px;">
                         <li>Firebase offers generous free usage limits</li>
                         <li>Your data is encrypted and secure</li>
@@ -2080,7 +2080,7 @@
         <div id="editJobModal" class="modal" style="display: none;">
             <div class="modal-content" style="max-width: 600px;">
                 <div class="modal-header">
-                    <h3 class="modal-title">âœï¸ Edit Job</h3>
+                    <h3 class="modal-title">ï¸ Edit Job</h3>
                     <button class="close-button" onclick="closeEditJobModal()">&times;</button>
                 </div>
                 
@@ -2221,18 +2221,18 @@
                         // Only enable cloud if we have a valid config
                         if (config.apiKey && config.projectId && config.apiKey !== 'your-api-key-here') {
                             this.useCloud = true;
-                            console.log('âœ… Loaded saved Firebase configuration');
+                            console.log(' Loaded saved Firebase configuration');
                             return config;
                         }
                     }
                 } catch (error) {
-                    console.error('âŒ Failed to load saved Firebase config:', error);
+                    console.error(' Failed to load saved Firebase config:', error);
                 }
                 return null;
             }
 
             init() {
-                console.log('ðŸ—„ï¸ Initializing Handyman Database System...');
+                console.log('ï¸ Initializing Handyman Database System...');
                 this.createDefaultData();
             }
 
@@ -2522,10 +2522,10 @@
                     const serialized = JSON.stringify(data);
                     localStorage.setItem(key, serialized);
                     
-                    console.log(`ðŸ’¾ Saved ${Array.isArray(data) ? data.length : 1} records to ${table}`);
+                    console.log(` Saved ${Array.isArray(data) ? data.length : 1} records to ${table}`);
                     return true;
                 } catch (error) {
-                    console.error(`âŒ Failed to save to ${table}:`, error);
+                    console.error(` Failed to save to ${table}:`, error);
                     return false;
                 }
             }
@@ -2539,21 +2539,21 @@
                     
                     const data = localStorage.getItem(key);
                     if (!data) {
-                        console.log(`ðŸ“‚ No data found for ${table}, returning empty array`);
+                        console.log(` No data found for ${table}, returning empty array`);
                         return [];
                     }
                     
                     const parsed = JSON.parse(data);
-                    console.log(`ðŸ“‚ Loaded ${Array.isArray(parsed) ? parsed.length : 1} records from ${table}`);
+                    console.log(` Loaded ${Array.isArray(parsed) ? parsed.length : 1} records from ${table}`);
                     return parsed;
                 } catch (error) {
-                    console.error(`âŒ Failed to load from ${table}:`, error);
+                    console.error(` Failed to load from ${table}:`, error);
                     return [];
                 }
             }
 
             addClientRequest(request) {
-                console.log('ðŸ“ Adding new client request:', request);
+                console.log(' Adding new client request:', request);
                 const requests = this.load('clientRequests');
                 request.id = Date.now() + Math.random(); // Ensure unique ID
                 request.createdAt = new Date().toISOString();
@@ -2562,12 +2562,12 @@
                 requests.push(request);
                 
                 const saved = this.save('clientRequests', requests);
-                console.log('ðŸ’¾ Client request saved:', saved);
+                console.log(' Client request saved:', saved);
                 
                 // Update notification count immediately
                 setTimeout(() => {
                     this.updateNotificationCount();
-                    console.log('ðŸ”” Notification count updated');
+                    console.log(' Notification count updated');
                 }, 100);
                 
                 return request;
@@ -2577,20 +2577,20 @@
                 const requests = this.load('clientRequests');
                 const unreadCount = requests.filter(r => !r.read && r.status === 'pending').length;
                 
-                console.log(`ðŸ”” Updating notification count: ${unreadCount} unread requests`);
+                console.log(` Updating notification count: ${unreadCount} unread requests`);
                 
                 const badge = document.getElementById('notificationBadge');
                 if (badge) {
                     if (unreadCount > 0) {
                         badge.textContent = unreadCount;
                         badge.style.display = 'flex';
-                        console.log(`âœ… Badge updated: ${unreadCount} notifications`);
+                        console.log(` Badge updated: ${unreadCount} notifications`);
                     } else {
                         badge.style.display = 'none';
-                        console.log('âœ… Badge hidden: no notifications');
+                        console.log(' Badge hidden: no notifications');
                     }
                 } else {
-                    console.log('âš ï¸ Notification badge element not found');
+                    console.log('ï¸ Notification badge element not found');
                 }
                 
                 return unreadCount;
@@ -2658,12 +2658,12 @@
 
         // App initialization
         function initApp() {
-            console.log('ðŸš€ Initializing Handyman App...');
+            console.log(' Initializing Handyman App...');
             
             setTimeout(() => {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('loginForm').style.display = 'block';
-                console.log('âœ… App initialized successfully');
+                console.log(' App initialized successfully');
             }, 1000);
 
             setupEventListeners();
@@ -2773,10 +2773,10 @@
                 
                 if (passwordField.type === 'password') {
                     passwordField.type = 'text';
-                    toggleBtn.textContent = 'ðŸ™ˆ';
+                    toggleBtn.textContent = '';
                 } else {
                     passwordField.type = 'password';
-                    toggleBtn.textContent = 'ðŸ‘ï¸';
+                    toggleBtn.textContent = 'ï¸';
                 }
             });
         }
@@ -2838,7 +2838,7 @@
         }
 
         function returnToAdmin() {
-            console.log('ðŸ”™ Returning to admin view...');
+            console.log(' Returning to admin view...');
             isClientView = false;
             document.getElementById('clientPortal').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
@@ -2882,20 +2882,20 @@
         // ===== GEOLOCATION SYSTEM =====
         
         function initializeGeolocation() {
-            console.log('ðŸŒ Initializing geolocation system...');
+            console.log(' Initializing geolocation system...');
             
             if (!navigator.geolocation) {
-                console.error('âŒ Geolocation not supported by this browser');
-                updateLocationStatus('âŒ', 'Location not supported', 'unknown');
+                console.error(' Geolocation not supported by this browser');
+                updateLocationStatus('', 'Location not supported', 'unknown');
                 return;
             }
 
-            updateLocationStatus('ðŸ”', 'Getting location...', 'unknown');
+            updateLocationStatus('', 'Getting location...', 'unknown');
             
             // Get initial position with better error handling
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    console.log('âœ… Initial location obtained:', position.coords);
+                    console.log(' Initial location obtained:', position.coords);
                     currentLocation = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude,
@@ -2903,7 +2903,7 @@
                         timestamp: new Date().toISOString()
                     };
                     
-                    console.log('ðŸ“ Current location:', currentLocation);
+                    console.log(' Current location:', currentLocation);
                     checkGeofenceStatus();
                     logLocation();
                     
@@ -2911,7 +2911,7 @@
                     startLocationWatcher();
                 },
                 (error) => {
-                    console.error('âŒ Geolocation error:', error);
+                    console.error(' Geolocation error:', error);
                     let errorMessage = 'Location error';
                     
                     switch(error.code) {
@@ -2929,10 +2929,10 @@
                             break;
                     }
                     
-                    updateLocationStatus('âŒ', errorMessage, 'unknown');
+                    updateLocationStatus('', errorMessage, 'unknown');
                     
                     // For demo purposes, use a default location (St. George, UT)
-                    console.log('ðŸŽ­ Using demo location for testing');
+                    console.log(' Using demo location for testing');
                     currentLocation = {
                         lat: 37.0965,
                         lng: -113.5684,
@@ -2942,7 +2942,7 @@
                     };
                     
                     setTimeout(() => {
-                        updateLocationStatus('ðŸŽ­', 'Using demo location', 'inside');
+                        updateLocationStatus('', 'Using demo location', 'inside');
                         checkGeofenceStatus();
                     }, 2000);
                 },
@@ -2957,14 +2957,14 @@
         function startLocationWatcher() {
             if (locationWatcher) {
                 navigator.geolocation.clearWatch(locationWatcher);
-                console.log('ðŸ”„ Cleared previous location watcher');
+                console.log(' Cleared previous location watcher');
             }
 
-            console.log('ðŸ‘€ Starting location watcher...');
+            console.log(' Starting location watcher...');
             
             locationWatcher = navigator.geolocation.watchPosition(
                 (position) => {
-                    console.log('ðŸ“ Location update received:', position.coords);
+                    console.log(' Location update received:', position.coords);
                     
                     // Only update if location has changed significantly (more than 10 meters)
                     if (currentLocation) {
@@ -2974,7 +2974,7 @@
                         );
                         
                         if (distance < 10 && !currentLocation.isDemo && !currentLocation.isTest) {
-                            console.log('ðŸ“ Location change too small, skipping update');
+                            console.log(' Location change too small, skipping update');
                             return;
                         }
                     }
@@ -2986,7 +2986,7 @@
                         timestamp: new Date().toISOString()
                     };
                     
-                    console.log('ðŸ“ Location updated:', currentLocation);
+                    console.log(' Location updated:', currentLocation);
                     checkGeofenceStatus();
                     
                     // Log location every 5 minutes
@@ -2998,7 +2998,7 @@
                     }
                 },
                 (error) => {
-                    console.error('âŒ Location watch error:', error);
+                    console.error(' Location watch error:', error);
                     let errorMessage = 'Location tracking interrupted';
                     
                     switch(error.code) {
@@ -3013,7 +3013,7 @@
                             break;
                     }
                     
-                    updateLocationStatus('âš ï¸', errorMessage, 'unknown');
+                    updateLocationStatus('ï¸', errorMessage, 'unknown');
                 },
                 {
                     enableHighAccuracy: false,
@@ -3022,26 +3022,26 @@
                 }
             );
             
-            console.log('âœ… Location watcher started');
+            console.log(' Location watcher started');
         }
 
         function checkGeofenceStatus() {
             if (!currentLocation) {
-                console.log('âš ï¸ No current location available for geofence check');
+                console.log('ï¸ No current location available for geofence check');
                 return;
             }
 
-            console.log('ðŸ” Checking geofence status for location:', currentLocation);
+            console.log(' Checking geofence status for location:', currentLocation);
             
             // Check if we're near any active job locations instead of fixed geofences
             const jobs = db.load('jobs');
             const activeJobs = jobs.filter(j => j.status !== 'completed' && j.address);
             
-            console.log('ðŸ“ Active jobs with addresses:', activeJobs.length);
+            console.log(' Active jobs with addresses:', activeJobs.length);
             
             if (activeJobs.length === 0) {
-                console.log('âš ï¸ No active jobs with addresses found');
-                updateLocationStatus('âš ï¸', 'No active job locations', 'unknown');
+                console.log('ï¸ No active jobs with addresses found');
+                updateLocationStatus('ï¸', 'No active job locations', 'unknown');
                 return;
             }
             
@@ -3056,7 +3056,7 @@
                 const jobCoords = getJobCoordinates(job.address);
                 
                 if (!jobCoords) {
-                    console.log(`âš ï¸ Could not get coordinates for job: ${job.title}`);
+                    console.log(`ï¸ Could not get coordinates for job: ${job.title}`);
                     continue;
                 }
 
@@ -3067,7 +3067,7 @@
                     jobCoords.lng
                 );
 
-                console.log(`ðŸ“ Distance to ${job.title}: ${(distance/1000).toFixed(2)}km`);
+                console.log(` Distance to ${job.title}: ${(distance/1000).toFixed(2)}km`);
 
                 if (distance < minDistance) {
                     minDistance = distance;
@@ -3078,7 +3078,7 @@
                 if (distance <= 500) {
                     insideAny = true;
                     currentJobLocation = job;
-                    console.log(`âœ… At job location: ${job.title}`);
+                    console.log(` At job location: ${job.title}`);
                     break;
                 }
             }
@@ -3087,22 +3087,22 @@
             isInsideGeofence = insideAny;
 
             if (insideAny && currentJobLocation) {
-                updateLocationStatus('âœ…', `At job: ${currentJobLocation.title}`, 'inside');
+                updateLocationStatus('', `At job: ${currentJobLocation.title}`, 'inside');
                 hideGeofenceWarning();
-                console.log('âœ… User is at job location');
+                console.log(' User is at job location');
             } else if (closestJob) {
                 const distanceKm = (minDistance / 1000).toFixed(1);
-                updateLocationStatus('ðŸ“', `${distanceKm}km from ${closestJob.title}`, 'outside');
+                updateLocationStatus('', `${distanceKm}km from ${closestJob.title}`, 'outside');
                 showGeofenceWarning();
-                console.log(`ðŸ“ User is ${distanceKm}km from nearest job`);
+                console.log(` User is ${distanceKm}km from nearest job`);
             } else {
-                updateLocationStatus('â“', 'Location status unknown', 'unknown');
-                console.log('â“ Could not determine location status');
+                updateLocationStatus('', 'Location status unknown', 'unknown');
+                console.log(' Could not determine location status');
             }
 
             // Log geofence status change
             if (wasInside !== isInsideGeofence) {
-                console.log(`ðŸ”„ Job location status changed: ${wasInside ? 'at job' : 'away'} â†’ ${isInsideGeofence ? 'at job' : 'away'}`);
+                console.log(` Job location status changed: ${wasInside ? 'at job' : 'away'}  ${isInsideGeofence ? 'at job' : 'away'}`);
             }
 
             // Update location details in time tracker
@@ -3134,7 +3134,7 @@
             }
             
             // Default to St. George center if no match found
-            console.log(`âš ï¸ No coordinates found for address: ${address}, using St. George center`);
+            console.log(`ï¸ No coordinates found for address: ${address}, using St. George center`);
             return { lat: 37.0965, lng: -113.5684 };
         }
 
@@ -3173,12 +3173,12 @@
             const detailsEl = document.getElementById('locationDetails');
             if (!detailsEl || !currentLocation) return;
 
-            const accuracy = currentLocation.accuracy ? `Â±${Math.round(currentLocation.accuracy)}m` : 'Unknown accuracy';
+            const accuracy = currentLocation.accuracy ? `{Math.round(currentLocation.accuracy)}m` : 'Unknown accuracy';
             const timestamp = new Date(currentLocation.timestamp).toLocaleTimeString();
             
             detailsEl.innerHTML = `
                 Location: ${currentLocation.lat.toFixed(6)}, ${currentLocation.lng.toFixed(6)}<br>
-                Accuracy: ${accuracy} â€¢ Updated: ${timestamp}
+                Accuracy: ${accuracy}  Updated: ${timestamp}
             `;
         }
 
@@ -3290,7 +3290,7 @@
             // Start the timer interval
             timeTracker.interval = setInterval(updateTimeDisplay, 1000);
             
-            console.log('â±ï¸ Time tracking started for job:', timeTracker.currentJobId);
+            console.log('ï¸ Time tracking started for job:', timeTracker.currentJobId);
         }
 
         function pauseTimeTracking() {
@@ -3304,9 +3304,9 @@
             // Update UI
             document.getElementById('startTimer').style.display = 'inline-block';
             document.getElementById('pauseTimer').style.display = 'none';
-            document.getElementById('startTimer').textContent = 'â–¶ï¸ Resume';
+            document.getElementById('startTimer').textContent = 'ï¸ Resume';
             
-            console.log('â¸ï¸ Time tracking paused');
+            console.log('ï¸ Time tracking paused');
         }
 
         function stopTimeTracking() {
@@ -3338,7 +3338,7 @@
             document.getElementById('startTimer').style.display = 'inline-block';
             document.getElementById('pauseTimer').style.display = 'none';
             document.getElementById('stopTimer').style.display = 'none';
-            document.getElementById('startTimer').textContent = 'â–¶ï¸ Start';
+            document.getElementById('startTimer').textContent = 'ï¸ Start';
             document.getElementById('timeDisplay').textContent = '00:00:00';
             document.getElementById('sessionEarnings').textContent = 'Session Earnings: $0.00';
             
@@ -3347,7 +3347,7 @@
             loadGoalsProgress();
             
             showSuccess(`Time entry saved: ${formatTime(totalSeconds)}`);
-            console.log('â¹ï¸ Time tracking stopped, entry saved');
+            console.log('ï¸ Time tracking stopped, entry saved');
         }
 
         function saveTimeEntry(totalSeconds) {
@@ -3537,7 +3537,7 @@
             if (clients.length === 0) {
                 grid.innerHTML = `
                     <div class="job-card" style="text-align: center; grid-column: 1 / -1;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">ðŸ‘¥</div>
+                        <div style="font-size: 48px; margin-bottom: 15px;"></div>
                         <h3 style="color: #19a974; margin-bottom: 10px;">No Clients Yet</h3>
                         <p style="color: #98bfa7; margin-bottom: 20px;">
                             Add your first client to get started!
@@ -3589,10 +3589,10 @@
                     </div>
                     
                     <div class="job-actions" style="margin-top: 15px;">
-                        <button onclick="editClient(${client.id})" class="button button-secondary">âœï¸ Edit</button>
-                        <button onclick="viewClientDetails(${client.id})" class="button button-secondary">ðŸ‘ï¸ View</button>
-                        <button onclick="callClient('${client.phone}')" class="button" style="background: #28a745;">ðŸ“ž Call</button>
-                        <button onclick="deleteClient(${client.id})" class="button button-danger">ðŸ—‘ï¸ Delete</button>
+                        <button onclick="editClient(${client.id})" class="button button-secondary">ï¸ Edit</button>
+                        <button onclick="viewClientDetails(${client.id})" class="button button-secondary">ï¸ View</button>
+                        <button onclick="callClient('${client.phone}')" class="button" style="background: #28a745;"> Call</button>
+                        <button onclick="deleteClient(${client.id})" class="button button-danger">ï¸ Delete</button>
                     </div>
                 </div>
             `).join('');
@@ -3642,10 +3642,10 @@
         }
 
         function showClientRequests() {
-            console.log('ðŸ”” Opening client requests modal...');
+            console.log(' Opening client requests modal...');
             
             const allRequests = db.getClientRequests();
-            console.log(`ðŸ“‹ Total requests found: ${allRequests.length}`);
+            console.log(` Total requests found: ${allRequests.length}`);
             
             const modal = document.getElementById('clientRequestsModal');
             const requestsList = document.getElementById('requestsList');
@@ -3667,12 +3667,12 @@
                 filteredRequests = filteredRequests.filter(r => r.urgency === urgencyFilter);
             }
             
-            console.log(`ðŸ“‹ Filtered requests: ${filteredRequests.length}`);
+            console.log(` Filtered requests: ${filteredRequests.length}`);
             
             if (filteredRequests.length === 0) {
                 requestsList.innerHTML = `
                     <div class="job-card" style="text-align: center;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">ðŸ“­</div>
+                        <div style="font-size: 48px; margin-bottom: 15px;"></div>
                         <h3 style="color: #19a974; margin-bottom: 10px;">No Client Requests</h3>
                         <p style="color: #98bfa7;">
                             ${allRequests.length > 0 ? 'No requests match the current filters.' : 'Client requests for estimates and services will appear here.'}
@@ -3718,10 +3718,10 @@
                         
                         <div class="job-actions" style="margin-top: 15px;">
                             ${request.status === 'pending' ? `
-                                <button onclick="markRequestAsRead(${request.id})" class="button button-secondary">âœ“ Mark Read</button>
-                                <button onclick="processRequest(${request.id})" class="button">ðŸ“‹ Process Request</button>
+                                <button onclick="markRequestAsRead(${request.id})" class="button button-secondary"> Mark Read</button>
+                                <button onclick="processRequest(${request.id})" class="button"> Process Request</button>
                             ` : `
-                                <button onclick="viewProcessedRequest(${request.id})" class="button button-secondary">ðŸ‘ï¸ View Details</button>
+                                <button onclick="viewProcessedRequest(${request.id})" class="button button-secondary">ï¸ View Details</button>
                             `}
                         </div>
                     </div>
@@ -3733,7 +3733,7 @@
             // Set up filter event listeners
             setupRequestFilters();
             
-            console.log('âœ… Client requests modal opened');
+            console.log(' Client requests modal opened');
         }
         
         function setupRequestFilters() {
@@ -4019,7 +4019,7 @@
             }
             
             showSuccess(`Started working on: ${job.title}`);
-            console.log('â±ï¸ Job timer started for:', job.title);
+            console.log('ï¸ Job timer started for:', job.title);
         }
 
         function updateJobTimerDisplay() {
@@ -4057,12 +4057,12 @@
             const timerDiv = document.getElementById(`timer-${jobId}`);
             if (timerDiv) {
                 timerDiv.style.background = '#ffc107';
-                timerDiv.querySelector('div').innerHTML = 'â¸ï¸ TIMER PAUSED';
-                timerDiv.querySelector('button[onclick*="pause"]').innerHTML = 'â–¶ï¸ Resume';
+                timerDiv.querySelector('div').innerHTML = 'ï¸ TIMER PAUSED';
+                timerDiv.querySelector('button[onclick*="pause"]').innerHTML = 'ï¸ Resume';
                 timerDiv.querySelector('button[onclick*="pause"]').onclick = () => resumeJobTimer(jobId);
             }
             
-            console.log('â¸ï¸ Job timer paused');
+            console.log('ï¸ Job timer paused');
         }
 
         function resumeJobTimer(jobId) {
@@ -4078,12 +4078,12 @@
             const timerDiv = document.getElementById(`timer-${jobId}`);
             if (timerDiv) {
                 timerDiv.style.background = '#28a745';
-                timerDiv.querySelector('div').innerHTML = 'â±ï¸ TIMER RUNNING';
-                timerDiv.querySelector('button[onclick*="resume"]').innerHTML = 'â¸ï¸ Pause';
+                timerDiv.querySelector('div').innerHTML = 'ï¸ TIMER RUNNING';
+                timerDiv.querySelector('button[onclick*="resume"]').innerHTML = 'ï¸ Pause';
                 timerDiv.querySelector('button[onclick*="resume"]').onclick = () => pauseJobTimer(jobId);
             }
             
-            console.log('â–¶ï¸ Job timer resumed');
+            console.log('ï¸ Job timer resumed');
         }
 
         function stopJobTimer(jobId) {
@@ -4129,7 +4129,7 @@
             updateStats();
             
             showSuccess(`Time entry saved: ${formatTime(totalSeconds)}`);
-            console.log('â¹ï¸ Job timer stopped, entry saved');
+            console.log('ï¸ Job timer stopped, entry saved');
         }
 
         function editClient(clientId) {
@@ -4154,7 +4154,7 @@
             document.getElementById('clientNotes').value = client.notes || '';
             
             // Change modal title and button
-            document.querySelector('#addClientModal .modal-title').textContent = 'âœï¸ Edit Client';
+            document.querySelector('#addClientModal .modal-title').textContent = 'ï¸ Edit Client';
             document.querySelector('#addClientModal button[onclick="saveNewClient()"]').textContent = 'Update Client';
             document.querySelector('#addClientModal button[onclick="saveNewClient()"]').onclick = () => updateClient(clientId);
             
@@ -4208,7 +4208,7 @@
             closeAddClientModal();
             
             // Reset modal to add mode
-            document.querySelector('#addClientModal .modal-title').textContent = 'ðŸ‘¤ Add New Client';
+            document.querySelector('#addClientModal .modal-title').textContent = ' Add New Client';
             document.querySelector('#addClientModal button[onclick*="Client"]').textContent = 'Add Client';
             document.querySelector('#addClientModal button[onclick*="Client"]').onclick = saveNewClient;
             
@@ -4233,18 +4233,18 @@
             const details = `
 Client Details: ${client.name}
 
-ðŸ“§ Email: ${client.email || 'Not provided'}
-ðŸ“ž Phone: ${client.phone || 'Not provided'}
-ðŸ  Type: ${client.type ? client.type.replace('-', ' ').toUpperCase() : 'RESIDENTIAL'}
-ðŸ“ Address: ${client.address || 'Not provided'}
+ Email: ${client.email || 'Not provided'}
+ Phone: ${client.phone || 'Not provided'}
+ Type: ${client.type ? client.type.replace('-', ' ').toUpperCase() : 'RESIDENTIAL'}
+ Address: ${client.address || 'Not provided'}
 
-ðŸ“Š Statistics:
-â€¢ Total Jobs: ${clientJobs.length}
-â€¢ Completed Jobs: ${completedJobs.length}
-â€¢ Active Jobs: ${clientJobs.filter(j => j.status === 'in-progress').length}
-â€¢ Total Spent: $${totalSpent.toFixed(2)}
+ Statistics:
+ Total Jobs: ${clientJobs.length}
+ Completed Jobs: ${completedJobs.length}
+ Active Jobs: ${clientJobs.filter(j => j.status === 'in-progress').length}
+ Total Spent: $${totalSpent.toFixed(2)}
 
-ðŸ“ Notes: ${client.notes || 'No notes'}
+ Notes: ${client.notes || 'No notes'}
 
 Member Since: ${formatDateTime(client.createdAt)}
 Last Updated: ${formatDateTime(client.updatedAt)}
@@ -4310,7 +4310,7 @@ Last Updated: ${formatDateTime(client.updatedAt)}
             if (workers.length === 0) {
                 grid.innerHTML = `
                     <div class="job-card" style="text-align: center; grid-column: 1 / -1;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">ðŸ‘·</div>
+                        <div style="font-size: 48px; margin-bottom: 15px;"></div>
                         <h3 style="color: #19a974; margin-bottom: 10px;">No Workers Found</h3>
                         <p style="color: #98bfa7; margin-bottom: 20px;">
                             Add your first worker to get started!
@@ -4380,9 +4380,9 @@ Last Updated: ${formatDateTime(client.updatedAt)}
                     </div>
                     
                     <div class="job-actions" style="margin-top: 15px;">
-                        <button onclick="viewWorkerDetails(${worker.id})" class="button button-secondary">ðŸ‘ï¸ View Details</button>
-                        <button onclick="editWorker(${worker.id})" class="button button-secondary">âœï¸ Edit</button>
-                        <button onclick="viewWorkerTimeEntries(${worker.id})" class="button">â±ï¸ Time Entries</button>
+                        <button onclick="viewWorkerDetails(${worker.id})" class="button button-secondary">ï¸ View Details</button>
+                        <button onclick="editWorker(${worker.id})" class="button button-secondary">ï¸ Edit</button>
+                        <button onclick="viewWorkerTimeEntries(${worker.id})" class="button">ï¸ Time Entries</button>
                     </div>
                 </div>
             `).join('');
@@ -4396,7 +4396,7 @@ Last Updated: ${formatDateTime(client.updatedAt)}
             if (activeGoals.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 20px; color: #98bfa7;">
-                        <div style="font-size: 32px; margin-bottom: 10px;">ðŸŽ¯</div>
+                        <div style="font-size: 32px; margin-bottom: 10px;"></div>
                         <div>No active goals set</div>
                         <button onclick="alert('Goal management coming soon!')" class="button" style="margin-top: 15px; width: auto; padding: 8px 16px;">Set Your First Goal</button>
                     </div>
@@ -4421,7 +4421,7 @@ Last Updated: ${formatDateTime(client.updatedAt)}
                             <span>${goal.current} / ${goal.target} ${goal.type === 'revenue' ? '$' : goal.type === 'hours' ? 'hrs' : ''}</span>
                             <span>${goal.period} goal</span>
                         </div>
-                        ${isOverTarget ? '<div style="color: #28a745; font-size: 12px; margin-top: 5px;">ðŸŽ‰ Goal exceeded!</div>' : ''}
+                        ${isOverTarget ? '<div style="color: #28a745; font-size: 12px; margin-top: 5px;"> Goal exceeded!</div>' : ''}
                     </div>
                 `;
             }).join('');
@@ -4446,20 +4446,20 @@ Last Updated: ${formatDateTime(client.updatedAt)}
             const details = `
 Worker Details: ${worker.name}
 
-ðŸ“§ Email: ${worker.email || 'Not provided'}
-ðŸ“ž Phone: ${worker.phone || 'Not provided'}
-ðŸ’° Hourly Rate: $${worker.hourlyRate || 0}/hr
-ðŸ“… Hire Date: ${formatDate(worker.hireDate)}
-ðŸ“Š Status: ${worker.status}
+ Email: ${worker.email || 'Not provided'}
+ Phone: ${worker.phone || 'Not provided'}
+ Hourly Rate: $${worker.hourlyRate || 0}/hr
+ Hire Date: ${formatDate(worker.hireDate)}
+ Status: ${worker.status}
 
-ðŸ› ï¸ Skills: ${worker.skills ? worker.skills.join(', ') : 'None listed'}
+ï¸ Skills: ${worker.skills ? worker.skills.join(', ') : 'None listed'}
 
-ðŸ“ˆ Performance:
-â€¢ Total Hours: ${totalHours.toFixed(2)}
-â€¢ Total Earnings: $${totalEarnings.toFixed(2)}
-â€¢ Jobs Completed: ${worker.jobsCompleted || 0}
-â€¢ Average Rate: $${avgRate.toFixed(2)}/hr
-â€¢ Currently Working: ${worker.currentlyWorking ? 'Yes' : 'No'}
+ Performance:
+ Total Hours: ${totalHours.toFixed(2)}
+ Total Earnings: $${totalEarnings.toFixed(2)}
+ Jobs Completed: ${worker.jobsCompleted || 0}
+ Average Rate: $${avgRate.toFixed(2)}/hr
+ Currently Working: ${worker.currentlyWorking ? 'Yes' : 'No'}
 
 Recent Activity: ${workerEntries.length} time entries
             `;
@@ -4487,7 +4487,7 @@ Recent Activity: ${workerEntries.length} time entries
             document.getElementById('workerStatus').value = worker.status || 'active';
             
             // Change modal title and button
-            document.querySelector('#addWorkerModal .modal-title').textContent = 'âœï¸ Edit Worker';
+            document.querySelector('#addWorkerModal .modal-title').textContent = 'ï¸ Edit Worker';
             document.querySelector('#addWorkerModal button[onclick="saveNewWorker()"]').textContent = 'Update Worker';
             document.querySelector('#addWorkerModal button[onclick="saveNewWorker()"]').onclick = () => updateWorker(workerId);
             
@@ -4569,7 +4569,7 @@ Recent Activity: ${workerEntries.length} time entries
                     
                 grid.innerHTML = `
                     <div class="job-card" style="text-align: center; grid-column: 1 / -1;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">ðŸ“‹</div>
+                        <div style="font-size: 48px; margin-bottom: 15px;"></div>
                         <h3 style="color: #19a974; margin-bottom: 10px;">${emptyMessage}</h3>
                         <p style="color: #98bfa7; margin-bottom: 20px;">
                             ${filterTab === 'all' ? 'Get started by adding your first job!' : `No jobs match the ${filterTab} filter.`}
@@ -4629,28 +4629,28 @@ Recent Activity: ${workerEntries.length} time entries
                         ${job.totalHours > 0 ? `
                             <div style="margin-top: 10px; padding: 10px; background: #1f2a1f; border-radius: 6px; border-left: 4px solid #19a974;">
                                 <div style="color: #98bfa7; font-size: 12px; margin-bottom: 5px;">Time Worked:</div>
-                                <div style="color: #19a974; font-weight: 600;">${job.totalHours.toFixed(2)} hours â€¢ $${(job.totalEarnings || 0).toFixed(2)} earned</div>
+                                <div style="color: #19a974; font-weight: 600;">${job.totalHours.toFixed(2)} hours  $${(job.totalEarnings || 0).toFixed(2)} earned</div>
                             </div>
                         ` : ''}
                     </div>
                     
                     <!-- Active Timer Display -->
                     <div id="timer-${job.id}" style="display: none; margin-top: 15px; padding: 15px; background: #28a745; border-radius: 8px; text-align: center;">
-                        <div style="color: white; font-weight: 600; margin-bottom: 5px;">â±ï¸ TIMER RUNNING</div>
+                        <div style="color: white; font-weight: 600; margin-bottom: 5px;">ï¸ TIMER RUNNING</div>
                         <div class="job-timer-display" data-job-id="${job.id}" style="color: white; font-size: 1.5rem; font-weight: 700; font-family: monospace;">00:00:00</div>
                         <div style="margin-top: 10px;">
-                            <button onclick="pauseJobTimer(${job.id})" class="button" style="background: #ffc107; color: #000; margin-right: 10px;">â¸ï¸ Pause</button>
-                            <button onclick="stopJobTimer(${job.id})" class="button" style="background: #28a745;">âœ… Complete</button>
+                            <button onclick="pauseJobTimer(${job.id})" class="button" style="background: #ffc107; color: #000; margin-right: 10px;">ï¸ Pause</button>
+                            <button onclick="stopJobTimer(${job.id})" class="button" style="background: #28a745;"> Complete</button>
                         </div>
                     </div>
                     
                     <div class="job-actions" style="margin-top: 15px;">
                         ${job.status !== 'completed' ? `
-                            <button onclick="startJobTimer(${job.id})" class="button" style="background: #28a745;" id="start-btn-${job.id}">â–¶ï¸ Start Job</button>
+                            <button onclick="startJobTimer(${job.id})" class="button" style="background: #28a745;" id="start-btn-${job.id}">ï¸ Start Job</button>
                         ` : ''}
-                        <button onclick="showEditJobModal(${job.id})" class="button button-secondary">âœï¸ Edit</button>
-                        <button class="button button-secondary comments-btn" data-job-id="${job.id}">ðŸ’¬ Comments</button>
-                        <button onclick="deleteJob(${job.id})" class="button button-danger">ðŸ—‘ï¸ Delete</button>
+                        <button onclick="showEditJobModal(${job.id})" class="button button-secondary">ï¸ Edit</button>
+                        <button class="button button-secondary comments-btn" data-job-id="${job.id}"> Comments</button>
+                        <button onclick="deleteJob(${job.id})" class="button button-danger">ï¸ Delete</button>
                     </div>
                 </div>
             `).join('');
@@ -4737,7 +4737,7 @@ Recent Activity: ${workerEntries.length} time entries
                 return;
             }
             
-            console.log('ðŸ—ºï¸ Opening address in maps:', address);
+            console.log('ï¸ Opening address in maps:', address);
             
             // Encode the address for URL
             const encodedAddress = encodeURIComponent(address);
@@ -4759,7 +4759,7 @@ Recent Activity: ${workerEntries.length} time entries
         // ===== DEBUG FUNCTIONS =====
         
         function testLocationSystem() {
-            console.log('ðŸ§ª Testing location system...');
+            console.log(' Testing location system...');
             
             // Test with different locations
             const testLocations = [
@@ -4773,13 +4773,13 @@ Recent Activity: ${workerEntries.length} time entries
             
             function runNextTest() {
                 if (testIndex >= testLocations.length) {
-                    console.log('âœ… Location testing complete');
+                    console.log(' Location testing complete');
                     showSuccess('Location testing complete! Check console for details.');
                     return;
                 }
                 
                 const testLocation = testLocations[testIndex];
-                console.log(`ðŸ§ª Testing location: ${testLocation.name}`);
+                console.log(` Testing location: ${testLocation.name}`);
                 
                 // Temporarily set location
                 currentLocation = {
@@ -4796,9 +4796,9 @@ Recent Activity: ${workerEntries.length} time entries
                 const expectedInside = testLocation.shouldBeInside;
                 
                 if (actualInside === expectedInside) {
-                    console.log(`âœ… ${testLocation.name}: PASS (${actualInside ? 'inside' : 'outside'})`);
+                    console.log(` ${testLocation.name}: PASS (${actualInside ? 'inside' : 'outside'})`);
                 } else {
-                    console.log(`âŒ ${testLocation.name}: FAIL (expected ${expectedInside ? 'inside' : 'outside'}, got ${actualInside ? 'inside' : 'outside'})`);
+                    console.log(` ${testLocation.name}: FAIL (expected ${expectedInside ? 'inside' : 'outside'}, got ${actualInside ? 'inside' : 'outside'})`);
                 }
                 
                 testIndex++;
@@ -4809,7 +4809,7 @@ Recent Activity: ${workerEntries.length} time entries
         }
         
         function testNotificationSystem() {
-            console.log('ðŸ§ª Testing notification system...');
+            console.log(' Testing notification system...');
             
             // Create a test request
             const testRequest = {
@@ -4822,15 +4822,15 @@ Recent Activity: ${workerEntries.length} time entries
                 clientId: 'test-client-123'
             };
             
-            console.log('ðŸ“ Creating test request:', testRequest);
+            console.log(' Creating test request:', testRequest);
             
             const savedRequest = db.addClientRequest(testRequest);
-            console.log('ðŸ’¾ Test request saved:', savedRequest);
+            console.log(' Test request saved:', savedRequest);
             
             // Force update notification count
             setTimeout(() => {
                 const count = db.updateNotificationCount();
-                console.log(`ðŸ”” Current notification count: ${count}`);
+                console.log(` Current notification count: ${count}`);
                 
                 if (count > 0) {
                     showSuccess(`Test notification created! Badge shows ${count} notifications.`);
@@ -5078,20 +5078,20 @@ Recent Activity: ${workerEntries.length} time entries
             
             // Validate required fields
             if (!firstName || !lastName || !phone || !street || !city || !state || !zipcode) {
-                showSuccess('âš ï¸ Please fill in all required fields: name, phone, and complete address');
+                showSuccess('ï¸ Please fill in all required fields: name, phone, and complete address');
                 return;
             }
 
             // Normalize and validate phone number: strip non-digits and require at least 10 digits
             const phoneDigits = phone.replace(/\D/g, '');
             if (phoneDigits.length < 10) {
-                showSuccess('âš ï¸ Please enter a valid phone number (at least 10 digits).');
+                showSuccess('ï¸ Please enter a valid phone number (at least 10 digits).');
                 return;
             }
 
             // Simple email validation if provided
             if (email && !/^\S+@\S+\.\S+$/.test(email)) {
-                showSuccess('âš ï¸ Please enter a valid email address.');
+                showSuccess('ï¸ Please enter a valid email address.');
                 return;
             }
 
@@ -5104,7 +5104,7 @@ Recent Activity: ${workerEntries.length} time entries
                 ) || (c.phone && c.phone.replace(/\D/g, '') === phoneDigits) || (email && c.email && c.email.toLowerCase() === email.toLowerCase());
             });
             if (duplicate) {
-                showSuccess('âš ï¸ A client with the same name, phone number, or email already exists.');
+                showSuccess('ï¸ A client with the same name, phone number, or email already exists.');
                 return;
             }
 
@@ -5161,7 +5161,7 @@ Recent Activity: ${workerEntries.length} time entries
             clearWorkerForm();
             
             // Reset modal to add mode
-            document.querySelector('#addWorkerModal .modal-title').textContent = 'ðŸ‘· Add New Worker';
+            document.querySelector('#addWorkerModal .modal-title').textContent = ' Add New Worker';
             document.querySelector('#addWorkerModal button[onclick*="Worker"]').textContent = 'Add Worker';
             document.querySelector('#addWorkerModal button[onclick*="Worker"]').onclick = saveNewWorker;
         }
@@ -5344,7 +5344,7 @@ Recent Activity: ${workerEntries.length} time entries
             if (goals.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: #98bfa7;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">ðŸŽ¯</div>
+                        <div style="font-size: 48px; margin-bottom: 15px;"></div>
                         <h3 style="color: #19a974; margin-bottom: 10px;">No Goals Set</h3>
                         <p>Create your first goal to start tracking progress!</p>
                     </div>
@@ -5385,14 +5385,14 @@ Recent Activity: ${workerEntries.length} time entries
                                 <span>${goal.type.charAt(0).toUpperCase() + goal.type.slice(1)} Goal</span>
                                 <span>${goal.period} period</span>
                             </div>
-                            ${isOverTarget ? '<div style="color: #28a745; font-size: 12px; margin-top: 5px;">ðŸŽ‰ Goal exceeded!</div>' : ''}
+                            ${isOverTarget ? '<div style="color: #28a745; font-size: 12px; margin-top: 5px;"> Goal exceeded!</div>' : ''}
                         </div>
                         
                         <div class="job-actions">
                             <button onclick="toggleGoalStatus(${goal.id})" class="button button-secondary">
-                                ${goal.active ? 'â¸ï¸ Deactivate' : 'â–¶ï¸ Activate'}
+                                ${goal.active ? 'ï¸ Deactivate' : 'ï¸ Activate'}
                             </button>
-                            <button onclick="deleteGoal(${goal.id})" class="button button-danger">ðŸ—‘ï¸ Delete</button>
+                            <button onclick="deleteGoal(${goal.id})" class="button button-danger">ï¸ Delete</button>
                         </div>
                     </div>
                 `;
@@ -5468,7 +5468,7 @@ Recent Activity: ${workerEntries.length} time entries
         // ===== CLOUD SETUP FUNCTIONS =====
         
         function showCloudSetupModal() {
-            console.log('â˜ï¸ Opening cloud setup modal...');
+            console.log('ï¸ Opening cloud setup modal...');
             
             // Load existing config if available
             loadExistingFirebaseConfig();
@@ -5496,10 +5496,10 @@ Recent Activity: ${workerEntries.length} time entries
                     document.getElementById('firebaseMessagingSenderId').value = config.messagingSenderId || '';
                     document.getElementById('firebaseAppId').value = config.appId || '';
                     
-                    console.log('âœ… Loaded existing Firebase configuration');
+                    console.log(' Loaded existing Firebase configuration');
                 }
             } catch (error) {
-                console.error('âŒ Failed to load existing config:', error);
+                console.error(' Failed to load existing config:', error);
             }
         }
         
@@ -5512,26 +5512,26 @@ Recent Activity: ${workerEntries.length} time entries
                     const config = JSON.parse(saved);
                     if (config.apiKey && config.projectId && config.apiKey !== 'your-api-key-here') {
                         statusDiv.innerHTML = `
-                            <div style="font-weight: 600; margin-bottom: 5px;">âœ… Cloud Storage: Enabled</div>
+                            <div style="font-weight: 600; margin-bottom: 5px;"> Cloud Storage: Enabled</div>
                             <div style="font-size: 14px;">Connected to Firebase project: ${config.projectId}</div>
                         `;
                         statusDiv.style.background = '#28a745';
                         return;
                     }
                 } catch (error) {
-                    console.error('âŒ Invalid saved config:', error);
+                    console.error(' Invalid saved config:', error);
                 }
             }
             
             statusDiv.innerHTML = `
-                <div style="font-weight: 600; margin-bottom: 5px;">âŒ Cloud Storage: Disabled</div>
+                <div style="font-weight: 600; margin-bottom: 5px;"> Cloud Storage: Disabled</div>
                 <div style="font-size: 14px;">Currently using local storage only. Set up Firebase to enable cloud sync.</div>
             `;
             statusDiv.style.background = '#dc3545';
         }
         
         function testFirebaseConnection() {
-            console.log('ðŸ§ª Testing Firebase connection...');
+            console.log(' Testing Firebase connection...');
             
             const config = getFirebaseConfigFromForm();
             if (!config) return;
@@ -5540,7 +5540,7 @@ Recent Activity: ${workerEntries.length} time entries
             testDiv.style.display = 'block';
             testDiv.innerHTML = `
                 <div style="background: #ffc107; color: #000; padding: 15px; border-radius: 8px;">
-                    <div style="font-weight: 600; margin-bottom: 5px;">ðŸ§ª Testing Connection...</div>
+                    <div style="font-weight: 600; margin-bottom: 5px;"> Testing Connection...</div>
                     <div style="font-size: 14px;">Attempting to connect to Firebase...</div>
                 </div>
             `;
@@ -5550,30 +5550,30 @@ Recent Activity: ${workerEntries.length} time entries
                 if (config.apiKey && config.projectId && config.authDomain && config.appId) {
                     testDiv.innerHTML = `
                         <div style="background: #28a745; color: white; padding: 15px; border-radius: 8px;">
-                            <div style="font-weight: 600; margin-bottom: 5px;">âœ… Connection Successful!</div>
+                            <div style="font-weight: 600; margin-bottom: 5px;"> Connection Successful!</div>
                             <div style="font-size: 14px;">
                                 Successfully connected to Firebase project: <strong>${config.projectId}</strong><br>
                                 Ready to enable cloud sync!
                             </div>
                         </div>
                     `;
-                    console.log('âœ… Firebase connection test passed');
+                    console.log(' Firebase connection test passed');
                 } else {
                     testDiv.innerHTML = `
                         <div style="background: #dc3545; color: white; padding: 15px; border-radius: 8px;">
-                            <div style="font-weight: 600; margin-bottom: 5px;">âŒ Connection Failed</div>
+                            <div style="font-weight: 600; margin-bottom: 5px;"> Connection Failed</div>
                             <div style="font-size: 14px;">
                                 Please check your configuration. Required fields: API Key, Project ID, Auth Domain, and App ID.
                             </div>
                         </div>
                     `;
-                    console.log('âŒ Firebase connection test failed - missing required fields');
+                    console.log(' Firebase connection test failed - missing required fields');
                 }
             }, 2000);
         }
         
         function saveFirebaseConfig() {
-            console.log('ðŸ’¾ Saving Firebase configuration...');
+            console.log(' Saving Firebase configuration...');
             
             const config = getFirebaseConfigFromForm();
             if (!config) return;
@@ -5596,12 +5596,12 @@ Recent Activity: ${workerEntries.length} time entries
                 // Update database status indicator
                 const dbStatus = document.getElementById('dbStatus');
                 if (dbStatus) {
-                    dbStatus.textContent = 'â˜ï¸ Cloud Enabled';
+                    dbStatus.textContent = 'ï¸ Cloud Enabled';
                     dbStatus.className = 'db-status';
                     dbStatus.style.display = 'block';
                 }
                 
-                console.log('âœ… Firebase configuration saved successfully');
+                console.log(' Firebase configuration saved successfully');
                 
                 // Close modal after short delay
                 setTimeout(() => {
@@ -5609,7 +5609,7 @@ Recent Activity: ${workerEntries.length} time entries
                 }, 2000);
                 
             } catch (error) {
-                console.error('âŒ Failed to save Firebase config:', error);
+                console.error(' Failed to save Firebase config:', error);
                 alert('Failed to save configuration. Please try again.');
             }
         }
@@ -5996,7 +5996,7 @@ function updateDashboard() {
                     <div id="jobChatModalContent" style="background: #0c1a0c; padding: 20px; border-radius: 8px; max-width: 500px; width: 90%; color: #e6ffee; position: relative;">
                         <!-- Close button triggers global close function -->
                         <span id="jobChatModalClose" onclick="window.closeJobChatModal()" style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px;">&times;</span>
-                        <h3 style="margin-top: 0; margin-bottom: 15px; color: #19a974;">ðŸ’¬ Job Comments</h3>
+                        <h3 style="margin-top: 0; margin-bottom: 15px; color: #19a974;"> Job Comments</h3>
                         <div id="jobChatMessages" style="max-height: 300px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #334; padding: 10px; border-radius: 4px; background: #152415; pointer-events: none;"></div>
                         <textarea id="jobChatInput" rows="3" placeholder="Type a message..." style="width: 100%; margin-bottom: 10px; background: #1f2a1f; color: #e6ffee; border: 1px solid #334; border-radius: 4px;"></textarea>
                         <!-- Send button triggers global send function.  Using inline onclick ensures the handler is available -->
@@ -6084,6 +6084,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Removed overrides for legacy sign-up buttons.  Event handlers are now set
 // directly on the buttons when the registration modal script loads.
 </script>
+
 
 
 
