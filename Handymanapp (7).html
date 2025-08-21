@@ -1164,6 +1164,7 @@
                          Requests
                         <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
                     </button>
+                    <button id="hm-users-top" class="button button-secondary" style="display: none;">User Roles</button>
                     <!-- Test Location button removed -->
                     <button id="addJobBtn" class="button">+ Add New Job</button>
                     <button id="clientViewBtn" class="button button-secondary">&#128280; Client View</button>
@@ -5653,7 +5654,7 @@ Recent Activity: ${workerEntries.length} time entries
 <script>
 (function(){
   const $ = (sel, root=document) => root.querySelector(sel);
-  const $ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
   function loadUsers(){ try { return (window.db && db.load('users')) || []; } catch(e){ return []; } }
   function saveUsers(users){ if(window.db){ db.save('users', users); } else { localStorage.setItem('users', JSON.stringify(users)); } }
 
@@ -5688,7 +5689,7 @@ Recent Activity: ${workerEntries.length} time entries
       </div>
     `).join('');
 
-    $('.hm-del', list).forEach(btn=>{
+    $$('.hm-del', list).forEach(btn=>{
       btn.addEventListener('click', (e)=>{
         const row = e.target.closest('.user-row');
         const id = +row.dataset.id;
@@ -5701,6 +5702,7 @@ Recent Activity: ${workerEntries.length} time entries
 
   function nextId(arr){ return arr.length ? Math.max.apply(null, arr.map(u=>+u.id||0))+1 : 1; }
   function openModal(){ renderList(); $('#hm-users-modal').style.display='block'; }
+    window.hmOpenUsersModal = openModal;
   function closeModal(){ $('#hm-users-modal').style.display='none'; }
 
   $('#hm-users-fab').addEventListener('click', openModal);
@@ -5715,7 +5717,7 @@ Recent Activity: ${workerEntries.length} time entries
   });
 
   $('#hm-users-save').addEventListener('click', ()=>{
-    const rows = $('.user-row', $('#hm-users-list'));
+    const rows = $$('.user-row', $('#hm-users-list'));
     const updated = rows.map(r => {
       const id = +r.dataset.id;
       const u = { id,
@@ -5754,7 +5756,7 @@ document.addEventListener('DOMContentLoaded', function(){
   function isAdmin(){ const u = getCurrentUser(); return !!(u && (u.role==='admin' || u.username==='admin')); }
 
   const topBtn = document.getElementById('hm-users-top');
-  function refreshVis(){ if (topBtn) topBtn.style.display = isAdmin() ? 'block' : 'none'; }
+  function refreshVis(){ if (topBtn) topBtn.style.display = isAdmin() ? 'inline-block' : 'none'; }
   refreshVis();
   const iv = setInterval(()=>{ refreshVis(); if (isAdmin()) clearInterval(iv); }, 500);
 
