@@ -5741,6 +5741,29 @@ Recent Activity: ${workerEntries.length} time entries
 })();
 </script>
 <!-- END HM USERS MANAGER -->
+<!-- HM USERS TOPBTN WIRE -->
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  function getCurrentUser(){
+    try{
+      if (window.currentUser) return window.currentUser;
+      const s = localStorage.getItem('currentUser'); if (s) return JSON.parse(s);
+    }catch(e){}
+    return null;
+  }
+  function isAdmin(){ const u = getCurrentUser(); return !!(u && (u.role==='admin' || u.username==='admin')); }
+
+  const topBtn = document.getElementById('hm-users-top');
+  function refreshVis(){ if (topBtn) topBtn.style.display = isAdmin() ? 'block' : 'none'; }
+  refreshVis();
+  const iv = setInterval(()=>{ refreshVis(); if (isAdmin()) clearInterval(iv); }, 500);
+
+  if (topBtn) topBtn.addEventListener('click', ()=> {
+    if (typeof window.hmOpenUsersModal === 'function') window.hmOpenUsersModal();
+    else alert('Users manager not loaded.');
+  });
+});
+</script>
 </body>
 </html>
 
@@ -6061,5 +6084,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // Removed overrides for legacy sign-up buttons.  Event handlers are now set
 // directly on the buttons when the registration modal script loads.
 </script>
+
 
 
