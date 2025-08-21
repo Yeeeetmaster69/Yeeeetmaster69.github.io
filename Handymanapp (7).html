@@ -2773,10 +2773,10 @@
                 
                 if (passwordField.type === 'password') {
                     passwordField.type = 'text';
-                    toggleBtn.textContent = '';
+                    toggleBtn.innerHTML = '&#128584;'; // 🙈
                 } else {
                     passwordField.type = 'password';
-                    toggleBtn.textContent = 'ï¸';
+                    toggleBtn.innerHTML = '&#128065;'; // 👁
                 }
             });
         }
