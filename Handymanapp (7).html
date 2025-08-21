@@ -1390,7 +1390,7 @@
                         <button id="scheduleServiceBtn" class="button" onclick="showServiceModal()"> Schedule Service</button>
                         <button id="testNotificationBtn" class="button" style="background: #ffc107; color: #000;"> Test Notification</button>
                         <button id="returnToAdminBtn" class="button" style="display: none;" onclick="returnToAdmin()"> Return to Admin</button>
-                        <button id="clientLogoutBtn" class="button button-secondary" onclick="handleClientLogout()">Logout</button>
+                        <button id="clientLogoutBtn" class="button button-secondary">Logout</button>
                     </div>
                 </div>
 
@@ -2698,9 +2698,7 @@
         }
 
         function setupEventListeners() {
-            // Login
-            document.getElementById('loginBtn').addEventListener('click', handleLogin);
-            
+           
             // Main app buttons
             // Cloud Setup button removed
             document.getElementById('addJobBtn').addEventListener('click', showAddJobModal);
@@ -2711,7 +2709,6 @@
 
             document.getElementById('manageGoalsBtn').addEventListener('click', showManageGoalsModal);
             
-            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
             document.getElementById('clientViewBtn').addEventListener('click', showClientView);
             
             // Client requests
@@ -2760,7 +2757,6 @@
             // Client portal buttons
             document.getElementById('requestEstimateBtn').addEventListener('click', showEstimateModal);
             document.getElementById('scheduleServiceBtn').addEventListener('click', showServiceModal);
-            document.getElementById('clientLogoutBtn').addEventListener('click', handleClientLogout);
             document.getElementById('returnToAdminBtn').addEventListener('click', returnToAdmin);
 
             // Tab navigation
@@ -2804,53 +2800,6 @@
                     toggleBtn.innerHTML = '&#128065;'; // 👁
                 }
             });
-        }
-
-        function handleLogin() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const errorDiv = document.getElementById('loginError');
-
-            if (!username || !password) {
-                showError(errorDiv, 'Please enter both username and password');
-                return;
-            }
-
-            const users = db.load('users');
-            const user = users.find(u => u.username === username && u.password === password);
-            
-            if (user) {
-                currentUser = user;
-                document.getElementById('loginForm').style.display = 'none';
-                
-                if (user.role === 'client') {
-                    // Show client portal
-                    currentClientUser = user;
-                    showClientPortal();
-                } else {
-                    // Show admin app
-                    document.getElementById('mainApp').style.display = 'block';
-                    document.getElementById('userName').textContent = user.name;
-                    loadDashboard();
-                }
-            } else {
-                showError(errorDiv, 'Invalid username or password');
-            }
-        }
-
-        function handleLogout() {
-            currentUser = null;
-            currentClientUser = null;
-            isClientView = false;
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('clientPortal').style.display = 'none';
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        function handleClientLogout() {
-            handleLogout();
         }
 
         function showClientView() {
