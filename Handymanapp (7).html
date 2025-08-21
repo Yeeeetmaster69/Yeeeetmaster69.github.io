@@ -939,6 +939,28 @@
             color: #98bfa7;
         }
     </style>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+      .hidden { display: none !important; }
+      #roleBar {
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+        padding: 8px;
+        text-align: center;
+        background: #a1d1b7;
+        color: #0f3c2b;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(0,0,0,.15);
+      }
+      #roleBar button {
+        border: 0;
+        background: transparent;
+        font: inherit;
+        color: inherit;
+      }
+    </style>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
@@ -947,6 +969,10 @@
 
 </head>
 <body>
+    <div id="roleBar" class="hidden">
+      <span id="roleViewLabel"></span>
+      <button id="roleMgrFab" onclick="toggleRole()"><i class="bi bi-wrench-adjustable"></i> Switch Role</button>
+    </div>
     <!-- Database Status Indicator -->
     <div id="dbStatus" class="db-status" style="display: none;">
          Database Ready
@@ -5764,8 +5790,9 @@ document.addEventListener('DOMContentLoaded', function(){
     if (typeof window.hmOpenUsersModal === 'function') window.hmOpenUsersModal();
     else alert('Users manager not loaded.');
   });
-});
-</script>
+  });
+  </script>
+  <script type="module" src="role-manager.js"></script>
 </body>
 </html>
 
