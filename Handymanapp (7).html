@@ -2783,10 +2783,11 @@
                 });
             });
 
-            // Enter key for login
+            // Replace the existing Enter key handler so it clicks the real Firebase login button
             document.getElementById('password').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    handleLogin();
+                    // Trigger the same click handler wired to Firebase signInWithEmailAndPassword
+                    document.getElementById('loginBtn').click();
                 }
             });
 
@@ -5907,16 +5908,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   const email = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const uid = userCredential.user.uid;
-    const userDoc = await getDoc(doc(fsDB, "users", uid));
-    if (userDoc.exists()) {
-      currentUser = userDoc.data();
-      document.getElementById("userName").textContent = currentUser.email;
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("mainApp").style.display = "block";
-      updateDashboard();
-    }
+    await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
     document.getElementById("loginError").style.display = "block";
     document.getElementById("loginError").textContent = err.message;
@@ -5961,23 +5953,37 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 
 // ====== AUTH STATE PERSISTENCE ======
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const userDoc = await getDoc(doc(fsDB, "users", user.uid));
-    if (userDoc.exists()) {
-      currentUser = userDoc.data();
-      // Set UID on currentUser for convenience when storing tokens
-      currentUser.uid = user.uid;
-      document.getElementById("userName").textContent = currentUser.email;
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("mainApp").style.display = "block";
-      updateDashboard();
-      // Request notification permission and register FCM token for this user
-      requestNotificationPermission();
-    }
-  } else {
+ if (!user) {
     document.getElementById("mainApp").style.display = "none";
     document.getElementById("loginForm").style.display = "block";
+     return;
   }
+
+  const uref = doc(fsDB, "users", user.uid);
+  let snap = await getDoc(uref);
+
+  // ✅ Create a default profile if missing
+  if (!snap.exists()) {
+    await setDoc(uref, {
+      email: (user.email || "").toLowerCase(),
+      role: "client",                // default role
+      createdAt: new Date().toISOString()
+    }, { merge: true });
+    snap = await getDoc(uref);
+  }
+    
+  // Stash role + uid everywhere the app expects it
+  window.currentUser = { ...snap.data(), uid: user.uid };
+  currentUser = window.currentUser;
+  localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
+
+  // Minimal UI wiring
+  document.getElementById("userName").textContent = window.currentUser.email;
+  document.getElementById("loginForm").style.display = "none";
+  document.getElementById("mainApp").style.display = "block";
+
+  updateDashboard();
+  requestNotificationPermission?.();
 });
 
 // ====== DASHBOARD UPDATE PLACEHOLDER ======
