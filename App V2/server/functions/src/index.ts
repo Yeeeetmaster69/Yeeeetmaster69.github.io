@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import * as cors from 'cors';
 import { Expo } from 'expo-server-sdk';
 import { randomUUID } from 'crypto';
-import { SquareClient, SquareEnvironment } from 'square';
+import { makeClient, getLocationId } from './square';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -52,27 +52,6 @@ export const broadcast = functions.https.onRequest((req,res)=>{
     }catch(e:any){ res.status(500).send(e.message) }
   });
 });
-
-// --- Square endpoints ---
-function makeClient(): any {
-  const token = (functions.config().square && functions.config().square.token) || process.env.SQUARE_ACCESS_TOKEN;
-  const env = (functions.config().square && functions.config().square.env) || process.env.SQUARE_ENV || 'sandbox';
-  if (!token)
-    throw new Error('Square token missing. Set via: firebase functions:config:set square.token="..."; square.env="production|sandbox"; square.location_id="..."');
-  const environment = env === 'production' ? SquareEnvironment.Production : SquareEnvironment.Sandbox;
-   return new SquareClient({ token, environment }) as any;
-}
-
-async function getLocationId(client: any): Promise<string> {
-  // Prefer configured location id
-  const cfgLoc = (functions.config().square && functions.config().square.location_id) || process.env.SQUARE_LOCATION_ID;
-  if (cfgLoc) return cfgLoc;
-  // Fallback to first active location
-  const loc = await client.locations.list();
-  const first = loc.data?.[0];
-  if (!first?.id) throw new Error('No Square locations found on the account');
-  return first.id;
-}
 
 // Create or fetch a Square Customer for a given email/name and store mapping in Firestore /users/{uid}
 export const sqUpsertCustomer = functions.https.onRequest((req, res) => {
