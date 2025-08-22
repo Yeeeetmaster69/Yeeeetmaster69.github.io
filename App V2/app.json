@@ -60,7 +60,8 @@
         "messagingSenderId": "YOUR_SENDER_ID",
         "appId": "YOUR_APP_ID",
         "measurementId": "YOUR_MEASUREMENT_ID"
-      }
+      },
+      "functionsBaseUrl": "https://YOUR_REGION-YOUR_PROJECT.cloudfunctions.net"
     }
   }
 }
