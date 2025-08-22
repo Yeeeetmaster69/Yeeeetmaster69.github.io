@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
+import { functionUrl } from '../../config/env';
 
 export default function Notifications(){
   const [msg,setMsg] = useState('');
   const send = async ()=>{
-    await fetch('https://YOUR_REGION-YOUR_PROJECT.cloudfunctions.net/broadcast', {
+    await fetch(functionUrl('broadcast'), {
       method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: msg })
     });
     alert('Sent');
