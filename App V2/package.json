@@ -2,7 +2,7 @@
   "name": "handyman-pro",
   "version": "0.1.0",
   "private": true,
-  "main": "index.js",
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
@@ -30,6 +30,7 @@
     "react-native-gesture-handler": "~2.16.2",
     "react-native-reanimated": "~3.10.1",
     "react-native-paper": "^5.12.5",
+    "expo-router": "^3.5.23",
     "dayjs": "^1.11.13"
   },
   "devDependencies": {
