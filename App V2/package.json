@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "lint": "eslint .",
     "functions:dev": "cd server/functions && npm run dev",
-    "functions:deploy": "cd server/functions && npm run deploy"
+    "functions:deploy": "cd server/functions && npm run deploy",
+    "test": "cd server/functions && npm test"
   },
   "dependencies": {
     "expo": "~51.0.23",
