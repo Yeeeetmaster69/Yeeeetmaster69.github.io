@@ -8,9 +8,11 @@ const TASK = 'location-updates';
 let meterTotal = 0;
 let prev: {lat:number; lng:number} | null = null;
 
-TaskManager.defineTask(TASK, ({ data, error }) => {
-  if (error) return;
-  // @ts-ignore
+interface LocationTaskData {
+  locations: Location.LocationObject[];
+}
+TaskManager.defineTask(TASK, ({ data, error }: TaskManager.TaskManagerTaskBody<LocationTaskData>) => {
+  if (error || !data) return;
   const { locations } = data;
   for (const loc of locations) {
     const { latitude, longitude } = loc.coords;
