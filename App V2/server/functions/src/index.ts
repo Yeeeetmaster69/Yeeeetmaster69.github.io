@@ -54,27 +54,16 @@ export const broadcast = functions.https.onRequest((req,res)=>{
 });
 
 // --- Square endpoints ---
-
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
-import * as cors from 'cors';
-import { randomUUID } from 'crypto';
-import { SquareClient, SquareEnvironment, Square } from 'square';
-
-// Initialized in index.ts
-// admin.initializeApp(); // already called in index.ts
-const db = admin.firestore();
-const corsHandler = cors({ origin: true });
-
-function makeClient(){
+function makeClient(): any {
   const token = (functions.config().square && functions.config().square.token) || process.env.SQUARE_ACCESS_TOKEN;
   const env = (functions.config().square && functions.config().square.env) || process.env.SQUARE_ENV || 'sandbox';
-  if (!token) throw new Error('Square token missing. Set via: firebase functions:config:set square.token="..."; square.env="production|sandbox"; square.location_id="..."');
+  if (!token)
+    throw new Error('Square token missing. Set via: firebase functions:config:set square.token="..."; square.env="production|sandbox"; square.location_id="..."');
   const environment = env === 'production' ? SquareEnvironment.Production : SquareEnvironment.Sandbox;
-  return new SquareClient({ token, environment });
+   return new SquareClient({ token, environment }) as any;
 }
 
-async function getLocationId(client: SquareClient): Promise<string> {
+async function getLocationId(client: any): Promise<string> {
   // Prefer configured location id
   const cfgLoc = (functions.config().square && functions.config().square.location_id) || process.env.SQUARE_LOCATION_ID;
   if (cfgLoc) return cfgLoc;
@@ -260,9 +249,12 @@ export const sqCreatePaymentLink = functions.https.onRequest((req, res) => {
 // --- Square Webhook (invoice/payment status) ---
 export const squareWebhook = functions.https.onRequest(async (req, res) => {
   // Verify signature (HMAC-SHA256)
-  try{
+  try {
     const secret = (functions.config().square && functions.config().square.webhook_secret) || process.env.SQUARE_WEBHOOK_SECRET;
-    if (!secret) return res.status(500).send('webhook_secret not configured');
+    if (!secret) {
+      res.status(500).send('webhook_secret not configured');
+      return;
+    }
     const signature = req.get('x-square-hmacsha256-signature');
     const bodyRaw = (req as any).rawBody || JSON.stringify(req.body);
     const crypto = require('crypto');
@@ -271,7 +263,8 @@ export const squareWebhook = functions.https.onRequest(async (req, res) => {
     const digest = hmac.digest('base64');
     if (signature !== digest) {
       console.error('Bad signature');
-      return res.status(401).send('invalid signature');
+      res.status(401).send('invalid signature');
+      return;
     }
 
     const ev = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
@@ -319,7 +312,7 @@ export const squareWebhook = functions.https.onRequest(async (req, res) => {
     }
 
     res.send('ok');
-  }catch(e:any){
+  } catch (e: any) {
     console.error(e);
     res.status(500).send(e.message);
   }
