@@ -1,0 +1,5 @@
+*.apk
+index.backup.html
+
+**/node_modules/
+**/dist/
