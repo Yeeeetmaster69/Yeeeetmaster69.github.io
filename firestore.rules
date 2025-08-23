@@ -1,0 +1,32 @@
+
+// WARNING: Starting point. Tighten before production.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function hasRole(r) { return request.auth != null && request.auth.token.role == r; }
+    function isAuthed() { return request.auth != null; }
+
+    match /users/{uid} {
+      allow read: if hasRole('admin') || uid == request.auth.uid;
+      allow write: if hasRole('admin') || uid == request.auth.uid;
+    }
+
+    match /jobs/{id} {
+      allow read: if isAuthed();
+      allow write: if hasRole('admin');
+    }
+
+    match /timesheets/{id} {
+      allow read, write: if isAuthed();
+    }
+
+    match /config/{doc} {
+      allow read: if true;
+      allow write: if hasRole('admin');
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
