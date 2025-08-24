@@ -2680,15 +2680,206 @@
             interval: null
         };
 
+        // Local Authentication Functions
+        function authenticateUser(username, password) {
+            const users = db.load('users');
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                window.currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                localStorage.setItem('isLoggedIn', 'true');
+                return true;
+            }
+            return false;
+        }
+
+        function showMainApp() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            
+            // Update user name display
+            if (currentUser) {
+                const userNameElement = document.getElementById('userName');
+                if (userNameElement) {
+                    userNameElement.textContent = currentUser.name || currentUser.username;
+                }
+            }
+            
+            // Update dashboard and load data
+            updateDashboard();
+            loadJobs();
+            loadClients();
+            loadWorkers();
+            updateCurrentDate();
+        }
+
+        function handleLocalLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+            
+            if (authenticateUser(username, password)) {
+                console.log(' Local authentication successful');
+                showMainApp();
+                showSuccess('Welcome back, ' + (currentUser.name || currentUser.username) + '!');
+            } else {
+                console.log(' Local authentication failed');
+                showError('Invalid username or password');
+            }
+        }
+
+        function updateDashboard() {
+            // Update dashboard with real data from local storage
+            const jobs = db.load('jobs');
+            const clients = db.load('clients');
+            const workers = db.load('workers');
+            
+            // Calculate job statistics
+            const totalJobs = jobs.length;
+            const activeJobs = jobs.filter(job => job.status === 'in-progress' || job.status === 'active').length;
+            const completedJobs = jobs.filter(job => job.status === 'completed').length;
+            
+            // Calculate total earnings from completed jobs
+            const totalEarnings = jobs
+                .filter(job => job.status === 'completed' && job.price)
+                .reduce((sum, job) => sum + parseFloat(job.price || 0), 0);
+            
+            // Update dashboard elements if they exist
+            const totalJobsEl = document.getElementById("totalJobs");
+            if (totalJobsEl) totalJobsEl.textContent = totalJobs.toString();
+            
+            const activeJobsEl = document.getElementById("activeJobs");
+            if (activeJobsEl) activeJobsEl.textContent = activeJobs.toString();
+            
+            const completedJobsEl = document.getElementById("completedJobs");
+            if (completedJobsEl) completedJobsEl.textContent = completedJobs.toString();
+            
+            const totalEarningsEl = document.getElementById("totalEarnings");
+            if (totalEarningsEl) totalEarningsEl.textContent = `$${totalEarnings.toFixed(2)}`;
+            
+            console.log(`📊 Dashboard updated: ${totalJobs} jobs, ${activeJobs} active, ${completedJobs} completed, $${totalEarnings.toFixed(2)} earned`);
+        }
+
+        function loadJobs() {
+            // Load and display jobs - implementation exists elsewhere in the code
+            if (typeof renderJobs === 'function') {
+                renderJobs();
+            }
+        }
+
+        function loadClients() {
+            // Load and display clients - implementation exists elsewhere in the code
+            if (typeof renderClients === 'function') {
+                renderClients();
+            }
+        }
+
+        function loadWorkers() {
+            // Load and display workers - implementation exists elsewhere in the code
+            if (typeof renderWorkers === 'function') {
+                renderWorkers();
+            }
+        }
+
+        function showSuccess(message) {
+            // Create a simple success notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                z-index: 10000;
+                font-family: inherit;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 3000);
+        }
+
+        function showError(message) {
+            // Create a simple error notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #dc3545;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                z-index: 10000;
+                font-family: inherit;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 5000);
+        }
+
+        function logout() {
+            currentUser = null;
+            window.currentUser = null;
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isLoggedIn');
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            showSuccess('Logged out successfully');
+        }
+
         // App initialization
         function initApp() {
             console.log(' Initializing Handyman App...');
             
-            setTimeout(() => {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('loginForm').style.display = 'block';
-                console.log(' App initialized successfully');
-            }, 1000);
+            // Check if user is already logged in
+            const savedUser = localStorage.getItem('currentUser');
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (savedUser && isLoggedIn === 'true') {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    window.currentUser = currentUser;
+                    console.log(' Restored user session:', currentUser.username);
+                    setTimeout(() => {
+                        document.getElementById('loading').style.display = 'none';
+                        showMainApp();
+                    }, 1000);
+                } catch (e) {
+                    console.error('Failed to restore user session:', e);
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('isLoggedIn');
+                    setTimeout(() => {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('loginForm').style.display = 'block';
+                    }, 1000);
+                }
+            } else {
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('loginForm').style.display = 'block';
+                    console.log(' App initialized successfully');
+                }, 1000);
+            }
 
             setupEventListeners();
             updateCurrentDate();
@@ -2698,23 +2889,17 @@
         }
 
         function setupEventListeners() {
-           
-            // Main app buttons
-            // Cloud Setup button removed
-            document.getElementById('addJobBtn').addEventListener('click', showAddJobModal);
-            
-            document.getElementById('addClientBtn').addEventListener('click', showAddClientModal);
-
-            document.getElementById('addWorkerBtn').addEventListener('click', showAddWorkerModal);
-
-            document.getElementById('manageGoalsBtn').addEventListener('click', showManageGoalsModal);
-            
-            document.getElementById('clientViewBtn').addEventListener('click', showClientView);
-            
-            // Client requests
-            document.getElementById('requestNotificationBtn').addEventListener('click', showClientRequests);
-            
             // Login form buttons
+            document.getElementById('loginBtn').addEventListener('click', handleLocalLogin);
+            
+            // Allow Enter key to submit login form
+            document.getElementById('username').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLocalLogin();
+            });
+            document.getElementById('password').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLocalLogin();
+            });
+            
             document.getElementById('forgotPasswordBtn').addEventListener('click', () => {
                 alert('Password reset functionality coming soon! Please contact your administrator.');
             });
@@ -2730,6 +2915,30 @@
                     }
                 });
             }
+           
+            // Main app buttons (only add listeners if elements exist)
+            const addJobBtn = document.getElementById('addJobBtn');
+            if (addJobBtn) addJobBtn.addEventListener('click', showAddJobModal);
+            
+            const addClientBtn = document.getElementById('addClientBtn');
+            if (addClientBtn) addClientBtn.addEventListener('click', showAddClientModal);
+
+            const addWorkerBtn = document.getElementById('addWorkerBtn');
+            if (addWorkerBtn) addWorkerBtn.addEventListener('click', showAddWorkerModal);
+
+            const manageGoalsBtn = document.getElementById('manageGoalsBtn');
+            if (manageGoalsBtn) manageGoalsBtn.addEventListener('click', showManageGoalsModal);
+            
+            const clientViewBtn = document.getElementById('clientViewBtn');
+            if (clientViewBtn) clientViewBtn.addEventListener('click', showClientView);
+            
+            // Client requests
+            const requestNotificationBtn = document.getElementById('requestNotificationBtn');
+            if (requestNotificationBtn) requestNotificationBtn.addEventListener('click', showClientRequests);
+
+            // Logout button
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.addEventListener('click', logout);
             
             // Remove first-time client login button event; the button has been
             // removed from the markup. Check existence before binding to
