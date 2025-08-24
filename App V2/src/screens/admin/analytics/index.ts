@@ -6,4 +6,4 @@ export { default as ChurnDashboard } from './ChurnDashboard';
 export { default as SentimentDashboard } from './SentimentDashboard';
 
 // Re-export analytics services for convenience
-export * from '../../services/analytics';
+export * from '../../../services/analytics';
