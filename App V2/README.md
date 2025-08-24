@@ -70,6 +70,21 @@ App will auto-fetch updates on next launch.
 
 Enjoy!
 
+## AI-Powered Features (Roadmap)
+
+The application is designed to support advanced AI-powered features for enhanced automation and efficiency:
+
+### Planned Features
+- **Smart Job Routing**: Automatically assign jobs based on worker skills, proximity, and availability
+- **Predictive Scheduling**: Suggest optimal scheduling times using historical data and external factors
+- **Automated Quoting**: Generate quotes from client descriptions and uploaded images
+- **Chatbot Support**: 24/7 automated support for common client and worker inquiries
+
+### Documentation
+- [`AI_FEATURES_SPECIFICATION.md`](./AI_FEATURES_SPECIFICATION.md) - Detailed requirements and technical architecture
+- [`AI_IMPLEMENTATION_GUIDE.md`](./AI_IMPLEMENTATION_GUIDE.md) - Step-by-step implementation guide for developers
+
+These features are currently in the planning phase. See the specification documents for implementation details and timelines.
 
 ---
 
