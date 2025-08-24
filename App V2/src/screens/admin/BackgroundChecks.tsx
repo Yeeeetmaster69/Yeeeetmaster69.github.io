@@ -8,7 +8,7 @@ import {
   List, 
   Chip,
   DataTable,
-  SearchBar,
+  Searchbar,
   Portal,
   Modal,
   Surface,
@@ -258,7 +258,7 @@ export default function BackgroundChecks() {
         </Button>
       </View>
 
-      <SearchBar
+      <Searchbar
         placeholder="Search workers..."
         onChangeText={setSearchQuery}
         value={searchQuery}

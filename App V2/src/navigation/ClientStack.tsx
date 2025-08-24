@@ -13,6 +13,7 @@ import Referrals from '../screens/client/Referrals';
 import Contact from '../screens/client/Contact';
 import PaymentOptions from '../screens/client/PaymentOptions';
 import Chat from '../screens/client/Chat';
+import IncidentReporting from '../screens/shared/IncidentReporting';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,7 @@ export default function ClientStack(){
       <Stack.Screen name="Contact" component={Contact} />
       <Stack.Screen name="PaymentOptions" component={PaymentOptions} />
       <Stack.Screen name="Chat" component={Chat} options={{title:'Support Chat'}} />
+      <Stack.Screen name="IncidentReporting" component={IncidentReporting} options={{title:'Report Safety Issue'}} />
     </Stack.Navigator>
   )
 }
