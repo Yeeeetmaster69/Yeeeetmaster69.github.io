@@ -159,6 +159,199 @@ class SampleUnitTest {
         assertEquals(8.0, hoursWorked, 0.01)
         verify(mockTimeTracker).calculateHoursWorked(startDate, endDate)
     }
+
+    // Additional edge and negative case tests
+
+    @Test
+    fun testNegativeHoursWorked() {
+        // Test edge case with negative hours worked
+        try {
+            jobCalculator.calculateJobCost(50.0, -2.0, 100.0)
+            fail("Should throw exception for negative hours worked")
+        } catch (e: IllegalArgumentException) {
+            assertTrue(e.message!!.contains("Hours worked must be positive"))
+        }
+    }
+
+    @Test
+    fun testNegativeMaterialCost() {
+        // Test edge case with negative material cost
+        try {
+            jobCalculator.calculateJobCost(50.0, 8.0, -100.0)
+            fail("Should throw exception for negative material cost")
+        } catch (e: IllegalArgumentException) {
+            assertTrue(e.message!!.contains("Material cost must be positive"))
+        }
+    }
+
+    @Test
+    fun testZeroHourlyRate() {
+        // Test edge case with zero hourly rate
+        val totalCost = jobCalculator.calculateJobCost(0.0, 8.0, 100.0)
+        assertEquals(100.0, totalCost, 0.01) // Only material cost
+    }
+
+    @Test
+    fun testZeroHoursWorked() {
+        // Test edge case with zero hours worked
+        val totalCost = jobCalculator.calculateJobCost(50.0, 0.0, 100.0)
+        assertEquals(100.0, totalCost, 0.01) // Only material cost
+    }
+
+    @Test
+    fun testZeroMaterialCost() {
+        // Test edge case with zero material cost
+        val totalCost = jobCalculator.calculateJobCost(50.0, 8.0, 0.0)
+        assertEquals(400.0, totalCost, 0.01) // Only labor cost
+    }
+
+    @Test
+    fun testVeryLargeNumbers() {
+        // Test with very large numbers
+        val hourlyRate = 1000000.0
+        val hoursWorked = 24.0
+        val materialCost = 5000000.0
+        
+        val totalCost = jobCalculator.calculateJobCost(hourlyRate, hoursWorked, materialCost)
+        assertEquals(29000000.0, totalCost, 0.01) // 24M + 5M = 29M
+    }
+
+    @Test
+    fun testVerySmallNumbers() {
+        // Test with very small decimal numbers
+        val hourlyRate = 0.01
+        val hoursWorked = 0.5
+        val materialCost = 0.99
+        
+        val totalCost = jobCalculator.calculateJobCost(hourlyRate, hoursWorked, materialCost)
+        assertEquals(0.995, totalCost, 0.001) // 0.005 + 0.99 = 0.995
+    }
+
+    @Test
+    fun testNegativeTaxRate() {
+        // Test with negative tax rate (discount scenario)
+        val totalCost = jobCalculator.calculateJobCostWithTax(100.0, 1.0, 0.0, -0.10)
+        assertEquals(90.0, totalCost, 0.01) // 100 * 0.90 = 90 (10% discount)
+    }
+
+    @Test
+    fun testVeryHighTaxRate() {
+        // Test with very high tax rate
+        val totalCost = jobCalculator.calculateJobCostWithTax(100.0, 1.0, 0.0, 2.0)
+        assertEquals(300.0, totalCost, 0.01) // 100 * 3.0 = 300 (200% tax)
+    }
+
+    @Test
+    fun testTimeTrackingWithSameStartEndTime() {
+        // Test time tracking with same start and end time
+        val time = Calendar.getInstance()
+        time.set(2024, 0, 1, 9, 0)
+        
+        val hoursWorked = timeTracker.calculateHoursWorked(time.time, time.time)
+        assertEquals(0.0, hoursWorked, 0.01)
+    }
+
+    @Test
+    fun testTimeTrackingWithEndTimeBeforeStartTime() {
+        // Test time tracking with end time before start time
+        val startTime = Calendar.getInstance()
+        startTime.set(2024, 0, 1, 17, 0) // 5:00 PM
+        
+        val endTime = Calendar.getInstance()
+        endTime.set(2024, 0, 1, 9, 0) // 9:00 AM (before start)
+        
+        val hoursWorked = timeTracker.calculateHoursWorked(startTime.time, endTime.time)
+        assertTrue("Hours worked should be negative", hoursWorked < 0)
+    }
+
+    @Test
+    fun testTimeTrackingWithExcessiveBreaks() {
+        // Test time tracking where break time exceeds work time
+        val startTime = Calendar.getInstance()
+        startTime.set(2024, 0, 1, 9, 0) // 9:00 AM
+        
+        val endTime = Calendar.getInstance()
+        endTime.set(2024, 0, 1, 13, 0) // 1:00 PM (4 hours total)
+        
+        val breakTimeMinutes = 300 // 5 hours break (more than work time)
+        
+        val hoursWorked = timeTracker.calculateHoursWorkedWithBreaks(
+            startTime.time, endTime.time, breakTimeMinutes
+        )
+        
+        assertEquals(-1.0, hoursWorked, 0.01) // 4 - 5 = -1 hour
+    }
+
+    @Test
+    fun testEstimateAccuracyWithZeroEstimate() {
+        // Test estimate accuracy when estimated hours is zero
+        val accuracy = jobCalculator.calculateEstimateAccuracy(0.0, 5.0)
+        assertEquals(0.0, accuracy, 0.01) // Should return 0 for zero estimate
+    }
+
+    @Test
+    fun testEstimateAccuracyWithZeroActual() {
+        // Test estimate accuracy when actual hours is zero
+        val accuracy = jobCalculator.calculateEstimateAccuracy(8.0, 0.0)
+        assertEquals(0.0, accuracy, 0.01) // 0/8 * 100 = 0%
+    }
+
+    @Test
+    fun testRatingCalculationWithNegativeRatings() {
+        // Test rating calculation with negative ratings (error case)
+        val ratings = listOf(-1.0, 3.0, 5.0)
+        val averageRating = jobCalculator.calculateAverageRating(ratings)
+        assertEquals(2.33, averageRating, 0.01) // Should still calculate average
+    }
+
+    @Test
+    fun testRatingCalculationWithOutOfRangeRatings() {
+        // Test rating calculation with ratings outside normal range
+        val ratings = listOf(10.0, 0.0, 15.0, -5.0)
+        val averageRating = jobCalculator.calculateAverageRating(ratings)
+        assertEquals(5.0, averageRating, 0.01) // (10 + 0 + 15 - 5) / 4 = 5
+    }
+
+    @Test
+    fun testJobStatusValidationWithNullInput() {
+        // Test job status validation with edge cases
+        assertFalse(jobCalculator.isValidJobStatus(""))
+        assertFalse(jobCalculator.isValidJobStatus("PENDING")) // Case sensitive
+        assertFalse(jobCalculator.isValidJobStatus(" pending ")) // With spaces
+        assertFalse(jobCalculator.isValidJobStatus("pending_test")) // Invalid variation
+    }
+
+    @Test
+    fun testJobStatusValidationWithSpecialCharacters() {
+        // Test job status validation with special characters
+        assertFalse(jobCalculator.isValidJobStatus("pending!"))
+        assertFalse(jobCalculator.isValidJobStatus("in-progress")) // Hyphen instead of underscore
+        assertFalse(jobCalculator.isValidJobStatus("completed."))
+        assertFalse(jobCalculator.isValidJobStatus("cancelled?"))
+    }
+
+    @Test
+    fun testTimeTrackingAcrossDateBoundary() {
+        // Test time tracking that spans across midnight
+        val startTime = Calendar.getInstance()
+        startTime.set(2024, 0, 1, 23, 0) // 11:00 PM
+        
+        val endTime = Calendar.getInstance()
+        endTime.set(2024, 0, 2, 7, 0) // 7:00 AM next day
+        
+        val hoursWorked = timeTracker.calculateHoursWorked(startTime.time, endTime.time)
+        assertEquals(8.0, hoursWorked, 0.01) // Should handle date boundary correctly
+    }
+
+    @Test
+    fun testTimeTrackingWithMillisecondPrecision() {
+        // Test time tracking with millisecond precision
+        val startTime = Date(1000000000L) // Specific timestamp
+        val endTime = Date(1000003661000L) // 1 hour, 1 minute, 1 second later
+        
+        val hoursWorked = timeTracker.calculateHoursWorked(startTime, endTime)
+        assertEquals(1.0169, hoursWorked, 0.001) // ~1.017 hours
+    }
 }
 
 /**

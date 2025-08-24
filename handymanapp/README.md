@@ -137,6 +137,16 @@ Located at: `android/app/src/test/java/com/handyman/pro/SampleUnitTest.kt`
 - Worker rating calculations
 - Job status validation
 - Error handling for invalid inputs
+- **Edge and negative cases including**:
+  - Negative values for hourly rate, hours worked, and material costs
+  - Zero values for all input parameters
+  - Very large and very small decimal numbers
+  - Invalid tax rates (negative and extremely high)
+  - Time tracking edge cases (same start/end time, end before start)
+  - Break time exceeding work time
+  - Estimate accuracy with zero values
+  - Rating calculations with negative and out-of-range ratings
+  - Job status validation with special characters and formatting
 
 **To run**:
 ```bash
@@ -145,6 +155,34 @@ Located at: `android/app/src/test/java/com/handyman/pro/SampleUnitTest.kt`
 
 # For Expo managed projects (after eject)
 cd android && ./gradlew test
+
+# Run specific test class
+./gradlew test --tests com.handyman.pro.SampleUnitTest
+
+# Run with verbose output
+./gradlew test --info
+```
+
+#### Integration Tests (JobViewModelTest.kt)
+Located at: `android/app/src/test/java/com/handyman/pro/JobViewModelTest.kt`
+
+**Purpose**: Test the integration between JobCalculator and TimeTracker components through a JobViewModel that combines their functionality.
+
+**Features tested**:
+- Complete job workflow from time tracking to cost calculation
+- Job cost calculation with break time integration
+- Multiple jobs estimate accuracy tracking
+- Integration with mocked dependencies for isolated testing
+- Invalid job data handling across integrated components
+- Job status workflow management
+
+**To run**:
+```bash
+# Run integration tests
+./gradlew test --tests com.handyman.pro.JobViewModelTest
+
+# Run all unit and integration tests together
+./gradlew test --tests "com.handyman.pro.*UnitTest" --tests "com.handyman.pro.*ViewModelTest"
 ```
 
 #### Accessibility Tests (AccessibilityTest.kt)
@@ -159,6 +197,12 @@ Located at: `android/app/src/androidTest/java/com/handyman/pro/AccessibilityTest
 - Keyboard navigation
 - Screen reader compatibility
 - Focus indicators
+- **Enhanced accessibility violation detection**:
+  - Missing content descriptions on ImageView and ImageButton elements
+  - Focusable elements without proper labels
+  - EditText fields without hints or labels
+  - Touch targets smaller than minimum accessibility requirements
+  - Color contrast issues automatically detected by framework
 
 **To run**:
 ```bash
@@ -167,6 +211,35 @@ Located at: `android/app/src/androidTest/java/com/handyman/pro/AccessibilityTest
 
 # Or run specific accessibility tests
 ./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.handyman.pro.AccessibilityTest
+
+# Run only the missing content description tests (these are designed to fail)
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.handyman.pro.AccessibilityTest#testMissingContentDescriptions
+```
+
+#### UI Tests (JobSummaryUiTest.kt)
+Located at: `android/app/src/androidTest/java/com/handyman/pro/JobSummaryUiTest.kt`
+
+**Purpose**: Test UI functionality by launching Activities and verifying user interface behavior, specifically focusing on job cost display verification.
+
+**Features tested**:
+- Job cost calculation display and formatting
+- Form validation and error handling
+- UI interaction with input fields and buttons
+- Currency formatting and decimal precision
+- Clear functionality and form reset
+- Activity lifecycle persistence (configuration changes)
+- Zero value handling in UI calculations
+
+**To run**:
+```bash
+# Requires connected Android device or emulator
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.handyman.pro.JobSummaryUiTest
+
+# Run specific UI test methods
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.handyman.pro.JobSummaryUiTest#testJobCostDisplayCalculation
+
+# Run all instrumented tests (UI + Accessibility)
+./gradlew connectedAndroidTest
 ```
 
 **Prerequisites for Android tests**:
@@ -185,6 +258,49 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.5.0'
     androidTestImplementation 'androidx.test:runner:1.5.2'
 }
+```
+
+### Expanded Test Suite Commands
+
+#### Running All Tests
+```bash
+# Run all unit tests (including integration tests)
+./gradlew test
+
+# Run all instrumented tests (UI + Accessibility)
+./gradlew connectedAndroidTest
+
+# Run complete test suite
+./gradlew test connectedAndroidTest
+```
+
+#### Running Specific Test Categories
+```bash
+# Unit tests only
+./gradlew test --tests "com.handyman.pro.SampleUnitTest"
+
+# Integration tests only
+./gradlew test --tests "com.handyman.pro.JobViewModelTest"
+
+# UI tests only
+./gradlew connectedAndroidTest --tests "com.handyman.pro.JobSummaryUiTest"
+
+# Accessibility tests only (including failing tests for missing content descriptions)
+./gradlew connectedAndroidTest --tests "com.handyman.pro.AccessibilityTest"
+```
+
+#### Test Reports and Output
+```bash
+# Generate detailed test reports with coverage
+./gradlew test --info --continue
+
+# View test reports
+# Unit test reports: android/app/build/reports/tests/testDebugUnitTest/index.html
+# Instrumented test reports: android/app/build/reports/androidTests/connected/index.html
+
+# Generate accessibility test reports
+./gradlew connectedAndroidTest --continue
+# Reports include specific accessibility violations found
 ```
 
 ### Lint Checks & Code Quality
@@ -232,13 +348,14 @@ All reports are saved to `./lint-reports/` with timestamps:
    ```bash
    ./run_lint.sh
    npm test  # Run any existing Jest/React Native tests
+   ./gradlew test  # Run unit and integration tests
    ```
 
 2. **Before releases**:
    ```bash
    ./run_lint.sh
-   ./gradlew test  # Unit tests
-   ./gradlew connectedAndroidTest  # Accessibility tests
+   ./gradlew test  # Unit and integration tests
+   ./gradlew connectedAndroidTest  # UI and accessibility tests
    ```
 
 3. **Regular accessibility audits**:
@@ -246,9 +363,38 @@ All reports are saved to `./lint-reports/` with timestamps:
    # Review the accessibility checklist
    cat lint-reports/accessibility-check-*.txt
    
-   # Run accessibility tests
-   ./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.handyman.pro.AccessibilityTest
+   # Run accessibility tests (including tests designed to fail for missing content descriptions)
+   ./gradlew connectedAndroidTest --tests "com.handyman.pro.AccessibilityTest"
+   
+   # Run specific failing accessibility tests to identify issues
+   ./gradlew connectedAndroidTest --tests "com.handyman.pro.AccessibilityTest#testMissingContentDescriptions"
    ```
+
+4. **Development testing workflow**:
+   ```bash
+   # Quick unit test feedback during development
+   ./gradlew test --tests "com.handyman.pro.SampleUnitTest" --continue
+   
+   # Test integration between components
+   ./gradlew test --tests "com.handyman.pro.JobViewModelTest"
+   
+   # UI testing for feature validation
+   ./gradlew connectedAndroidTest --tests "com.handyman.pro.JobSummaryUiTest#testJobCostDisplayCalculation"
+   ```
+
+### Test Coverage and Quality Metrics
+
+The expanded test suite provides comprehensive coverage across multiple dimensions:
+
+- **Unit Tests**: 20+ test methods covering edge cases, negative scenarios, and business logic validation
+- **Integration Tests**: 6 test methods validating component interactions and end-to-end workflows  
+- **UI Tests**: 7 test methods covering user interface functionality and user experience validation
+- **Accessibility Tests**: 10+ test methods including intentional failure tests for missing accessibility features
+
+**Expected Test Results**:
+- Unit and Integration tests should all pass
+- UI tests should pass (demonstrating proper functionality)
+- Some Accessibility tests are designed to FAIL to highlight missing accessibility features that need to be addressed
 
 ### Adapting Tests for Your Project
 
@@ -261,20 +407,69 @@ The provided test files use generic business logic suitable for a handyman app. 
 
 ### CI/CD Integration
 
-To integrate these tests into your CI/CD pipeline:
+To integrate the expanded test suite into your CI/CD pipeline:
 
 ```yaml
 # Example GitHub Actions workflow
-- name: Run lint checks
-  run: ./run_lint.sh
+name: Test Suite
 
-- name: Run unit tests
-  run: ./gradlew test
+on: [push, pull_request]
 
-- name: Run accessibility tests
-  run: ./gradlew connectedAndroidTest
-  if: matrix.api-level >= 21
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        
+    - name: Run lint checks
+      run: ./run_lint.sh
+      
+    - name: Run unit tests
+      run: ./gradlew test --continue
+      
+    - name: Run integration tests  
+      run: ./gradlew test --tests "com.handyman.pro.JobViewModelTest" --continue
+      
+    - name: Set up Android emulator (for UI/Accessibility tests)
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 29
+        script: |
+          ./gradlew connectedAndroidTest --continue
+          
+    - name: Upload test reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-reports
+        path: |
+          android/app/build/reports/tests/
+          android/app/build/reports/androidTests/
+          lint-reports/
+
+    - name: Test results summary
+      run: |
+        echo "Unit Tests: Validate business logic"
+        echo "Integration Tests: Test component interactions" 
+        echo "UI Tests: Verify user interface functionality"
+        echo "Accessibility Tests: Check compliance (some designed to fail)"
 ```
+
+### Test Categories Summary
+
+| Test Type | Location | Purpose | Expected Result |
+|-----------|----------|---------|----------------|
+| **Unit Tests** | `src/test/.../SampleUnitTest.kt` | Business logic validation, edge cases | ✅ All should pass |
+| **Integration Tests** | `src/test/.../JobViewModelTest.kt` | Component interaction testing | ✅ All should pass |
+| **UI Tests** | `src/androidTest/.../JobSummaryUiTest.kt` | User interface functionality | ✅ All should pass |
+| **Accessibility Tests** | `src/androidTest/.../AccessibilityTest.kt` | Accessibility compliance | ⚠️ Some designed to fail |
 
 For more testing best practices and detailed setup instructions, refer to the official documentation:
 - [Android Testing Guide](https://developer.android.com/training/testing)
