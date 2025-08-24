@@ -14,6 +14,7 @@ import Estimates from '../screens/admin/Estimates';
 import Invoices from '../screens/admin/Invoices';
 import Notifications from '../screens/admin/Notifications';
 import Settings from '../screens/admin/Settings';
+import IncidentReporting from '../screens/shared/IncidentReporting';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,7 @@ export default function AdminStack(){
       <Stack.Screen name="Invoices" component={Invoices} />
       <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="IncidentReporting" component={IncidentReporting} options={{title:'Incident Reports'}} />
     </Stack.Navigator>
   )
 }

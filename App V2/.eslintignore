@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+.expo/
+.git/
+coverage/
+.nyc_output/
+server/functions/
+*.log
+*.tgz
+.env*
