@@ -5,6 +5,7 @@ import JobsTab from './tabs/JobsTab';
 import ClientsTab from './tabs/ClientsTab';
 import WorkersTab from './tabs/WorkersTab';
 import SafetyTab from './tabs/SafetyTab';
+import AIAssistantTab from './tabs/AIAssistantTab';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -27,7 +28,7 @@ export default function AdminTabs() {
           height: 3,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 10,
           fontWeight: '600',
           textTransform: 'none',
         },
@@ -58,6 +59,11 @@ export default function AdminTabs() {
         name="Safety" 
         component={SafetyTab}
         options={{ tabBarLabel: 'Safety' }}
+      />
+      <Tab.Screen 
+        name="AI" 
+        component={AIAssistantTab}
+        options={{ tabBarLabel: 'AI' }}
       />
     </Tab.Navigator>
   );
