@@ -1,2 +1,5 @@
 *.apk
 index.backup.html
+# Corrupted files backups
+*.backup
+package.json.backup

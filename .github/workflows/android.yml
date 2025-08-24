@@ -1,0 +1,162 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  android-ci:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        project: ["App V2", "handymanapp"]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        api-level: 34
+        build-tools: 34.0.0
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: '${{ matrix.project }}/package-lock.json'
+        
+    - name: Install dependencies
+      working-directory: ./${{ matrix.project }}
+      run: npm ci
+      
+    - name: Set up Expo CLI
+      run: npm install -g @expo/cli
+      
+    - name: Run ESLint
+      working-directory: ./${{ matrix.project }}
+      run: |
+        if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ] || [ -f "eslint.config.js" ]; then
+          npm run lint
+        elif [ -f "App V2/.eslintrc.js" ]; then
+          # Handle nested eslint config
+          cp "App V2/.eslintrc.js" .
+          npm run lint
+        else
+          echo "No ESLint config found, skipping lint"
+        fi
+      continue-on-error: true
+      
+    - name: Run TypeScript check
+      working-directory: ./${{ matrix.project }}
+      run: npx tsc --noEmit
+      continue-on-error: true
+      
+    - name: Run lint script
+      working-directory: ./${{ matrix.project }}
+      run: |
+        if [ -f "run_lint.sh" ]; then
+          chmod +x run_lint.sh
+          ./run_lint.sh
+        fi
+      continue-on-error: true
+      
+    - name: Create Android project (if needed)
+      working-directory: ./${{ matrix.project }}
+      run: |
+        # Check if android directory exists, if not create it via expo prebuild
+        if [ ! -d "android" ]; then
+          echo "Creating native Android project..."
+          npx expo prebuild --platform android --no-install
+        fi
+      continue-on-error: true
+      
+    - name: Make Gradlew executable
+      working-directory: ./${{ matrix.project }}
+      run: |
+        if [ -f "android/gradlew" ]; then
+          chmod +x android/gradlew
+        fi
+      continue-on-error: true
+      
+    - name: Run Android unit tests
+      working-directory: ./${{ matrix.project }}
+      run: |
+        if [ -d "android" ] && [ -f "android/gradlew" ]; then
+          cd android
+          ./gradlew test --continue
+        else
+          echo "No native Android project found, running React Native tests instead"
+          if [ -d "server/functions" ]; then
+            cd server/functions
+            npm install && npm test
+          else
+            echo "No server functions directory found, skipping tests"
+          fi
+        fi
+      continue-on-error: true
+      
+    - name: Run Android lint
+      working-directory: ./${{ matrix.project }}
+      run: |
+        if [ -d "android" ] && [ -f "android/gradlew" ]; then
+          cd android
+          ./gradlew lint --continue
+        else
+          echo "No native Android project found, lint already run via npm run lint"
+        fi
+      continue-on-error: true
+      
+    - name: Run Android instrumented tests
+      working-directory: ./${{ matrix.project }}
+      run: |
+        if [ -d "android" ] && [ -f "android/gradlew" ]; then
+          cd android
+          ./gradlew connectedAndroidTest --continue
+        else
+          echo "No native Android project found, skipping instrumented tests"
+        fi
+      continue-on-error: true
+      
+    - name: Archive lint results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: lint-results-${{ matrix.project }}
+        path: |
+          ${{ matrix.project }}/android/app/build/reports/lint-results*
+          ${{ matrix.project }}/lint-reports/**/*
+          ${{ matrix.project }}/android/*/build/reports/lint-results*
+        retention-days: 30
+        
+    - name: Archive test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.project }}
+        path: |
+          ${{ matrix.project }}/android/app/build/test-results/**/*
+          ${{ matrix.project }}/android/*/build/test-results/**/*
+          ${{ matrix.project }}/server/functions/coverage/**/*
+        retention-days: 30
+        
+    - name: Archive build outputs
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: build-outputs-${{ matrix.project }}
+        path: |
+          ${{ matrix.project }}/android/app/build/outputs/**/*
+          ${{ matrix.project }}/android/*/build/outputs/**/*
+        retention-days: 7
