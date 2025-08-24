@@ -4847,7 +4847,15 @@ Recent Activity: ${workerEntries.length} time entries
                     const jobIdAttr = btn.getAttribute('data-job-id');
                     const jobIdNum = jobIdAttr ? parseInt(jobIdAttr, 10) : NaN;
                     if (!isNaN(jobIdNum)) {
-                        showJobChatModal(jobIdNum);
+                        // Check if the window function exists, if not, call local function
+                        if (typeof window.showJobChatModal === 'function') {
+                            window.showJobChatModal(jobIdNum);
+                        } else if (typeof showJobChatModal === 'function') {
+                            showJobChatModal(jobIdNum);
+                        } else {
+                            // Fallback: create a simple alert for now
+                            alert(`Comments for Job ID ${jobIdNum} - Chat feature loading...`);
+                        }
                     }
                 });
             });
