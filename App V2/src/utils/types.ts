@@ -7,6 +7,9 @@ export type JobPriority = 'low' | 'medium' | 'high' | 'urgent';
 export type SubscriptionFrequency = 'weekly' | 'biweekly' | 'monthly' | 'quarterly' | 'semi-annual' | 'one-time';
 export type SubscriptionStatus = 'active' | 'paused' | 'cancelled' | 'pending';
 
+export type IncidentType = 'injury' | 'property_damage' | 'equipment_failure' | 'safety_violation' | 'emergency' | 'other';
+export type IncidentSeverity = 'low' | 'medium' | 'high' | 'critical';
+
 export type Job = {
   id?: string;
   title: string;
@@ -253,6 +256,65 @@ export type ClientSubscription = {
   customPrice?: number;
   notes?: string;
   autoRenew: boolean;
+  createdAt?: number;
+  updatedAt?: number;
+};
+
+export type IncidentReport = {
+  id?: string;
+  reporterId: string;
+  reporterRole: Role;
+  jobId?: string;
+  type: IncidentType;
+  severity: IncidentSeverity;
+  title: string;
+  description: string;
+  location: string;
+  injuredParties?: string[];
+  witnessInfo?: string;
+  propertyDamage?: string;
+  equipmentInvolved?: string;
+  photos?: string[];
+  actionsTaken: string;
+  followUpRequired: boolean;
+  followUpNotes?: string;
+  reportedAt: number;
+  investigatedAt?: number;
+  investigatedBy?: string;
+  status: 'reported' | 'investigating' | 'resolved' | 'closed';
+  createdAt?: number;
+  updatedAt?: number;
+};
+
+export type EmergencyContact = {
+  id?: string;
+  userId: string;
+  name: string;
+  relationship: string;
+  phone: string;
+  email?: string;
+  address?: string;
+  isPrimary: boolean;
+  createdAt?: number;
+  updatedAt?: number;
+};
+
+export type BackgroundCheck = {
+  id?: string;
+  workerId: string;
+  provider: string;
+  checkType: 'criminal' | 'driving' | 'reference' | 'identity' | 'credit';
+  status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'expired';
+  requestedAt: number;
+  completedAt?: number;
+  expiresAt?: number;
+  results?: {
+    passed: boolean;
+    details?: string;
+    documentUrl?: string;
+  };
+  cost?: number;
+  notes?: string;
   createdAt?: number;
   updatedAt?: number;
 };

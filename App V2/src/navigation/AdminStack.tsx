@@ -16,6 +16,8 @@ import Notifications from '../screens/admin/Notifications';
 import Settings from '../screens/admin/Settings';
 import AdminSubscriptions from '../screens/admin/Subscriptions';
 import AdminClientSubscriptions from '../screens/admin/ClientSubscriptions';
+import AdminIncidents from '../screens/admin/Incidents';
+import AdminBackgroundChecks from '../screens/admin/BackgroundChecks';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +39,8 @@ export default function AdminStack(){
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="AdminSubscriptions" component={AdminSubscriptions} options={{title:'Subscription Plans'}}/>
       <Stack.Screen name="AdminClientSubscriptions" component={AdminClientSubscriptions} options={{title:'Client Subscriptions'}}/>
+      <Stack.Screen name="AdminIncidents" component={AdminIncidents} options={{title:'Incident Reports'}}/>
+      <Stack.Screen name="AdminBackgroundChecks" component={AdminBackgroundChecks} options={{title:'Background Checks'}}/>
     </Stack.Navigator>
   )
 }

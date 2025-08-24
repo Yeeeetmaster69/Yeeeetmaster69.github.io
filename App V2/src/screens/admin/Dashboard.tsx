@@ -271,6 +271,22 @@ export default function Dashboard({ navigation }: any) {
             </Button>
             <Button 
               mode="outlined" 
+              icon="shield-alert"
+              onPress={() => navigation.navigate('AdminIncidents')}
+              style={styles.managementButton}
+            >
+              Incident Reports
+            </Button>
+            <Button 
+              mode="outlined" 
+              icon="account-check"
+              onPress={() => navigation.navigate('AdminBackgroundChecks')}
+              style={styles.managementButton}
+            >
+              Background Checks
+            </Button>
+            <Button 
+              mode="outlined" 
               icon="cog"
               onPress={() => navigation.navigate('Settings')}
               style={styles.managementButton}

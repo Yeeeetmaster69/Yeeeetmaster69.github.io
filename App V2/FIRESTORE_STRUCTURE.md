@@ -348,6 +348,100 @@ Stores active client subscriptions to landscaping plans.
 }
 ```
 
+### 17. incident_reports
+Stores safety incident reports from workers and clients.
+
+```typescript
+{
+  id: string;
+  reporterId: string;
+  reporterRole: 'admin' | 'worker' | 'client';
+  jobId?: string;
+  type: 'injury' | 'property_damage' | 'equipment_failure' | 'safety_violation' | 'emergency' | 'other';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  description: string;
+  location: string;
+  injuredParties?: string[];
+  witnessInfo?: string;
+  propertyDamage?: string;
+  equipmentInvolved?: string;
+  photos?: string[];
+  actionsTaken: string;
+  followUpRequired: boolean;
+  followUpNotes?: string;
+  reportedAt: timestamp;
+  investigatedAt?: timestamp;
+  investigatedBy?: string;
+  status: 'reported' | 'investigating' | 'resolved' | 'closed';
+  createdAt: timestamp;
+  updatedAt: timestamp;
+}
+```
+
+### 18. emergency_contacts
+Stores emergency contact information for users.
+
+```typescript
+{
+  id: string;
+  userId: string;
+  name: string;
+  relationship: string;
+  phone: string;
+  email?: string;
+  address?: string;
+  isPrimary: boolean;
+  createdAt: timestamp;
+  updatedAt: timestamp;
+}
+```
+
+### 19. background_checks
+Stores background check records for workers.
+
+```typescript
+{
+  id: string;
+  workerId: string;
+  provider: string;
+  checkType: 'criminal' | 'driving' | 'reference' | 'identity' | 'credit';
+  status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'expired';
+  requestedAt: timestamp;
+  completedAt?: timestamp;
+  expiresAt?: timestamp;
+  results?: {
+    passed: boolean;
+    details?: string;
+    documentUrl?: string;
+  };
+  cost?: number;
+  notes?: string;
+  createdAt: timestamp;
+  updatedAt: timestamp;
+}
+```
+
+### 20. emergency_sos
+Stores emergency SOS alerts triggered by workers.
+
+```typescript
+{
+  id: string;
+  userId: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  notes?: string;
+  triggeredAt: timestamp;
+  status: 'active' | 'responded' | 'resolved';
+  responseTime?: timestamp;
+  respondedBy?: string;
+  updatedAt?: timestamp;
+}
+```
+
 ## Security Rules
 
 ```javascript
@@ -402,6 +496,13 @@ service cloud.firestore {
 8. **subscription_plans**: `isActive ASC, frequency ASC, basePrice ASC`
 9. **client_subscriptions**: `clientId ASC, status ASC, createdAt DESC`
 10. **client_subscriptions**: `status ASC, nextServiceDate ASC`
+11. **incident_reports**: `reporterId ASC, reportedAt DESC`
+12. **incident_reports**: `type ASC, severity ASC, reportedAt DESC`
+13. **incident_reports**: `status ASC, reportedAt DESC`
+14. **background_checks**: `workerId ASC, requestedAt DESC`
+15. **background_checks**: `status ASC, requestedAt DESC`
+16. **emergency_contacts**: `userId ASC, isPrimary DESC, createdAt DESC`
+17. **emergency_sos**: `status ASC, triggeredAt DESC`
 
 ## Data Flow Examples
 
@@ -428,3 +529,24 @@ service cloud.firestore {
 3. System calculates next service date based on frequency
 4. System auto-generates jobs for upcoming service dates
 5. System updates subscription status after service completion
+
+### Incident Reporting:
+1. Worker/client reports incident in `incident_reports` collection
+2. System creates incident with photos and details
+3. Admin investigates incident, updates status to 'investigating'
+4. Admin resolves incident with notes and actions taken
+5. System tracks follow-up requirements and completion
+
+### Emergency SOS:
+1. Worker triggers emergency SOS with location
+2. System creates record in `emergency_sos` collection
+3. System automatically creates incident report
+4. System notifies emergency contacts and supervisors
+5. Admin responds to SOS and marks as resolved
+
+### Background Check Process:
+1. Admin requests background check in `background_checks` collection
+2. System tracks check status and provider information
+3. Admin updates status when check is in progress
+4. Admin completes check with results and documentation
+5. System maintains audit trail of all check activities
