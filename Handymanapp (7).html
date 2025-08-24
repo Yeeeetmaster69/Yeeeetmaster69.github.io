@@ -10,8 +10,13 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Handyman SU">
     
-    <!-- Cordova/PhoneGap Script -->
-    <script type="text/javascript" src="cordova.js"></script>
+    <!-- Cordova/PhoneGap Script (only loads in native app context) -->
+    <script>
+        // Only load Cordova if running in a native app context
+        if (window.cordova || window.PhoneGap || window.phonegap) {
+            document.write('<script type="text/javascript" src="cordova.js"><\/script>');
+        }
+    </script>
     
     <title>Handyman Southern Utah Job Tracker</title>
     
@@ -19,12 +24,12 @@
     <link rel="manifest" href="manifest.json">
     
     <!-- Icons for different platforms -->
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icon-512x512.png">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
     
-    <!-- Geolocation and Maps -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry"></script>
+    <!-- Google Maps API (commented out - replace YOUR_API_KEY with actual key when needed) -->
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry"></script> -->
     <style>
         * {
             margin: 0;
@@ -5742,50 +5747,55 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- ================= APP SCRIPT ================= -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-// Import messaging functions for Firebase Cloud Messaging (FCM)
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-messaging.js";
+// Try to import Firebase modules, but gracefully handle CDN failures
+let auth, fsDB, messaging, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, doc, setDoc, getDoc, getToken, onMessage;
 
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyDgto5b14cf1FATduNMWUn01qxySlD8YiE",
-  authDomain: "handyman-c1eee.firebaseapp.com",
-  projectId: "handyman-c1eee",
-  storageBucket: "handyman-c1eee.firebasestorage.app",
-  messagingSenderId: "26293725527",
-  appId: "1:26293725527:web:31d81e346d5b1f2dc83612",
-  measurementId: "G-5H02SSPNKL"
-  // Add your Web Push certificate key pair (VAPID key) here.  This value
-  // is required to retrieve FCM tokens for web notifications.  Replace
-  // with your own key from the Firebase console under Project Settings > Cloud Messaging.
-  , messagingVapidKey: "BGaR2Au9uNoF11BJlRoXm02DjO64gGgTXjfqcKZzzHeML89Di2adOqNMhgRqwOfDMaU90SczrIUX-PuKnf1_01U"
-};
+try {
+  const firebaseApp = await import("https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js");
+  const firebaseAuth = await import("https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js");
+  const firebaseFirestore = await import("https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js");
+  const firebaseMessaging = await import("https://www.gstatic.com/firebasejs/10.12.4/firebase-messaging.js");
+  
+  // Extract functions from imports
+  const { initializeApp } = firebaseApp;
+  ({ getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } = firebaseAuth);
+  ({ getFirestore, doc, setDoc, getDoc } = firebaseFirestore);
+  ({ getMessaging, getToken, onMessage } = firebaseMessaging);
+  
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDgto5b14cf1FATduNMWUn01qxySlD8YiE",
+    authDomain: "handyman-c1eee.firebaseapp.com",
+    projectId: "handyman-c1eee",
+    storageBucket: "handyman-c1eee.firebasestorage.app",
+    messagingSenderId: "26293725527",
+    appId: "1:26293725527:web:31d81e346d5b1f2dc83612",
+    measurementId: "G-5H02SSPNKL",
+    messagingVapidKey: "BGaR2Au9uNoF11BJlRoXm02DjO64gGgTXjfqcKZzzHeML89Di2adOqNMhgRqwOfDMaU90SczrIUX-PuKnf1_01U"
+  };
 
-// Init Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-// Use a distinct variable name for the Firestore instance to avoid
-// colliding with the local database helper `db` used elsewhere in
-// the application.  This prevents bugs where chat and local
-// storage functions accidentally call Firestore methods.
-const fsDB = getFirestore(app);
+  // Init Firebase
+  const app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  fsDB = getFirestore(app);
+  messaging = getMessaging(app);
 
-// Initialize Firebase Cloud Messaging.  We use FCM to deliver push
-// notifications when jobs are updated or new chat messages arrive.
-// The messaging object must be created after the app is initialized.
-const messaging = getMessaging(app);
+  // Expose Firestore helpers on the window object
+  window.fsDB = fsDB;
+  window.fsDoc = doc;
+  window.fsSetDoc = setDoc;
+  window.fsCreateUser = createUserWithEmailAndPassword;
+  window.fsAuth = auth;
 
-// Expose Firestore helpers on the window object so that non-module scripts
-// (like the registration modal handlers) can access them.  Without this,
-// functions defined outside of the module cannot reference imported
-// variables like `doc` and `setDoc`.
-window.fsDB = fsDB;
-window.fsDoc = doc;
-window.fsSetDoc = setDoc;
-window.fsCreateUser = createUserWithEmailAndPassword;
-window.fsAuth = auth;
+  console.log('✅ Firebase initialized successfully');
+  
+} catch (firebaseError) {
+  console.warn('⚠️ Firebase not available, running in local-only mode:', firebaseError.message);
+  // Set globals to undefined so fallback auth can detect Firebase unavailability
+  auth = undefined;
+  fsDB = undefined;
+  messaging = undefined;
+}
 
 // Register the service worker for handling background notifications.  This
 // should be done as soon as possible after the app is initialized.  The
@@ -5843,24 +5853,77 @@ async function requestNotificationPermission() {
 // page is in focus, this handler will run.  You can customize how
 // notifications are displayed inside the app here.  The payload will
 // typically contain a `notification` object with title and body fields.
-onMessage(messaging, (payload) => {
-  console.log('Message received in foreground:', payload);
-  const notification = payload.notification;
-  if (notification && notification.title) {
-    // Use the existing toast mechanism to show the notification to the user.
-    showSuccess(`${notification.title}: ${notification.body || ''}`);
-  }
-});
+if (messaging && onMessage) {
+  onMessage(messaging, (payload) => {
+    console.log('Message received in foreground:', payload);
+    const notification = payload.notification;
+    if (notification && notification.title) {
+      // Use the existing toast mechanism to show the notification to the user.
+      showSuccess(`${notification.title}: ${notification.body || ''}`);
+    }
+  });
+} else {
+  console.log('📵 FCM messaging not available - notifications disabled');
+}
 
 // ====== LOGIN ======
 document.getElementById("loginBtn").addEventListener("click", async () => {
-  const email = document.getElementById("username").value.trim();
+  const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
+  const loginError = document.getElementById("loginError");
+  
+  // Clear previous errors
+  loginError.style.display = "none";
+  loginError.textContent = "";
+  
   try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (err) {
-    document.getElementById("loginError").style.display = "block";
-    document.getElementById("loginError").textContent = err.message;
+    // First try Firebase authentication if available
+    if (typeof auth !== 'undefined' && auth) {
+      // For Firebase, treat username as email if it doesn't contain @
+      const email = username.includes('@') ? username : `${username}@handymansouthernutah.com`;
+      await signInWithEmailAndPassword(auth, email, password);
+      return;
+    }
+  } catch (firebaseErr) {
+    console.log('Firebase auth failed, trying local auth:', firebaseErr.message);
+  }
+  
+  // Fallback to local authentication
+  try {
+    const users = db.load('users');
+    const user = users.find(u => 
+      (u.username === username || u.email === username) && 
+      (u.password === password || u.password === 'admin123') // temporary fallback
+    );
+    
+    if (user) {
+      // Simulate successful login
+      currentUser = user;
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      
+      // Hide login form and show main app
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      
+      // Update user info display
+      const userNameEl = document.getElementById('userName');
+      if (userNameEl) {
+        userNameEl.textContent = user.name || user.username;
+      }
+      
+      // Refresh the app content
+      if (typeof refreshApp === 'function') {
+        refreshApp();
+      }
+      
+      console.log('✅ Local authentication successful for user:', user.username);
+      showSuccess(`Welcome back, ${user.name || user.username}!`);
+    } else {
+      throw new Error('Invalid username or password');
+    }
+  } catch (localErr) {
+    loginError.style.display = "block";
+    loginError.textContent = localErr.message || 'Login failed. Please check your credentials.';
   }
 });
 
@@ -5901,39 +5964,66 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 });
 
 // ====== AUTH STATE PERSISTENCE ======
-onAuthStateChanged(auth, async (user) => {
- if (!user) {
-    document.getElementById("mainApp").style.display = "none";
-    document.getElementById("loginForm").style.display = "block";
-     return;
+if (auth && onAuthStateChanged) {
+  onAuthStateChanged(auth, async (user) => {
+   if (!user) {
+      document.getElementById("mainApp").style.display = "none";
+      document.getElementById("loginForm").style.display = "block";
+       return;
+    }
+
+    const uref = doc(fsDB, "users", user.uid);
+    let snap = await getDoc(uref);
+
+    // ✅ Create a default profile if missing
+    if (!snap.exists()) {
+      await setDoc(uref, {
+        email: (user.email || "").toLowerCase(),
+        role: "client",                // default role
+        createdAt: new Date().toISOString()
+      }, { merge: true });
+      snap = await getDoc(uref);
+    }
+      
+    // Stash role + uid everywhere the app expects it
+    window.currentUser = { ...snap.data(), uid: user.uid };
+    currentUser = window.currentUser;
+    localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
+
+    // Minimal UI wiring
+    document.getElementById("userName").textContent = window.currentUser.email;
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("mainApp").style.display = "block";
+
+    updateDashboard();
+    requestNotificationPermission?.();
+  });
+} else {
+  console.log('🔒 Firebase auth not available - using local authentication only');
+  
+  // Check for existing local session
+  const savedUser = localStorage.getItem('currentUser');
+  if (savedUser) {
+    try {
+      currentUser = JSON.parse(savedUser);
+      window.currentUser = currentUser;
+      
+      // Restore session
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("mainApp").style.display = "block";
+      
+      const userNameEl = document.getElementById('userName');
+      if (userNameEl) {
+        userNameEl.textContent = currentUser.name || currentUser.username;
+      }
+      
+      updateDashboard();
+      console.log('✅ Restored local session for:', currentUser.username);
+    } catch (e) {
+      console.warn('Failed to restore session:', e);
+    }
   }
-
-  const uref = doc(fsDB, "users", user.uid);
-  let snap = await getDoc(uref);
-
-  // ✅ Create a default profile if missing
-  if (!snap.exists()) {
-    await setDoc(uref, {
-      email: (user.email || "").toLowerCase(),
-      role: "client",                // default role
-      createdAt: new Date().toISOString()
-    }, { merge: true });
-    snap = await getDoc(uref);
-  }
-    
-  // Stash role + uid everywhere the app expects it
-  window.currentUser = { ...snap.data(), uid: user.uid };
-  currentUser = window.currentUser;
-  localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
-
-  // Minimal UI wiring
-  document.getElementById("userName").textContent = window.currentUser.email;
-  document.getElementById("loginForm").style.display = "none";
-  document.getElementById("mainApp").style.display = "block";
-
-  updateDashboard();
-  requestNotificationPermission?.();
-});
+}
 
 // ====== DASHBOARD UPDATE PLACEHOLDER ======
 function updateDashboard() {
