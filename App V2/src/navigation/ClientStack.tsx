@@ -12,6 +12,7 @@ import DealsAndOffers from '../screens/client/DealsAndOffers';
 import Referrals from '../screens/client/Referrals';
 import Contact from '../screens/client/Contact';
 import PaymentOptions from '../screens/client/PaymentOptions';
+import Chat from '../screens/client/Chat';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +29,8 @@ export default function ClientStack(){
       <Stack.Screen name="DealsAndOffers" component={DealsAndOffers} />
       <Stack.Screen name="Referrals" component={Referrals} />
       <Stack.Screen name="Contact" component={Contact} />
-          <Stack.Screen name="PaymentOptions" component={PaymentOptions} />
+      <Stack.Screen name="PaymentOptions" component={PaymentOptions} />
+      <Stack.Screen name="Chat" component={Chat} options={{title:'Support Chat'}} />
     </Stack.Navigator>
   )
 }
