@@ -309,6 +309,103 @@ Stores device tokens for push notifications.
 }
 ```
 
+### 15. analytics_churn
+Stores churn prediction data for clients.
+
+```typescript
+{
+  id: string;
+  clientId: string;
+  riskScore: number; // 0-100, higher = more risk
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  lastUpdated: timestamp;
+  factors: {
+    bookingFrequency: number;
+    paymentBehavior: number;
+    satisfactionTrend: number;
+    engagementLevel: number;
+  };
+  predictions: {
+    next30Days: number;
+    next60Days: number;
+    next90Days: number;
+  };
+  recommendations: string[];
+  interventionsSuggested: string[];
+  createdAt: timestamp;
+}
+```
+
+### 16. analytics_sentiment
+Stores sentiment analysis results for feedback and reviews.
+
+```typescript
+{
+  id: string;
+  sourceType: 'review' | 'chat' | 'support' | 'survey' | 'social';
+  sourceId: string; // Reference to original content
+  clientId?: string;
+  workerId?: string;
+  jobId?: string;
+  content: string;
+  sentiment: {
+    score: number; // -1 to 1 (negative to positive)
+    magnitude: number; // 0 to 1 (intensity)
+    confidence: number; // 0 to 1
+    classification: 'positive' | 'neutral' | 'negative';
+  };
+  topics: string[]; // Extracted topics/keywords
+  emotions: {
+    joy: number;
+    anger: number;
+    fear: number;
+    sadness: number;
+    surprise: number;
+  };
+  actionRequired: boolean;
+  priority: 'low' | 'medium' | 'high';
+  createdAt: timestamp;
+  processedAt: timestamp;
+}
+```
+
+### 17. analytics_trends
+Stores aggregated trend data for analytics dashboards.
+
+```typescript
+{
+  id: string;
+  metricType: 'revenue' | 'satisfaction' | 'churn' | 'sentiment' | 'performance';
+  period: 'daily' | 'weekly' | 'monthly' | 'quarterly';
+  date: timestamp;
+  value: number;
+  metadata: {
+    [key: string]: any;
+  };
+  createdAt: timestamp;
+}
+```
+
+### 18. analytics_alerts
+Stores system-generated alerts for business intelligence.
+
+```typescript
+{
+  id: string;
+  type: 'churn_risk' | 'negative_sentiment' | 'performance_drop' | 'revenue_decline';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  description: string;
+  targetId?: string; // clientId, workerId, or jobId related to alert
+  isRead: boolean;
+  isResolved: boolean;
+  resolvedBy?: string;
+  resolvedAt?: timestamp;
+  recommendations: string[];
+  createdAt: timestamp;
+}
+```
+
 ## Security Rules
 
 ```javascript
@@ -360,6 +457,14 @@ service cloud.firestore {
 5. **time_entries**: `workerId ASC, createdAt DESC`
 6. **notifications**: `userId ASC, isRead ASC, createdAt DESC`
 7. **income**: `clientId ASC, createdAt DESC`
+8. **analytics_churn**: `clientId ASC, lastUpdated DESC`
+9. **analytics_churn**: `riskLevel ASC, lastUpdated DESC`
+10. **analytics_sentiment**: `sourceType ASC, createdAt DESC`
+11. **analytics_sentiment**: `sentiment.classification ASC, createdAt DESC`
+12. **analytics_sentiment**: `actionRequired ASC, priority ASC, createdAt DESC`
+13. **analytics_trends**: `metricType ASC, period ASC, date DESC`
+14. **analytics_alerts**: `type ASC, severity ASC, createdAt DESC`
+15. **analytics_alerts**: `isRead ASC, severity ASC, createdAt DESC`
 
 ## Data Flow Examples
 
