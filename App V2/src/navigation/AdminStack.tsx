@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Dashboard from '../screens/admin/Dashboard';
+import AdminScreen from '../screens/admin/AdminScreen';
 import Users from '../screens/admin/Users';
 import AdminJobs from '../screens/admin/Jobs';
 import AdminClients from '../screens/admin/Clients';
@@ -23,7 +23,7 @@ const Stack = createNativeStackNavigator();
 export default function AdminStack(){
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen name="Admin" component={AdminScreen} options={{title:'Admin'}} />
       <Stack.Screen name="Users" component={Users} />
       <Stack.Screen name="AdminJobs" component={AdminJobs} options={{title:'Jobs'}}/>
       <Stack.Screen name="Clients" component={AdminClients} />
