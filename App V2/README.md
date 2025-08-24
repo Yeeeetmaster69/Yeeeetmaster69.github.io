@@ -3,6 +3,34 @@
 
 A clean Expo + Firebase starter tailored for your Client / Worker / Admin app with OTA updates, role-based routing, GPS time & miles tracking, push notifications, and Cloud Functions for role claims.
 
+## 🚀 Quick Start - Get APK for Your Phone
+
+**Want to install the app on your phone right now?** Follow these simple steps:
+
+### Option 1: Automated Build Script (Recommended)
+```bash
+cd "App V2"
+./build_apk.sh
+```
+
+### Option 2: Manual EAS Build
+```bash
+cd "App V2"
+npm install
+eas login
+eas build --platform android --profile preview
+```
+
+### Option 3: Step-by-Step Guide
+See [BUILD_APK.md](./BUILD_APK.md) for detailed instructions.
+
+## 📱 Installing on Your Phone
+
+1. Download the APK file to your Android phone
+2. Go to Settings → Security → Enable "Install from Unknown Sources"
+3. Open the APK file and tap "Install"
+4. Grant permissions when the app starts
+
 ## What you get
 - **Expo (React Native)** app with **OTA updates** (EAS Updates ready)
 - **Role-based routing** via Firebase **custom claims** (admin/worker/client)
