@@ -1,6 +1,58 @@
 
 # Handyman Pro (Fresh Build)
 
+A comprehensive handyman service application built with React Native/Expo, featuring role-based access, GPS tracking, job management, and Firebase integration.
+
+## 🚀 Quick Start - Build APK
+
+Get your APK in 3 simple steps:
+
+```bash
+cd handymanapp
+./get_apk.sh
+```
+
+This script will guide you through building an APK that you can install on any Android device.
+
+## 📱 What You Get
+
+- **Complete React Native App** with role-based navigation (Client/Worker/Admin)
+- **Firebase Integration** - Authentication, Firestore, Storage ready
+- **Professional UI** with Material Design icons and theming
+- **GPS Clock In/Out** system for workers
+- **Job Management** system for all user types
+- **APK Build System** with EAS Build integration
+- **OTA Updates** capability with Expo Updates
+
+## 🛠️ Build Methods
+
+### Method 1: Quick APK Build (Recommended) ⭐
+```bash
+./get_apk.sh
+```
+
+### Method 2: EAS Build (Professional)
+```bash
+eas login
+eas build --platform android --profile preview
+```
+
+### Method 3: Local Build (Advanced)
+```bash
+expo prebuild --platform android
+cd android && ./gradlew assembleDebug
+```
+
+## 📋 Installation
+
+1. Build your APK using any method above
+2. Download the APK file 
+3. Enable "Install from Unknown Sources" in Android settings
+4. Install and launch the app
+5. Sign up and start using!
+
+---
+
 A clean Expo + Firebase starter tailored for your Client / Worker / Admin app with OTA updates, role-based routing, GPS time & miles tracking, push notifications, and Cloud Functions for role claims.
 
 ## What you get
