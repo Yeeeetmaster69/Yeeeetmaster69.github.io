@@ -310,111 +310,83 @@ Stores device tokens for push notifications.
 ```
 
 ### 15. incidents
-Stores safety incident reports.
+
+Stores safety incident reports (See SAFETY_COMPLIANCE.md for full schema).
+
 
 ```typescript
 {
   id: string;
   reporterId: string;
-  reporterRole: 'worker' | 'client';
+
+  reporterRole: 'worker' | 'client' | 'admin';
   jobId?: string;
-  type: 'injury' | 'property_damage' | 'equipment_failure' | 'safety_concern' | 'other';
+  type: 'injury' | 'property_damage' | 'near_miss' | 'safety_violation' | 'other';
   severity: 'low' | 'medium' | 'high' | 'critical';
-  title: string;
-  description: string;
-  location: {
-    address: string;
-    lat?: number;
-    lng?: number;
-  };
-  photos: string[];
-  documents: string[];
-  witnessInfo?: {
-    name: string;
-    contact: string;
-    statement: string;
-  };
-  immediateActionTaken: string;
-  status: 'reported' | 'investigating' | 'resolved' | 'closed';
-  assignedInvestigator?: string;
-  followUpNotes: string[];
-  resolutionNotes?: string;
+  status: 'open' | 'investigating' | 'resolved' | 'closed';
   createdAt: timestamp;
-  updatedAt: timestamp;
+  // ... additional fields in SAFETY_COMPLIANCE.md
+
 }
 ```
 
 ### 16. emergency_contacts
-Stores emergency contact information for workers.
+
+Stores worker emergency contact information.
+
 
 ```typescript
 {
   id: string;
-  workerId: string;
-  name: string;
-  phone: string;
-  email: string;
-  relationship: 'supervisor' | 'family' | 'medical' | 'police' | 'fire' | 'other';
-  isPrimary: boolean;
-  isActive: boolean;
-  responseTime?: number; // expected response time in minutes
+
+  userId: string;
+  contacts: Array<{
+    name: string;
+    phoneNumber: string;
+    relationship: string;
+    isPrimary: boolean;
+  }>;
   createdAt: timestamp;
-  updatedAt: timestamp;
+  // ... additional fields in SAFETY_COMPLIANCE.md
 }
 ```
 
-### 17. emergency_alerts
-Stores emergency alert activations and responses.
+### 17. sos_events
+Stores emergency SOS activations and responses.
+
 
 ```typescript
 {
   id: string;
   workerId: string;
-  jobId?: string;
-  type: 'sos' | 'medical' | 'safety' | 'check_in_overdue';
-  location: {
-    lat: number;
-    lng: number;
-    address: string;
-    accuracy: number;
-  };
-  status: 'active' | 'responded' | 'resolved' | 'false_alarm';
-  contactsNotified: string[];
-  responseTime?: number;
-  resolutionNotes?: string;
-  createdAt: timestamp;
-  resolvedAt?: timestamp;
+
+  location: { lat: number; lng: number; };
+  triggerTime: timestamp;
+  status: 'active' | 'responded' | 'false_alarm' | 'resolved';
+  escalationLevel: number;
+  // ... additional fields in SAFETY_COMPLIANCE.md
+
 }
 ```
 
 ### 18. background_checks
-Stores background verification process and results.
+
+Stores worker background verification records.
+
 
 ```typescript
 {
   id: string;
   workerId: string;
-  type: 'initial' | 'periodic' | 'incident_triggered';
-  provider: string; // e.g., 'checkr', 'sterling', 'goodhire'
+
+  provider: string;
   status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'expired';
-  requestedAt: timestamp;
-  completedAt?: timestamp;
-  expiresAt?: timestamp;
-  consent: {
-    given: boolean;
-    givenAt: timestamp;
-    ipAddress: string;
+  results: {
+    passed: boolean;
+    findings: Array<object>;
   };
-  checks: {
-    criminal: 'clear' | 'review' | 'disqualifying' | 'pending';
-    driving: 'clear' | 'review' | 'disqualifying' | 'pending' | 'not_required';
-    identity: 'verified' | 'failed' | 'pending';
-    references: 'clear' | 'review' | 'pending' | 'not_required';
-  };
-  notes: string[];
-  reviewedBy?: string;
-  reviewedAt?: timestamp;
-  nextCheckDue?: timestamp;
+  // ... additional fields in SAFETY_COMPLIANCE.md
+
 }
 ```
 
@@ -510,10 +482,11 @@ service cloud.firestore {
 8. **incidents**: `reporterId ASC, status ASC, createdAt DESC`
 9. **incidents**: `jobId ASC, createdAt DESC`
 10. **incidents**: `severity ASC, status ASC, createdAt DESC`
-11. **emergency_contacts**: `workerId ASC, isPrimary DESC, isActive ASC`
-12. **emergency_alerts**: `workerId ASC, status ASC, createdAt DESC`
-13. **background_checks**: `workerId ASC, status ASC, requestedAt DESC`
-14. **background_checks**: `status ASC, expiresAt ASC`
+
+11. **sos_events**: `workerId ASC, status ASC, triggerTime DESC`
+12. **background_checks**: `workerId ASC, status ASC, requestedAt DESC`
+13. **emergency_contacts**: `userId ASC`
+
 
 ## Data Flow Examples
 
@@ -533,3 +506,23 @@ service cloud.firestore {
 1. User sends message to `messages` collection
 2. System updates `lastMessage` in `chats` collection
 3. System sends push notification to other participants
+
+### Incident Reporting:
+1. Worker/client creates incident in `incidents` collection
+2. System auto-tags location and job context
+3. Admin receives notification for high-severity incidents
+4. System creates job event if incident is job-related
+
+### Emergency SOS Activation:
+1. Worker triggers SOS, creates `sos_events` record
+2. System immediately notifies emergency contacts
+3. System begins location tracking and escalation timer
+4. Admin dashboard shows active emergency status
+5. Response creates resolution record and notifications
+
+### Background Check Process:
+1. New worker triggers background check in `background_checks`
+2. System calls external provider API
+3. Provider webhook updates status and results
+4. Admin reviews and approves/rejects worker
+5. System updates worker profile and permissions
