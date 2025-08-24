@@ -309,6 +309,115 @@ Stores device tokens for push notifications.
 }
 ```
 
+### 15. incidents
+Stores safety incident reports.
+
+```typescript
+{
+  id: string;
+  reporterId: string;
+  reporterRole: 'worker' | 'client';
+  jobId?: string;
+  type: 'injury' | 'property_damage' | 'equipment_failure' | 'safety_concern' | 'other';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  description: string;
+  location: {
+    address: string;
+    lat?: number;
+    lng?: number;
+  };
+  photos: string[];
+  documents: string[];
+  witnessInfo?: {
+    name: string;
+    contact: string;
+    statement: string;
+  };
+  immediateActionTaken: string;
+  status: 'reported' | 'investigating' | 'resolved' | 'closed';
+  assignedInvestigator?: string;
+  followUpNotes: string[];
+  resolutionNotes?: string;
+  createdAt: timestamp;
+  updatedAt: timestamp;
+}
+```
+
+### 16. emergency_contacts
+Stores emergency contact information for workers.
+
+```typescript
+{
+  id: string;
+  workerId: string;
+  name: string;
+  phone: string;
+  email: string;
+  relationship: 'supervisor' | 'family' | 'medical' | 'police' | 'fire' | 'other';
+  isPrimary: boolean;
+  isActive: boolean;
+  responseTime?: number; // expected response time in minutes
+  createdAt: timestamp;
+  updatedAt: timestamp;
+}
+```
+
+### 17. emergency_alerts
+Stores emergency alert activations and responses.
+
+```typescript
+{
+  id: string;
+  workerId: string;
+  jobId?: string;
+  type: 'sos' | 'medical' | 'safety' | 'check_in_overdue';
+  location: {
+    lat: number;
+    lng: number;
+    address: string;
+    accuracy: number;
+  };
+  status: 'active' | 'responded' | 'resolved' | 'false_alarm';
+  contactsNotified: string[];
+  responseTime?: number;
+  resolutionNotes?: string;
+  createdAt: timestamp;
+  resolvedAt?: timestamp;
+}
+```
+
+### 18. background_checks
+Stores background verification process and results.
+
+```typescript
+{
+  id: string;
+  workerId: string;
+  type: 'initial' | 'periodic' | 'incident_triggered';
+  provider: string; // e.g., 'checkr', 'sterling', 'goodhire'
+  status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'expired';
+  requestedAt: timestamp;
+  completedAt?: timestamp;
+  expiresAt?: timestamp;
+  consent: {
+    given: boolean;
+    givenAt: timestamp;
+    ipAddress: string;
+  };
+  checks: {
+    criminal: 'clear' | 'review' | 'disqualifying' | 'pending';
+    driving: 'clear' | 'review' | 'disqualifying' | 'pending' | 'not_required';
+    identity: 'verified' | 'failed' | 'pending';
+    references: 'clear' | 'review' | 'pending' | 'not_required';
+  };
+  notes: string[];
+  reviewedBy?: string;
+  reviewedAt?: timestamp;
+  nextCheckDue?: timestamp;
+}
+```
+
 ## Security Rules
 
 ```javascript
@@ -340,6 +449,44 @@ service cloud.firestore {
       );
     }
     
+    // Incidents - reporters and admins can read/write, assigned investigators can read/write
+    match /incidents/{incidentId} {
+      allow read: if request.auth != null && (
+        resource.data.reporterId == request.auth.uid ||
+        resource.data.assignedInvestigator == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+      allow write: if request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        (resource.data.reporterId == request.auth.uid && resource.data.status == 'reported')
+      );
+    }
+    
+    // Emergency contacts - workers can read/write their own, admins can read all
+    match /emergency_contacts/{contactId} {
+      allow read, write: if request.auth != null && (
+        resource.data.workerId == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+    
+    // Emergency alerts - workers can create their own, admins and emergency contacts can read
+    match /emergency_alerts/{alertId} {
+      allow read: if request.auth != null && (
+        resource.data.workerId == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+      allow create: if request.auth != null && resource.data.workerId == request.auth.uid;
+      allow update: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Background checks - admin only
+    match /background_checks/{checkId} {
+      allow read, write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
     // Admin-only collections
     match /{collection}/{document} {
       allow read, write: if request.auth != null && 
@@ -360,6 +507,13 @@ service cloud.firestore {
 5. **time_entries**: `workerId ASC, createdAt DESC`
 6. **notifications**: `userId ASC, isRead ASC, createdAt DESC`
 7. **income**: `clientId ASC, createdAt DESC`
+8. **incidents**: `reporterId ASC, status ASC, createdAt DESC`
+9. **incidents**: `jobId ASC, createdAt DESC`
+10. **incidents**: `severity ASC, status ASC, createdAt DESC`
+11. **emergency_contacts**: `workerId ASC, isPrimary DESC, isActive ASC`
+12. **emergency_alerts**: `workerId ASC, status ASC, createdAt DESC`
+13. **background_checks**: `workerId ASC, status ASC, requestedAt DESC`
+14. **background_checks**: `status ASC, expiresAt ASC`
 
 ## Data Flow Examples
 

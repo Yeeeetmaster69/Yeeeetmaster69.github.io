@@ -6,9 +6,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    '@typescript-eslint/recommended',
     'plugin:react/recommended',
-    'plugin:react-native/all',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -25,10 +23,14 @@ module.exports = {
   ],
   rules: {
     'react/react-in-jsx-scope': 'off',
-    '@typescript-eslint/no-explicit-any': 'warn',
-    'react-native/no-inline-styles': 'warn',
+    'react-native/no-inline-styles': 'off',
     'react-native/no-unused-styles': 'warn',
     'react-native/split-platform-components': 'off',
+    'react-native/no-raw-text': 'off',
+    'react-native/no-color-literals': 'off',
+    'no-unused-vars': 'warn',
+    'no-console': 'off',
+    'react/no-unescaped-entities': 'off',
   },
   settings: {
     react: {
