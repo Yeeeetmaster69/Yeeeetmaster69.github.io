@@ -442,6 +442,115 @@ Stores emergency SOS alerts triggered by workers.
 }
 ```
 
+### 21. automated_reminders
+Stores automated reminder configurations and schedules.
+
+```typescript
+{
+  id: string;
+  type: 'job_scheduled' | 'payment_due' | 'review_request' | 'maintenance' | 'subscription_renewal' | 'custom';
+  title: string;
+  message: string;
+  recipientId: string;
+  recipientRole: 'admin' | 'worker' | 'client';
+  channels: ('push' | 'sms' | 'email' | 'in_app')[];
+  scheduledAt: timestamp;
+  sentAt?: timestamp;
+  status: 'scheduled' | 'sent' | 'failed' | 'cancelled';
+  relatedEntityId?: string;
+  relatedEntityType?: string;
+  isRecurring: boolean;
+  recurringInterval?: number;
+  nextScheduledAt?: timestamp;
+  metadata?: object;
+  createdAt: timestamp;
+  updatedAt: timestamp;
+}
+```
+
+### 22. call_sessions
+Stores in-app voice and video call records.
+
+```typescript
+{
+  id: string;
+  initiatorId: string;
+  participantId: string;
+  type: 'voice' | 'video';
+  status: 'initiated' | 'ringing' | 'active' | 'ended' | 'missed' | 'declined';
+  startedAt: timestamp;
+  endedAt?: timestamp;
+  duration?: number;
+  recordingUrl?: string;
+  jobId?: string;
+  notes?: string;
+  quality?: {
+    rating: number;
+    issues?: string[];
+  };
+  createdAt: timestamp;
+  updatedAt: timestamp;
+}
+```
+
+### 23. personalized_notifications
+Stores ML-powered personalized notifications.
+
+```typescript
+{
+  id: string;
+  userId: string;
+  title: string;
+  body: string;
+  type: 'job' | 'payment' | 'message' | 'system' | 'reminder' | 'promotion';
+  channels: ('push' | 'sms' | 'email' | 'in_app')[];
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  personalizationData: {
+    userName: string;
+    jobCount?: number;
+    earnings?: number;
+    completionRate?: number;
+    preferredTime?: string;
+    interests?: string[];
+  };
+  sentAt?: timestamp;
+  readAt?: timestamp;
+  clickedAt?: timestamp;
+  isRead: boolean;
+  data?: object;
+  createdAt: timestamp;
+}
+```
+
+### 24. communication_preferences
+Stores user communication preferences and settings.
+
+```typescript
+{
+  id: string;
+  userId: string;
+  channels: {
+    push: boolean;
+    sms: boolean;
+    email: boolean;
+    inApp: boolean;
+  };
+  frequency: {
+    jobReminders: 'none' | 'minimal' | 'normal' | 'frequent';
+    paymentNotifications: 'none' | 'minimal' | 'normal' | 'frequent';
+    promotions: 'none' | 'minimal' | 'normal' | 'frequent';
+  };
+  quietHours: {
+    enabled: boolean;
+    startTime: string;
+    endTime: string;
+  };
+  language: string;
+  timezone: string;
+  updatedAt: timestamp;
+}
+```
+
 ## Security Rules
 
 ```javascript
@@ -503,6 +612,12 @@ service cloud.firestore {
 15. **background_checks**: `status ASC, requestedAt DESC`
 16. **emergency_contacts**: `userId ASC, isPrimary DESC, createdAt DESC`
 17. **emergency_sos**: `status ASC, triggeredAt DESC`
+18. **automated_reminders**: `status ASC, scheduledAt ASC`
+19. **automated_reminders**: `recipientId ASC, scheduledAt ASC`
+20. **call_sessions**: `initiatorId ASC, createdAt DESC`
+21. **call_sessions**: `participantId ASC, createdAt DESC`
+22. **personalized_notifications**: `userId ASC, isRead ASC, createdAt DESC`
+23. **communication_preferences**: `userId ASC`
 
 ## Data Flow Examples
 
@@ -550,3 +665,24 @@ service cloud.firestore {
 3. Admin updates status when check is in progress
 4. Admin completes check with results and documentation
 5. System maintains audit trail of all check activities
+
+### Automated Communication Flow:
+1. System triggers automated reminder based on schedule
+2. Reminder is created in `automated_reminders` collection
+3. System processes reminder and sends via configured channels
+4. System tracks delivery status and user engagement
+5. System schedules recurring reminders if configured
+
+### In-App Communication:
+1. User initiates voice/video call via `call_sessions`
+2. System manages call lifecycle and connection
+3. System tracks call duration and quality metrics
+4. System stores call history for review and analysis
+5. System generates personalized notifications based on usage
+
+### Personalized Notifications:
+1. System analyzes user behavior and preferences
+2. ML algorithms generate personalized message content
+3. System creates notification in `personalized_notifications`
+4. System respects user communication preferences
+5. System tracks engagement and adjusts future messaging

@@ -10,6 +10,10 @@ export type SubscriptionStatus = 'active' | 'paused' | 'cancelled' | 'pending';
 export type IncidentType = 'injury' | 'property_damage' | 'equipment_failure' | 'safety_violation' | 'emergency' | 'other';
 export type IncidentSeverity = 'low' | 'medium' | 'high' | 'critical';
 
+export type ReminderType = 'job_scheduled' | 'payment_due' | 'review_request' | 'maintenance' | 'subscription_renewal' | 'custom';
+export type NotificationChannel = 'push' | 'sms' | 'email' | 'in_app';
+export type CallType = 'voice' | 'video';
+
 export type Job = {
   id?: string;
   title: string;
@@ -316,5 +320,96 @@ export type BackgroundCheck = {
   cost?: number;
   notes?: string;
   createdAt?: number;
+  updatedAt?: number;
+};
+
+export type AutomatedReminder = {
+  id?: string;
+  type: ReminderType;
+  title: string;
+  message: string;
+  recipientId: string;
+  recipientRole: Role;
+  channels: NotificationChannel[];
+  scheduledAt: number;
+  sentAt?: number;
+  status: 'scheduled' | 'sent' | 'failed' | 'cancelled';
+  relatedEntityId?: string; // job, invoice, subscription, etc.
+  relatedEntityType?: string;
+  isRecurring: boolean;
+  recurringInterval?: number; // in milliseconds
+  nextScheduledAt?: number;
+  metadata?: {
+    [key: string]: any;
+  };
+  createdAt?: number;
+  updatedAt?: number;
+};
+
+export type CallSession = {
+  id?: string;
+  initiatorId: string;
+  participantId: string;
+  type: CallType;
+  status: 'initiated' | 'ringing' | 'active' | 'ended' | 'missed' | 'declined';
+  startedAt: number;
+  endedAt?: number;
+  duration?: number; // in seconds
+  recordingUrl?: string;
+  jobId?: string;
+  notes?: string;
+  quality?: {
+    rating: number; // 1-5
+    issues?: string[];
+  };
+  createdAt?: number;
+  updatedAt?: number;
+};
+
+export type PersonalizedNotification = {
+  id?: string;
+  userId: string;
+  title: string;
+  body: string;
+  type: 'job' | 'payment' | 'message' | 'system' | 'reminder' | 'promotion';
+  channels: NotificationChannel[];
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  personalizationData: {
+    userName: string;
+    jobCount?: number;
+    earnings?: number;
+    completionRate?: number;
+    preferredTime?: string;
+    interests?: string[];
+  };
+  sentAt?: number;
+  readAt?: number;
+  clickedAt?: number;
+  isRead: boolean;
+  data?: any;
+  createdAt?: number;
+};
+
+export type CommunicationPreferences = {
+  id?: string;
+  userId: string;
+  channels: {
+    push: boolean;
+    sms: boolean;
+    email: boolean;
+    inApp: boolean;
+  };
+  frequency: {
+    jobReminders: 'none' | 'minimal' | 'normal' | 'frequent';
+    paymentNotifications: 'none' | 'minimal' | 'normal' | 'frequent';
+    promotions: 'none' | 'minimal' | 'normal' | 'frequent';
+  };
+  quietHours: {
+    enabled: boolean;
+    startTime: string; // HH:mm format
+    endTime: string; // HH:mm format
+  };
+  language: string;
+  timezone: string;
   updatedAt?: number;
 };

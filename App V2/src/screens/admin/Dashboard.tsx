@@ -287,6 +287,14 @@ export default function Dashboard({ navigation }: any) {
             </Button>
             <Button 
               mode="outlined" 
+              icon="bell-ring"
+              onPress={() => navigation.navigate('AdminReminders')}
+              style={styles.managementButton}
+            >
+              Automated Reminders
+            </Button>
+            <Button 
+              mode="outlined" 
               icon="cog"
               onPress={() => navigation.navigate('Settings')}
               style={styles.managementButton}
