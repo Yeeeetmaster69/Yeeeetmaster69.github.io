@@ -1,0 +1,5 @@
+exclude:
+  - node_modules
+  - vendor
+  - handymanapp/node_modules
+  - handymanapp/vendor

@@ -261,6 +261,14 @@ export default function Dashboard({ navigation }: any) {
             >
               Settings
             </Button>
+            <Button 
+              mode="contained" 
+              icon="chart-line"
+              onPress={() => navigation.navigate('AnalyticsDashboard')}
+              style={[styles.managementButton, styles.analyticsButton]}
+            >
+              Data Insights
+            </Button>
           </View>
         </View>
       </View>
@@ -319,5 +327,8 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: '45%',
     marginBottom: 8,
+  },
+  analyticsButton: {
+    backgroundColor: '#2196f3',
   },
 });

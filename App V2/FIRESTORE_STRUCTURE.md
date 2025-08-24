@@ -309,6 +309,112 @@ Stores device tokens for push notifications.
 }
 ```
 
+
+### 15. analytics_churn
+Stores churn prediction data for clients.
+
+
+```typescript
+{
+  id: string;
+
+  clientId: string;
+  riskScore: number; // 0-100, higher = more risk
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  lastUpdated: timestamp;
+  factors: {
+    bookingFrequency: number;
+    paymentBehavior: number;
+    satisfactionTrend: number;
+    engagementLevel: number;
+  };
+  predictions: {
+    next30Days: number;
+    next60Days: number;
+    next90Days: number;
+  };
+  recommendations: string[];
+  interventionsSuggested: string[];
+  createdAt: timestamp;
+}
+```
+
+### 16. analytics_sentiment
+Stores sentiment analysis results for feedback and reviews.
+
+
+```typescript
+{
+  id: string;
+
+  sourceType: 'review' | 'chat' | 'support' | 'survey' | 'social';
+  sourceId: string; // Reference to original content
+  clientId?: string;
+  workerId?: string;
+  jobId?: string;
+  content: string;
+  sentiment: {
+    score: number; // -1 to 1 (negative to positive)
+    magnitude: number; // 0 to 1 (intensity)
+    confidence: number; // 0 to 1
+    classification: 'positive' | 'neutral' | 'negative';
+  };
+  topics: string[]; // Extracted topics/keywords
+  emotions: {
+    joy: number;
+    anger: number;
+    fear: number;
+    sadness: number;
+    surprise: number;
+  };
+  actionRequired: boolean;
+  priority: 'low' | 'medium' | 'high';
+  createdAt: timestamp;
+  processedAt: timestamp;
+}
+```
+
+### 17. analytics_trends
+Stores aggregated trend data for analytics dashboards.
+
+```typescript
+{
+  id: string;
+
+  metricType: 'revenue' | 'satisfaction' | 'churn' | 'sentiment' | 'performance';
+  period: 'daily' | 'weekly' | 'monthly' | 'quarterly';
+  date: timestamp;
+  value: number;
+  metadata: {
+    [key: string]: any;
+  };
+  createdAt: timestamp;
+}
+```
+
+### 18. analytics_alerts
+Stores system-generated alerts for business intelligence.
+
+
+```typescript
+{
+  id: string;
+
+  type: 'churn_risk' | 'negative_sentiment' | 'performance_drop' | 'revenue_decline';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  description: string;
+  targetId?: string; // clientId, workerId, or jobId related to alert
+  isRead: boolean;
+  isResolved: boolean;
+  resolvedBy?: string;
+  resolvedAt?: timestamp;
+  recommendations: string[];
+  createdAt: timestamp;
+
+}
+```
+
 ## Security Rules
 
 ```javascript
@@ -340,6 +446,44 @@ service cloud.firestore {
       );
     }
     
+    // Incidents - reporters and admins can read/write, assigned investigators can read/write
+    match /incidents/{incidentId} {
+      allow read: if request.auth != null && (
+        resource.data.reporterId == request.auth.uid ||
+        resource.data.assignedInvestigator == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+      allow write: if request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        (resource.data.reporterId == request.auth.uid && resource.data.status == 'reported')
+      );
+    }
+    
+    // Emergency contacts - workers can read/write their own, admins can read all
+    match /emergency_contacts/{contactId} {
+      allow read, write: if request.auth != null && (
+        resource.data.workerId == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+    
+    // Emergency alerts - workers can create their own, admins and emergency contacts can read
+    match /emergency_alerts/{alertId} {
+      allow read: if request.auth != null && (
+        resource.data.workerId == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+      allow create: if request.auth != null && resource.data.workerId == request.auth.uid;
+      allow update: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Background checks - admin only
+    match /background_checks/{checkId} {
+      allow read, write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
     // Admin-only collections
     match /{collection}/{document} {
       allow read, write: if request.auth != null && 
@@ -361,6 +505,16 @@ service cloud.firestore {
 6. **notifications**: `userId ASC, isRead ASC, createdAt DESC`
 7. **income**: `clientId ASC, createdAt DESC`
 
+8. **analytics_churn**: `clientId ASC, lastUpdated DESC`
+9. **analytics_churn**: `riskLevel ASC, lastUpdated DESC`
+10. **analytics_sentiment**: `sourceType ASC, createdAt DESC`
+11. **analytics_sentiment**: `sentiment.classification ASC, createdAt DESC`
+12. **analytics_sentiment**: `actionRequired ASC, priority ASC, createdAt DESC`
+13. **analytics_trends**: `metricType ASC, period ASC, date DESC`
+14. **analytics_alerts**: `type ASC, severity ASC, createdAt DESC`
+15. **analytics_alerts**: `isRead ASC, severity ASC, createdAt DESC`
+
+
 ## Data Flow Examples
 
 ### Creating a Job:
@@ -379,3 +533,23 @@ service cloud.firestore {
 1. User sends message to `messages` collection
 2. System updates `lastMessage` in `chats` collection
 3. System sends push notification to other participants
+
+### Incident Reporting:
+1. Worker/client creates incident in `incidents` collection
+2. System auto-tags location and job context
+3. Admin receives notification for high-severity incidents
+4. System creates job event if incident is job-related
+
+### Emergency SOS Activation:
+1. Worker triggers SOS, creates `sos_events` record
+2. System immediately notifies emergency contacts
+3. System begins location tracking and escalation timer
+4. Admin dashboard shows active emergency status
+5. Response creates resolution record and notifications
+
+### Background Check Process:
+1. New worker triggers background check in `background_checks`
+2. System calls external provider API
+3. Provider webhook updates status and results
+4. Admin reviews and approves/rejects worker
+5. System updates worker profile and permissions

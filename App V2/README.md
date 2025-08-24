@@ -12,6 +12,7 @@ A clean Expo + Firebase starter tailored for your Client / Worker / Admin app wi
 - **Cloud Functions**: setRoleClaim endpoint, onUserCreate default claims, broadcast push
 - **Firestore Rules** (starter) and minimal schema
 - **In-app customization** (primary/accent colors)
+- **Safety & Compliance**: incident reporting, emergency SOS, background checks (see SAFETY_COMPLIANCE.md)
 
 ## Setup (10 steps)
 1) **Install**: Node 18+, `npm i -g expo-cli` (optional). Then:
@@ -70,6 +71,21 @@ App will auto-fetch updates on next launch.
 
 Enjoy!
 
+## AI-Powered Features (Roadmap)
+
+The application is designed to support advanced AI-powered features for enhanced automation and efficiency:
+
+### Planned Features
+- **Smart Job Routing**: Automatically assign jobs based on worker skills, proximity, and availability
+- **Predictive Scheduling**: Suggest optimal scheduling times using historical data and external factors
+- **Automated Quoting**: Generate quotes from client descriptions and uploaded images
+- **Chatbot Support**: 24/7 automated support for common client and worker inquiries
+
+### Documentation
+- [`AI_FEATURES_SPECIFICATION.md`](./AI_FEATURES_SPECIFICATION.md) - Detailed requirements and technical architecture
+- [`AI_IMPLEMENTATION_GUIDE.md`](./AI_IMPLEMENTATION_GUIDE.md) - Step-by-step implementation guide for developers
+
+These features are currently in the planning phase. See the specification documents for implementation details and timelines.
 
 ---
 
@@ -120,6 +136,7 @@ npm run deploy
 ```
 3) The webhook updates `jobs` with `invoiceId`, `orderId`, `invoiceStatus`, `paymentStatus`, and marks job `status: "done"` on `COMPLETED` payments.
 
+
 ## Monetization & Marketplace Features
 
 🚀 **New in v2.1**: Advanced monetization features including subscription upgrades, ad network, and plugin marketplace.
@@ -135,3 +152,4 @@ For comprehensive documentation on monetization features, see:
 - **Plugin Marketplace**: Third-party developer ecosystem with 30% platform fee
 - **Feature Gating**: Advanced features locked behind subscription tiers
 - **Analytics Dashboard**: Detailed business insights for premium users
+
