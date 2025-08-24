@@ -25,6 +25,85 @@ service cloud.firestore {
       allow write: if hasRole('admin');
     }
 
+    // Safety and compliance collections
+    match /incidents/{id} {
+      allow read: if isAuthed();
+      allow create: if isAuthed();
+      allow update: if hasRole('admin') || resource.data.reporterId == request.auth.uid;
+    }
+
+    match /emergency_contacts/{id} {
+      allow read, write: if isAuthed() && (hasRole('admin') || resource.data.userId == request.auth.uid);
+    }
+
+    match /sos_events/{id} {
+      allow read: if isAuthed();
+      allow create: if isAuthed();
+      allow update: if hasRole('admin');
+    }
+
+    match /background_checks/{id} {
+      allow read: if hasRole('admin') || resource.data.userId == request.auth.uid;
+      allow write: if hasRole('admin');
+    }
+
+    match /worker_check_ins/{id} {
+      allow read, write: if isAuthed();
+    }
+
+    // Extended feature collections
+    match /chats/{id} {
+      allow read, write: if isAuthed();
+    }
+
+    match /messages/{id} {
+      allow read, write: if isAuthed();
+    }
+
+    match /job_events/{id} {
+      allow read: if isAuthed();
+      allow write: if hasRole('admin');
+    }
+
+    match /notifications/{id} {
+      allow read, write: if isAuthed() && resource.data.userId == request.auth.uid;
+    }
+
+    match /reviews/{id} {
+      allow read: if isAuthed();
+      allow create: if isAuthed();
+      allow update: if hasRole('admin') || resource.data.clientId == request.auth.uid;
+    }
+
+    match /income/{id} {
+      allow read, write: if isAuthed() && resource.data.workerId == request.auth.uid;
+    }
+
+    match /gps_tracking/{id} {
+      allow read, write: if isAuthed();
+    }
+
+    match /push_tokens/{id} {
+      allow read, write: if isAuthed();
+    }
+
+    // Analytics collections (admin only)
+    match /analytics_churn/{id} {
+      allow read, write: if hasRole('admin');
+    }
+
+    match /analytics_sentiment/{id} {
+      allow read, write: if hasRole('admin');
+    }
+
+    match /analytics_trends/{id} {
+      allow read, write: if hasRole('admin');
+    }
+
+    match /analytics_alerts/{id} {
+      allow read, write: if hasRole('admin');
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

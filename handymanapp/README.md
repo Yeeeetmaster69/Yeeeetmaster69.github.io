@@ -18,17 +18,29 @@ A clean Expo + Firebase starter tailored for your Client / Worker / Admin app wi
 ```bash
 npm install
 ```
+
 2) **Firebase Project**: Use your existing `handyman-c1eee` or create new. In `app.json` replace `expo.extra.firebase` with your config.
 
 3) **Auth**: Enable Email/Password in Firebase Console.
 
-4) **Firestore**: Create database in production mode. Run rules:
+4) **Database Setup**: Initialize Firestore collections with Fireway migrations:
+```bash
+# Quick setup (recommended)
+./setup-database.sh
+
+# Or manual setup
+npm run db:setup
+```
+See `DATABASE_SETUP.md` for detailed instructions.
+
+5) **Firestore Rules & Indexes**: Deploy the security rules and indexes:
 ```bash
 firebase deploy --only firestore:rules
+firebase deploy --only firestore:indexes
 ```
-(or paste `firestore.rules` in console).
+(or paste `firestore.rules` and `firestore.indexes.json` content in console).
 
-5) **Cloud Functions**: In `server/functions`:
+6) **Cloud Functions**: In `server/functions`:
 ```bash
 cd server/functions
 npm install
@@ -39,11 +51,11 @@ npm run deploy
 ```
 Copy your function URL and replace `https://YOUR_REGION-YOUR_PROJECT.cloudfunctions.net/...` in Admin screens.
 
-6) **Push Notifications**:
+7) **Push Notifications**:
 - EAS project: set a real `extra.eas.projectId` in `app.json`.
 - App startup should request permissions and save token (you can write a small effect to store token to `pushTokens` in Firestore).
 
-7) **Run app**:
+8) **Run app**:
 ```bash
 npm run start
 ```
