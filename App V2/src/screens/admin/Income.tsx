@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, Alert, Share } from 'react-native';
 import { 
   Text, 
   SegmentedButtons, 
@@ -144,6 +144,66 @@ export default function AdminIncome({ navigation }: any) {
     const [year, month] = monthKey.split('-');
     const date = new Date(parseInt(year), parseInt(month) - 1);
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+  };
+
+  const exportIncomeReport = async () => {
+    try {
+      const totals = calculateTotalsByTimeFrame();
+      const reportData = incomeData
+        .filter(income => {
+          const now = Date.now();
+          const oneDayMs = 24 * 60 * 60 * 1000;
+          let cutoffTime = 0;
+          
+          switch (timeFrame) {
+            case 'today':
+              cutoffTime = now - oneDayMs;
+              break;
+            case 'week':
+              cutoffTime = now - (7 * oneDayMs);
+              break;
+            case 'month':
+              cutoffTime = now - (30 * oneDayMs);
+              break;
+            case 'year':
+              cutoffTime = now - (365 * oneDayMs);
+              break;
+          }
+          
+          return income.createdAt && income.createdAt >= cutoffTime;
+        })
+        .map(income => ({
+          date: new Date(income.createdAt || 0).toLocaleDateString(),
+          amount: income.amount,
+          type: income.type,
+          status: income.isPaid ? 'Paid' : 'Pending',
+          paymentMethod: income.paymentMethod || 'N/A'
+        }));
+
+      const csvContent = [
+        ['Date', 'Amount', 'Type', 'Status', 'Payment Method'],
+        ...reportData.map(row => [row.date, row.amount, row.type, row.status, row.paymentMethod])
+      ].map(row => row.join(',')).join('\n');
+
+      const reportSummary = `Income Report (${timeFrame})\n\n` +
+        `Total Revenue: $${totals.total.toFixed(2)}\n` +
+        `Paid: $${totals.paid.toFixed(2)}\n` +
+        `Pending: $${totals.pending.toFixed(2)}\n` +
+        `Total Jobs: ${totals.jobCount}\n\n` +
+        `Detailed Data:\n${csvContent}`;
+
+      const result = await Share.share({
+        message: reportSummary,
+        title: `Income Report - ${timeFrame}`,
+      });
+
+      if (result.action === Share.sharedAction) {
+        Alert.alert('Success', 'Income report exported successfully!');
+      }
+    } catch (error) {
+      console.error('Error exporting report:', error);
+      Alert.alert('Error', 'Failed to export income report. Please try again.');
+    }
   };
 
   const totals = calculateTotalsByTimeFrame();
@@ -310,7 +370,7 @@ export default function AdminIncome({ navigation }: any) {
             <Button 
               mode="outlined" 
               icon="download"
-              onPress={() => {/* TODO: Export functionality */}}
+              onPress={exportIncomeReport}
               style={styles.actionButton}
             >
               Export Report

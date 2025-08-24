@@ -1,13 +1,30 @@
-diff --git a//dev/null b/App V2/server/functions/package-lock.json	
-index 0000000000000000000000000000000000000000..16bfaad36a18f46e0a2da22f0c9ab0f3dcf9223f 100644
---- a//dev/null
-+++ b/App V2/server/functions/package-lock.json	
-@@ -0,0 +1,6760 @@
-+{
-+  "name": "handyman-functions",
-+  "lockfileVersion": 3,
-+  "requires": true,
-+  "packages": {
+{
+  "name": "handyman-functions",
+  "version": "1.0.0",
+  "description": "Cloud Functions for Handyman Pro app",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "npm run build && firebase emulators:start --only functions",
+    "deploy": "npm run build && firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "test": "jest"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "private": true
+}
 +    "": {
 +      "name": "handyman-functions",
 +      "dependencies": {

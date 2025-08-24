@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, Linking, Alert } from 'react-native';
 import { 
   Searchbar, 
   SegmentedButtons, 
@@ -181,14 +181,46 @@ export default function AdminClients({ navigation }: any) {
     navigation.navigate('ClientDetail', { clientId: client.id });
   };
 
-  const handleCall = (client: Client) => {
-    // TODO: Implement phone call functionality
-    console.log('Calling:', client.phone);
+  const handleCall = async (client: Client) => {
+    if (!client.phone) {
+      Alert.alert('No Phone Number', 'This client does not have a phone number on file.');
+      return;
+    }
+    
+    try {
+      const phoneUrl = `tel:${client.phone}`;
+      const canOpen = await Linking.canOpenURL(phoneUrl);
+      
+      if (canOpen) {
+        await Linking.openURL(phoneUrl);
+      } else {
+        Alert.alert('Unable to Call', 'Your device cannot make phone calls.');
+      }
+    } catch (error) {
+      console.error('Error making phone call:', error);
+      Alert.alert('Error', 'Failed to initiate phone call.');
+    }
   };
 
-  const handleEmail = (client: Client) => {
-    // TODO: Implement email functionality
-    console.log('Emailing:', client.email);
+  const handleEmail = async (client: Client) => {
+    if (!client.email) {
+      Alert.alert('No Email Address', 'This client does not have an email address on file.');
+      return;
+    }
+    
+    try {
+      const emailUrl = `mailto:${client.email}?subject=Handyman Services&body=Hello ${client.firstName || 'there'},\n\nI hope this email finds you well. I wanted to follow up regarding our handyman services.\n\nBest regards,\nHandyman Pro Team`;
+      const canOpen = await Linking.canOpenURL(emailUrl);
+      
+      if (canOpen) {
+        await Linking.openURL(emailUrl);
+      } else {
+        Alert.alert('Unable to Send Email', 'Your device cannot send emails or no email app is configured.');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+      Alert.alert('Error', 'Failed to open email client.');
+    }
   };
 
   const getClientCounts = () => {

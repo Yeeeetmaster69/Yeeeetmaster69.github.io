@@ -14,7 +14,7 @@ import {
   Surface
 } from 'react-native-paper';
 import JobCard from '../../components/JobCard';
-import { createJob, getJobsByStatus } from '../../services/jobs';
+import { createJob, getJobsByStatus, updateJobStatus } from '../../services/jobs';
 import { Job, JobStatus } from '../../utils/types';
 
 export default function AdminJobs({ navigation }: any) {
@@ -103,12 +103,14 @@ export default function AdminJobs({ navigation }: any) {
 
   const handleJobStatusChange = async (jobId: string, newStatus: JobStatus) => {
     try {
-      // Update job status in database
+      // Update job status in Firebase
+      await updateJobStatus(jobId, newStatus);
+      
+      // Update local state
       const updatedJobs = jobs.map(job =>
         job.id === jobId ? { ...job, status: newStatus } : job
       );
       setJobs(updatedJobs);
-      // TODO: Update in Firebase
     } catch (error) {
       console.error('Error updating job status:', error);
     }

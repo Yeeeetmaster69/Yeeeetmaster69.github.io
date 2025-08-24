@@ -1,0 +1,6 @@
+node_modules/
+server/functions/
+dist/
+build/
+.expo/
+*.log
