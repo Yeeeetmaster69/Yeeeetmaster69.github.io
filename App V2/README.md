@@ -12,6 +12,7 @@ A clean Expo + Firebase starter tailored for your Client / Worker / Admin app wi
 - **Cloud Functions**: setRoleClaim endpoint, onUserCreate default claims, broadcast push
 - **Firestore Rules** (starter) and minimal schema
 - **In-app customization** (primary/accent colors)
+- **Safety & Compliance**: incident reporting, emergency SOS, background checks (see SAFETY_COMPLIANCE.md)
 
 ## Setup (10 steps)
 1) **Install**: Node 18+, `npm i -g expo-cli` (optional). Then:

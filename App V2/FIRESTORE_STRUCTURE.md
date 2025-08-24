@@ -309,6 +309,73 @@ Stores device tokens for push notifications.
 }
 ```
 
+### 15. incidents
+Stores safety incident reports (See SAFETY_COMPLIANCE.md for full schema).
+
+```typescript
+{
+  id: string;
+  reporterId: string;
+  reporterRole: 'worker' | 'client' | 'admin';
+  jobId?: string;
+  type: 'injury' | 'property_damage' | 'near_miss' | 'safety_violation' | 'other';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  status: 'open' | 'investigating' | 'resolved' | 'closed';
+  createdAt: timestamp;
+  // ... additional fields in SAFETY_COMPLIANCE.md
+}
+```
+
+### 16. emergency_contacts
+Stores worker emergency contact information.
+
+```typescript
+{
+  id: string;
+  userId: string;
+  contacts: Array<{
+    name: string;
+    phoneNumber: string;
+    relationship: string;
+    isPrimary: boolean;
+  }>;
+  createdAt: timestamp;
+  // ... additional fields in SAFETY_COMPLIANCE.md
+}
+```
+
+### 17. sos_events
+Stores emergency SOS activations and responses.
+
+```typescript
+{
+  id: string;
+  workerId: string;
+  location: { lat: number; lng: number; };
+  triggerTime: timestamp;
+  status: 'active' | 'responded' | 'false_alarm' | 'resolved';
+  escalationLevel: number;
+  // ... additional fields in SAFETY_COMPLIANCE.md
+}
+```
+
+### 18. background_checks
+Stores worker background verification records.
+
+```typescript
+{
+  id: string;
+  workerId: string;
+  provider: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'expired';
+  results: {
+    passed: boolean;
+    findings: Array<object>;
+  };
+  // ... additional fields in SAFETY_COMPLIANCE.md
+}
+```
+
 ## Security Rules
 
 ```javascript
@@ -360,6 +427,12 @@ service cloud.firestore {
 5. **time_entries**: `workerId ASC, createdAt DESC`
 6. **notifications**: `userId ASC, isRead ASC, createdAt DESC`
 7. **income**: `clientId ASC, createdAt DESC`
+8. **incidents**: `reporterId ASC, status ASC, createdAt DESC`
+9. **incidents**: `jobId ASC, createdAt DESC`
+10. **incidents**: `severity ASC, status ASC, createdAt DESC`
+11. **sos_events**: `workerId ASC, status ASC, triggerTime DESC`
+12. **background_checks**: `workerId ASC, status ASC, requestedAt DESC`
+13. **emergency_contacts**: `userId ASC`
 
 ## Data Flow Examples
 
@@ -379,3 +452,23 @@ service cloud.firestore {
 1. User sends message to `messages` collection
 2. System updates `lastMessage` in `chats` collection
 3. System sends push notification to other participants
+
+### Incident Reporting:
+1. Worker/client creates incident in `incidents` collection
+2. System auto-tags location and job context
+3. Admin receives notification for high-severity incidents
+4. System creates job event if incident is job-related
+
+### Emergency SOS Activation:
+1. Worker triggers SOS, creates `sos_events` record
+2. System immediately notifies emergency contacts
+3. System begins location tracking and escalation timer
+4. Admin dashboard shows active emergency status
+5. Response creates resolution record and notifications
+
+### Background Check Process:
+1. New worker triggers background check in `background_checks`
+2. System calls external provider API
+3. Provider webhook updates status and results
+4. Admin reviews and approves/rejects worker
+5. System updates worker profile and permissions
