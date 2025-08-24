@@ -119,3 +119,19 @@ firebase functions:config:set square.webhook_secret="YOUR_WEBHOOK_SIGNATURE_KEY"
 npm run deploy
 ```
 3) The webhook updates `jobs` with `invoiceId`, `orderId`, `invoiceStatus`, `paymentStatus`, and marks job `status: "done"` on `COMPLETED` payments.
+
+## Monetization & Marketplace Features
+
+🚀 **New in v2.1**: Advanced monetization features including subscription upgrades, ad network, and plugin marketplace.
+
+For comprehensive documentation on monetization features, see:
+- **[📋 Monetization Strategy](../MONETIZATION_STRATEGY.md)** - Business model, revenue streams, and strategic planning
+- **[🛠 Implementation Guide](../IMPLEMENTATION_GUIDE.md)** - Technical implementation details and code examples  
+- **[📖 Overview](../MONETIZATION_README.md)** - Quick start guide and feature summary
+
+### Key Features
+- **Subscription Tiers**: Free, Professional ($19.99), Business ($49.99), Enterprise ($99.99)
+- **Partner Ad Network**: Revenue sharing with local service providers
+- **Plugin Marketplace**: Third-party developer ecosystem with 30% platform fee
+- **Feature Gating**: Advanced features locked behind subscription tiers
+- **Analytics Dashboard**: Detailed business insights for premium users
