@@ -24,7 +24,14 @@ export default function ClientCard({ client, onPress, onCall, onEmail, showActio
   };
 
   return (
-    <Card style={styles.card} onPress={onPress}>
+    <Card 
+      style={styles.card} 
+      onPress={onPress}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={`Client: ${client.firstName} ${client.lastName}. Type: ${client.type}. ${client.email ? `Email: ${client.email}` : ''} ${client.phone ? `Phone: ${client.phone}` : ''}`}
+      accessibilityHint="Tap to view client details"
+    >
       <Card.Content>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>

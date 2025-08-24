@@ -36,7 +36,14 @@ export default function JobCard({ job, onPress, onStatusChange, showActions = fa
   };
 
   return (
-    <Card style={styles.card} onPress={onPress}>
+    <Card 
+      style={styles.card} 
+      onPress={onPress}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={`Job: ${job.title}. Status: ${job.status || 'pending'}. ${job.description ? `Description: ${job.description}` : ''}`}
+      accessibilityHint="Tap to view job details"
+    >
       <Card.Content>
         <View style={styles.header}>
           <View style={styles.titleContainer}>

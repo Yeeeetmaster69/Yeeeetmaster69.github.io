@@ -161,13 +161,22 @@ export default function ClientHome({ navigation }: any) {
           </Text>
           <View style={styles.quickActionsGrid}>
             {quickActions.map((action, index) => (
-              <Card key={index} style={styles.actionCard} onPress={action.onPress}>
+              <Card 
+                key={index} 
+                style={styles.actionCard} 
+                onPress={action.onPress}
+                accessible={true}
+                accessibilityRole="button"
+                accessibilityLabel={`${action.title}: ${action.description}`}
+                accessibilityHint={`Tap to ${action.description.toLowerCase()}`}
+              >
                 <Card.Content style={styles.actionContent}>
                   <View style={[styles.actionIcon, { backgroundColor: action.color + '20' }]}>
                     <IconButton
                       icon={action.icon}
                       size={32}
                       iconColor={action.color}
+                      accessibilityLabel={action.title}
                     />
                   </View>
                   <Text variant="titleMedium" style={styles.actionTitle}>
