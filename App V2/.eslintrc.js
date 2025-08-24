@@ -4,6 +4,7 @@ module.exports = {
     es2021: true,
     'react-native/react-native': true,
   },
+  ignorePatterns: ['server/functions/lib/**/*'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
