@@ -309,83 +309,108 @@ Stores device tokens for push notifications.
 }
 ```
 
-### 15. incidents
 
-Stores safety incident reports (See SAFETY_COMPLIANCE.md for full schema).
-
-
-```typescript
-{
-  id: string;
-  reporterId: string;
-
-  reporterRole: 'worker' | 'client' | 'admin';
-  jobId?: string;
-  type: 'injury' | 'property_damage' | 'near_miss' | 'safety_violation' | 'other';
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  status: 'open' | 'investigating' | 'resolved' | 'closed';
-  createdAt: timestamp;
-  // ... additional fields in SAFETY_COMPLIANCE.md
-
-}
-```
-
-### 16. emergency_contacts
-
-Stores worker emergency contact information.
+### 15. analytics_churn
+Stores churn prediction data for clients.
 
 
 ```typescript
 {
   id: string;
 
-  userId: string;
-  contacts: Array<{
-    name: string;
-    phoneNumber: string;
-    relationship: string;
-    isPrimary: boolean;
-  }>;
-  createdAt: timestamp;
-  // ... additional fields in SAFETY_COMPLIANCE.md
-}
-```
-
-### 17. sos_events
-Stores emergency SOS activations and responses.
-
-
-```typescript
-{
-  id: string;
-  workerId: string;
-
-  location: { lat: number; lng: number; };
-  triggerTime: timestamp;
-  status: 'active' | 'responded' | 'false_alarm' | 'resolved';
-  escalationLevel: number;
-  // ... additional fields in SAFETY_COMPLIANCE.md
-
-}
-```
-
-### 18. background_checks
-
-Stores worker background verification records.
-
-
-```typescript
-{
-  id: string;
-  workerId: string;
-
-  provider: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'expired';
-  results: {
-    passed: boolean;
-    findings: Array<object>;
+  clientId: string;
+  riskScore: number; // 0-100, higher = more risk
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  lastUpdated: timestamp;
+  factors: {
+    bookingFrequency: number;
+    paymentBehavior: number;
+    satisfactionTrend: number;
+    engagementLevel: number;
   };
-  // ... additional fields in SAFETY_COMPLIANCE.md
+  predictions: {
+    next30Days: number;
+    next60Days: number;
+    next90Days: number;
+  };
+  recommendations: string[];
+  interventionsSuggested: string[];
+  createdAt: timestamp;
+}
+```
+
+### 16. analytics_sentiment
+Stores sentiment analysis results for feedback and reviews.
+
+
+```typescript
+{
+  id: string;
+
+  sourceType: 'review' | 'chat' | 'support' | 'survey' | 'social';
+  sourceId: string; // Reference to original content
+  clientId?: string;
+  workerId?: string;
+  jobId?: string;
+  content: string;
+  sentiment: {
+    score: number; // -1 to 1 (negative to positive)
+    magnitude: number; // 0 to 1 (intensity)
+    confidence: number; // 0 to 1
+    classification: 'positive' | 'neutral' | 'negative';
+  };
+  topics: string[]; // Extracted topics/keywords
+  emotions: {
+    joy: number;
+    anger: number;
+    fear: number;
+    sadness: number;
+    surprise: number;
+  };
+  actionRequired: boolean;
+  priority: 'low' | 'medium' | 'high';
+  createdAt: timestamp;
+  processedAt: timestamp;
+}
+```
+
+### 17. analytics_trends
+Stores aggregated trend data for analytics dashboards.
+
+```typescript
+{
+  id: string;
+
+  metricType: 'revenue' | 'satisfaction' | 'churn' | 'sentiment' | 'performance';
+  period: 'daily' | 'weekly' | 'monthly' | 'quarterly';
+  date: timestamp;
+  value: number;
+  metadata: {
+    [key: string]: any;
+  };
+  createdAt: timestamp;
+}
+```
+
+### 18. analytics_alerts
+Stores system-generated alerts for business intelligence.
+
+
+```typescript
+{
+  id: string;
+
+  type: 'churn_risk' | 'negative_sentiment' | 'performance_drop' | 'revenue_decline';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  description: string;
+  targetId?: string; // clientId, workerId, or jobId related to alert
+  isRead: boolean;
+  isResolved: boolean;
+  resolvedBy?: string;
+  resolvedAt?: timestamp;
+  recommendations: string[];
+  createdAt: timestamp;
 
 }
 ```
@@ -479,13 +504,15 @@ service cloud.firestore {
 5. **time_entries**: `workerId ASC, createdAt DESC`
 6. **notifications**: `userId ASC, isRead ASC, createdAt DESC`
 7. **income**: `clientId ASC, createdAt DESC`
-8. **incidents**: `reporterId ASC, status ASC, createdAt DESC`
-9. **incidents**: `jobId ASC, createdAt DESC`
-10. **incidents**: `severity ASC, status ASC, createdAt DESC`
 
-11. **sos_events**: `workerId ASC, status ASC, triggerTime DESC`
-12. **background_checks**: `workerId ASC, status ASC, requestedAt DESC`
-13. **emergency_contacts**: `userId ASC`
+8. **analytics_churn**: `clientId ASC, lastUpdated DESC`
+9. **analytics_churn**: `riskLevel ASC, lastUpdated DESC`
+10. **analytics_sentiment**: `sourceType ASC, createdAt DESC`
+11. **analytics_sentiment**: `sentiment.classification ASC, createdAt DESC`
+12. **analytics_sentiment**: `actionRequired ASC, priority ASC, createdAt DESC`
+13. **analytics_trends**: `metricType ASC, period ASC, date DESC`
+14. **analytics_alerts**: `type ASC, severity ASC, createdAt DESC`
+15. **analytics_alerts**: `isRead ASC, severity ASC, createdAt DESC`
 
 
 ## Data Flow Examples
