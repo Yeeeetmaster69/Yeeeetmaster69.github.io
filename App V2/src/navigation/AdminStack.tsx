@@ -4,6 +4,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Dashboard from '../screens/admin/Dashboard';
 import Users from '../screens/admin/Users';
 import AdminJobs from '../screens/admin/Jobs';
+import AdminClients from '../screens/admin/Clients';
+import AdminWorkers from '../screens/admin/Workers';
+import AdminIncome from '../screens/admin/Income';
+import AdminReferences from '../screens/admin/References';
 import Pricing from '../screens/admin/Pricing';
 import Payroll from '../screens/admin/Payroll';
 import Estimates from '../screens/admin/Estimates';
@@ -19,6 +23,10 @@ export default function AdminStack(){
       <Stack.Screen name="Dashboard" component={Dashboard} />
       <Stack.Screen name="Users" component={Users} />
       <Stack.Screen name="AdminJobs" component={AdminJobs} options={{title:'Jobs'}}/>
+      <Stack.Screen name="Clients" component={AdminClients} />
+      <Stack.Screen name="Workers" component={AdminWorkers} />
+      <Stack.Screen name="Income" component={AdminIncome} />
+      <Stack.Screen name="References" component={AdminReferences} />
       <Stack.Screen name="Pricing" component={Pricing} />
       <Stack.Screen name="Payroll" component={Payroll} />
       <Stack.Screen name="Estimates" component={Estimates} />
