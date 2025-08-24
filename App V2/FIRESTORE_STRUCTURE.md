@@ -309,6 +309,45 @@ Stores device tokens for push notifications.
 }
 ```
 
+### 15. subscription_plans
+Stores subscription plan templates for landscaping services.
+
+```typescript
+{
+  id: string;
+  name: string;
+  description: string;
+  frequency: 'weekly' | 'biweekly' | 'monthly' | 'quarterly' | 'semi-annual' | 'one-time';
+  basePrice: number;
+  estimatedHours: number;
+  services: string[];
+  isActive: boolean;
+  createdAt: timestamp;
+  updatedAt: timestamp;
+}
+```
+
+### 16. client_subscriptions
+Stores active client subscriptions to landscaping plans.
+
+```typescript
+{
+  id: string;
+  clientId: string;
+  planId: string;
+  status: 'active' | 'paused' | 'cancelled' | 'pending';
+  startDate: timestamp;
+  endDate?: timestamp;
+  lastServiceDate?: timestamp;
+  nextServiceDate?: timestamp;
+  customPrice?: number;
+  notes?: string;
+  autoRenew: boolean;
+  createdAt: timestamp;
+  updatedAt: timestamp;
+}
+```
+
 ## Security Rules
 
 ```javascript
@@ -360,6 +399,9 @@ service cloud.firestore {
 5. **time_entries**: `workerId ASC, createdAt DESC`
 6. **notifications**: `userId ASC, isRead ASC, createdAt DESC`
 7. **income**: `clientId ASC, createdAt DESC`
+8. **subscription_plans**: `isActive ASC, frequency ASC, basePrice ASC`
+9. **client_subscriptions**: `clientId ASC, status ASC, createdAt DESC`
+10. **client_subscriptions**: `status ASC, nextServiceDate ASC`
 
 ## Data Flow Examples
 
@@ -379,3 +421,10 @@ service cloud.firestore {
 1. User sends message to `messages` collection
 2. System updates `lastMessage` in `chats` collection
 3. System sends push notification to other participants
+
+### Subscription Management:
+1. Admin creates subscription plan in `subscription_plans` collection
+2. Client subscribes to plan, creates record in `client_subscriptions`
+3. System calculates next service date based on frequency
+4. System auto-generates jobs for upcoming service dates
+5. System updates subscription status after service completion

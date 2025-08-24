@@ -255,6 +255,22 @@ export default function Dashboard({ navigation }: any) {
             </Button>
             <Button 
               mode="outlined" 
+              icon="calendar-sync"
+              onPress={() => navigation.navigate('AdminSubscriptions')}
+              style={styles.managementButton}
+            >
+              Subscription Plans
+            </Button>
+            <Button 
+              mode="outlined" 
+              icon="account-sync"
+              onPress={() => navigation.navigate('AdminClientSubscriptions')}
+              style={styles.managementButton}
+            >
+              Client Subscriptions
+            </Button>
+            <Button 
+              mode="outlined" 
               icon="cog"
               onPress={() => navigation.navigate('Settings')}
               style={styles.managementButton}

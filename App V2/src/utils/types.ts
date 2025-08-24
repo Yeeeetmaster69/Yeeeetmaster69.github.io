@@ -4,6 +4,9 @@ export type Role = 'admin'|'worker'|'client';
 export type JobStatus = 'pending' | 'active' | 'upcoming' | 'completed' | 'cancelled';
 export type JobPriority = 'low' | 'medium' | 'high' | 'urgent';
 
+export type SubscriptionFrequency = 'weekly' | 'biweekly' | 'monthly' | 'quarterly' | 'semi-annual' | 'one-time';
+export type SubscriptionStatus = 'active' | 'paused' | 'cancelled' | 'pending';
+
 export type Job = {
   id?: string;
   title: string;
@@ -223,4 +226,33 @@ export type DashboardStats = {
   monthlyRevenue: number;
   weeklyRevenue: number;
   dailyRevenue: number;
+};
+
+export type SubscriptionPlan = {
+  id?: string;
+  name: string;
+  description: string;
+  frequency: SubscriptionFrequency;
+  basePrice: number;
+  estimatedHours: number;
+  services: string[];
+  isActive: boolean;
+  createdAt?: number;
+  updatedAt?: number;
+};
+
+export type ClientSubscription = {
+  id?: string;
+  clientId: string;
+  planId: string;
+  status: SubscriptionStatus;
+  startDate: number;
+  endDate?: number;
+  lastServiceDate?: number;
+  nextServiceDate?: number;
+  customPrice?: number;
+  notes?: string;
+  autoRenew: boolean;
+  createdAt?: number;
+  updatedAt?: number;
 };

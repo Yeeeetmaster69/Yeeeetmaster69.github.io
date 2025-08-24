@@ -14,6 +14,8 @@ import Estimates from '../screens/admin/Estimates';
 import Invoices from '../screens/admin/Invoices';
 import Notifications from '../screens/admin/Notifications';
 import Settings from '../screens/admin/Settings';
+import AdminSubscriptions from '../screens/admin/Subscriptions';
+import AdminClientSubscriptions from '../screens/admin/ClientSubscriptions';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +35,8 @@ export default function AdminStack(){
       <Stack.Screen name="Invoices" component={Invoices} />
       <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="AdminSubscriptions" component={AdminSubscriptions} options={{title:'Subscription Plans'}}/>
+      <Stack.Screen name="AdminClientSubscriptions" component={AdminClientSubscriptions} options={{title:'Client Subscriptions'}}/>
     </Stack.Navigator>
   )
 }
