@@ -1,3 +1,4 @@
+
 # Safety & Compliance System
 
 This document outlines the requirements and proposed architecture for the Safety & Compliance features in the Handyman Pro application, including Incident Reporting, Emergency Contact/SOS functionality, and Background Checks integration.
@@ -110,11 +111,13 @@ The Safety & Compliance system ensures worker and client safety through three co
   reporterRole: 'worker' | 'client' | 'admin';
   jobId?: string; // Associated job if applicable
   type: 'injury' | 'property_damage' | 'near_miss' | 'safety_violation' | 'other';
+
   severity: 'low' | 'medium' | 'high' | 'critical';
   title: string;
   description: string;
   location: {
     address: string;
+
     coordinates: {
       lat: number;
       lng: number;
@@ -185,9 +188,11 @@ The Safety & Compliance system ensures worker and client safety through three co
   responseTime?: number; // in minutes
   resolution: string;
   notes?: string;
+
   resolvedAt?: timestamp;
 }
 ```
+
 
 ##### 4. `background_checks`
 ```typescript
@@ -197,10 +202,12 @@ The Safety & Compliance system ensures worker and client safety through three co
   provider: string; // 'checkr', 'sterling', etc.
   providerRequestId: string;
   type: 'basic' | 'extended' | 'mvr' | 'identity' | 'license';
+
   status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'expired';
   requestedAt: timestamp;
   completedAt?: timestamp;
   expiresAt?: timestamp;
+
   results: {
     passed: boolean;
     score?: number;
@@ -345,3 +352,4 @@ The Safety & Compliance system ensures worker and client safety through three co
 - Real-time environmental hazard monitoring
 - Safety training module integration
 - Predictive analytics for safety risk assessment
+

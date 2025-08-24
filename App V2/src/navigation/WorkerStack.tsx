@@ -8,6 +8,8 @@ import Earnings from '../screens/worker/Earnings';
 import ClockInOut from '../screens/worker/ClockInOut';
 import Photos from '../screens/worker/Photos';
 import Miles from '../screens/worker/Miles';
+import EmergencyContact from '../screens/worker/EmergencyContact';
+import IncidentReporting from '../screens/shared/IncidentReporting';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +23,8 @@ export default function WorkerStack(){
       <Stack.Screen name="ClockInOut" component={ClockInOut} />
       <Stack.Screen name="Photos" component={Photos} />
       <Stack.Screen name="Miles" component={Miles} />
+      <Stack.Screen name="EmergencyContact" component={EmergencyContact} options={{title:'Emergency & Safety'}} />
+      <Stack.Screen name="IncidentReporting" component={IncidentReporting} options={{title:'Report Incident'}} />
     </Stack.Navigator>
   )
 }

@@ -310,12 +310,15 @@ Stores device tokens for push notifications.
 ```
 
 ### 15. incidents
+
 Stores safety incident reports (See SAFETY_COMPLIANCE.md for full schema).
+
 
 ```typescript
 {
   id: string;
   reporterId: string;
+
   reporterRole: 'worker' | 'client' | 'admin';
   jobId?: string;
   type: 'injury' | 'property_damage' | 'near_miss' | 'safety_violation' | 'other';
@@ -323,15 +326,19 @@ Stores safety incident reports (See SAFETY_COMPLIANCE.md for full schema).
   status: 'open' | 'investigating' | 'resolved' | 'closed';
   createdAt: timestamp;
   // ... additional fields in SAFETY_COMPLIANCE.md
+
 }
 ```
 
 ### 16. emergency_contacts
+
 Stores worker emergency contact information.
+
 
 ```typescript
 {
   id: string;
+
   userId: string;
   contacts: Array<{
     name: string;
@@ -347,25 +354,31 @@ Stores worker emergency contact information.
 ### 17. sos_events
 Stores emergency SOS activations and responses.
 
+
 ```typescript
 {
   id: string;
   workerId: string;
+
   location: { lat: number; lng: number; };
   triggerTime: timestamp;
   status: 'active' | 'responded' | 'false_alarm' | 'resolved';
   escalationLevel: number;
   // ... additional fields in SAFETY_COMPLIANCE.md
+
 }
 ```
 
 ### 18. background_checks
+
 Stores worker background verification records.
+
 
 ```typescript
 {
   id: string;
   workerId: string;
+
   provider: string;
   status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'expired';
   results: {
@@ -373,6 +386,7 @@ Stores worker background verification records.
     findings: Array<object>;
   };
   // ... additional fields in SAFETY_COMPLIANCE.md
+
 }
 ```
 
@@ -407,6 +421,44 @@ service cloud.firestore {
       );
     }
     
+    // Incidents - reporters and admins can read/write, assigned investigators can read/write
+    match /incidents/{incidentId} {
+      allow read: if request.auth != null && (
+        resource.data.reporterId == request.auth.uid ||
+        resource.data.assignedInvestigator == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+      allow write: if request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        (resource.data.reporterId == request.auth.uid && resource.data.status == 'reported')
+      );
+    }
+    
+    // Emergency contacts - workers can read/write their own, admins can read all
+    match /emergency_contacts/{contactId} {
+      allow read, write: if request.auth != null && (
+        resource.data.workerId == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+    
+    // Emergency alerts - workers can create their own, admins and emergency contacts can read
+    match /emergency_alerts/{alertId} {
+      allow read: if request.auth != null && (
+        resource.data.workerId == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+      allow create: if request.auth != null && resource.data.workerId == request.auth.uid;
+      allow update: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Background checks - admin only
+    match /background_checks/{checkId} {
+      allow read, write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
     // Admin-only collections
     match /{collection}/{document} {
       allow read, write: if request.auth != null && 
@@ -430,9 +482,11 @@ service cloud.firestore {
 8. **incidents**: `reporterId ASC, status ASC, createdAt DESC`
 9. **incidents**: `jobId ASC, createdAt DESC`
 10. **incidents**: `severity ASC, status ASC, createdAt DESC`
+
 11. **sos_events**: `workerId ASC, status ASC, triggerTime DESC`
 12. **background_checks**: `workerId ASC, status ASC, requestedAt DESC`
 13. **emergency_contacts**: `userId ASC`
+
 
 ## Data Flow Examples
 
