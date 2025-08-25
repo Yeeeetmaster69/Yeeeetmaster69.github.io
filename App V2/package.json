@@ -14,7 +14,6 @@
     "test": "cd server/functions && npm test"
   },
   "dependencies": {
-    "@react-navigation/material-top-tabs": "^7.3.6",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "dayjs": "^1.11.13",

@@ -1,0 +1,2 @@
+HandymanPro-debug.apk (126,548,008 bytes) - Built successfully Mon Aug 25 00:26:59 UTC 2025
+HandymanPro-release.apk (58,701,978 bytes) - Built successfully Mon Aug 25 00:26:59 UTC 2025
