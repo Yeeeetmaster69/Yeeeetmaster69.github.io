@@ -4,7 +4,15 @@
 
 ## 🚀 Download & Build Options
 
-### ✅ RECOMMENDED: Build Your Own APK
+### ✅ OPTION 1: Build Latest APKs
+
+**🚀 GitHub Actions Build** - Get the freshest APKs
+- **[⚡ Build APK Now](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-apk.yml)** - Latest debug version
+- **[📦 Build Release](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-release.yml)** - Production version
+
+Click → "Run workflow" → Download from Artifacts (~5 minutes)
+
+### 🛠️ OPTION 2: Build Your Own APK
 
 **📦 HandymanPro-SourceCode.zip** - Complete source code package
 - **100% working source code** included
@@ -14,11 +22,19 @@
 
 ### 📥 Available Downloads
 
+Choose your preferred option:
+
+**🎯 OPTION 1: On-Demand APK Build**
+- **[⚡ Build Latest APK](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-apk.yml)** - Fresh build from source
+- **[📦 Build Release APK](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-release.yml)** - Production optimized
+
+**🛠️ OPTION 2: Build Your Own**
+
 | File | Type | Description |
 |------|------|-------------|
 | `HandymanPro-SourceCode.zip` | **Source Code** | **Complete project** - Build your own APK |
-| `HandymanPro-debug.apk` | Placeholder | Instructions to build debug APK |
-| `HandymanPro-release.apk` | Placeholder | Instructions to build release APK |
+| **GitHub Actions** | **Live APK Build** | **[⚡ Build fresh APK](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-apk.yml)** (5 min) |
+| **Release Build** | **Production APK** | **[📦 Build optimized release](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-release.yml)** |
 
 ### 📍 File Location
 
@@ -30,6 +46,17 @@
 - **🚀 [Download Source Code](./HandymanPro-SourceCode.zip)** - Build your own APK
 - **📖 [View Build Instructions](../BUILD_AND_DEPLOY_APK.md)** - How to build APKs
 - **📁 [Browse This Directory](./)** - See all files
+
+### 🚀 Quick Installation (GitHub Actions APKs)
+
+**For Latest APKs:**
+1. **Click** the "Build APK Now" link above
+2. **Click** "Run workflow" button (GitHub sign-in required)  
+3. **Wait** for build completion (~5 minutes)
+4. **Download** APK from "Artifacts" section at bottom of workflow page
+5. **Enable** "Install from Unknown Sources" on your Android device
+6. **Install** the downloaded APK file
+7. **Launch** "Handyman Pro" and login with demo credentials below
 
 ### 🔨 Build Instructions
 
@@ -73,4 +100,4 @@ For technical documentation and build information, see:
 
 ---
 
-**Note**: If APK files are not visible in this directory, they may need to be rebuilt or uploaded. Check the build documentation for instructions.
+**Note**: APK files are generated fresh using GitHub Actions build system. This ensures you always get the latest version with all features functional.
