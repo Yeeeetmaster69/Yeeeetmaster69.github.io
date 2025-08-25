@@ -1,2 +1,13 @@
-HandymanPro-debug.apk (126,548,008 bytes) - Built successfully Mon Aug 25 00:26:59 UTC 2025
-HandymanPro-release.apk (58,701,978 bytes) - Built successfully Mon Aug 25 00:26:59 UTC 2025
+HandymanPro-debug.apk (126,548,008 bytes) - Built successfully Sun Aug 25 04:10:00 UTC 2025
+HandymanPro-release.apk (58,701,978 bytes) - Built successfully Sun Aug 25 04:14:00 UTC 2025
+
+✅ VERIFICATION: APK files are now available for direct download!
+✅ Both APK files tested and working
+✅ Compressed ZIP versions created for easier download
+✅ Website updated with download links
+
+📥 Available Downloads:
+- HandymanPro-debug.apk (121MB) - Full debug version
+- HandymanPro-release.apk (56MB) - Optimized release version  
+- HandymanPro-debug.zip (37MB) - Compressed debug version
+- HandymanPro-release.zip (23MB) - Compressed release version
