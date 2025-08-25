@@ -2,9 +2,13 @@
 
 ## 🚀 Quick Download - APK Files
 
-**📥 Want the APK files? Build them in 5 minutes!**
+**📥 Get Latest APKs via GitHub Actions!**
 
-### 🚀 RECOMMENDED: Build Your Own APK
+### 📱 RECOMMENDED: Build Fresh APKs
+- **[⚡ Build Latest APK](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-apk.yml)** - Debug version (~5 min build)
+- **[📦 Build Release APK](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-release.yml)** - Production version
+
+### 🛠️ ALTERNATIVE: Build Your Own APK
 
 **[📦 Download Complete Source Code](./apk/HandymanPro-SourceCode.zip)** (922 KB)
 - ✅ **100% working source code** included  
@@ -16,8 +20,8 @@
 | File | Type | Description |
 |------|------|-------------|
 | [HandymanPro-SourceCode.zip](./apk/HandymanPro-SourceCode.zip) | **Source Code** | **Build your own working APK** |
-| [HandymanPro-debug.apk](./apk/HandymanPro-debug.apk) | Placeholder | Build instructions for debug APK |
-| [HandymanPro-release.apk](./apk/HandymanPro-release.apk) | Placeholder | Build instructions for release APK |
+| [⚡ GitHub Actions Build](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-apk.yml) | **Live APK Build** | Fresh APK generated on-demand (~5 min) |
+| [📦 Release Build](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-release.yml) | **Production APK** | Optimized release version build |
 
 ### 🔗 Quick Links
 

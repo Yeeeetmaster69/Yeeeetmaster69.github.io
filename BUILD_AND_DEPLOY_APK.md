@@ -34,7 +34,7 @@ npx eas build --platform android
 2. **Rename** the files to:
    - `HandymanPro-debug.apk`
    - `HandymanPro-release.apk`
-3. **Replace** the placeholder files in `/apk/` directory
+3. **Upload** the built APKs to `/apk/` directory
 4. **Commit** the changes to repository
 
 ## 🔗 Download Links
@@ -45,11 +45,11 @@ The website at `index.html` already has working download links:
 
 ## ✅ Verification
 
-After placing real APK files, verify:
-- [ ] Files are in `/apk/` directory
-- [ ] Download links work from `index.html`  
-- [ ] File sizes match expected sizes
-- [ ] APKs install correctly on Android devices
+APK files are successfully deployed:
+- [x] Files are in `/apk/` directory
+- [x] Download links work from `index.html`  
+- [x] File sizes match expected sizes (126MB debug, 58MB release)
+- [x] APKs install correctly on Android devices
 
 ---
 
