@@ -33,15 +33,19 @@ jobs:
         working-directory: App V2
         run: npx expo prebuild --platform android --clean
 
-      - name: Build release APK
+      - name: Build debug APK (Full Featured)
         working-directory: App V2/android
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug
+
+      - name: Rename APK to expected name
+        run: |
+          cp "App V2/android/app/build/outputs/apk/debug/app-debug.apk" "App V2/android/app/build/outputs/apk/debug/HandymanPro-debug.apk"
 
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.tag }}
           files: |
-            App V2/android/app/build/outputs/apk/release/app-release*.apk
+            App V2/android/app/build/outputs/apk/debug/HandymanPro-debug.apk
