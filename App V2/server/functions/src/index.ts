@@ -12,6 +12,14 @@ const auth = admin.auth();
 const expo = new Expo();
 const corsHandler = cors({ origin: true });
 
+// Export subscription functions
+export {
+  generateSubscriptionJobs,
+  manualGenerateSubscriptionJobs,
+  updateSubscriptionAfterJobCompletion,
+  checkSubscriptionRenewals
+} from './subscriptions';
+
 export const setRoleClaim = functions.https.onRequest((req, res) => {
   return corsHandler(req, res, async () => {
     try{

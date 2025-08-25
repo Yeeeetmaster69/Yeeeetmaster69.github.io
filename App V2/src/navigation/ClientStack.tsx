@@ -14,6 +14,7 @@ import Contact from '../screens/client/Contact';
 import PaymentOptions from '../screens/client/PaymentOptions';
 import Chat from '../screens/client/Chat';
 import IncidentReporting from '../screens/shared/IncidentReporting';
+import Subscriptions from '../screens/client/Subscriptions';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,7 @@ export default function ClientStack(){
       <Stack.Screen name="PaymentOptions" component={PaymentOptions} />
       <Stack.Screen name="Chat" component={Chat} options={{title:'Support Chat'}} />
       <Stack.Screen name="IncidentReporting" component={IncidentReporting} options={{title:'Report Safety Issue'}} />
+      <Stack.Screen name="Subscriptions" component={Subscriptions} options={{title:'My Subscriptions'}} />
     </Stack.Navigator>
   )
 }
