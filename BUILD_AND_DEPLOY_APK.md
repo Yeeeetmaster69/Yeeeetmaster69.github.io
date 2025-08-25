@@ -4,8 +4,8 @@
 ✅ APK files are now properly organized in the `/apk/` directory for easy downloading!
 
 The APK files are located at:
-- `/apk/HandymanPro-debug.apk` - Debug version (126 MB expected)
-- `/apk/HandymanPro-release.apk` - Release version (58 MB expected)
+- `/apk/HandymanPro-debug.apk` - Debug version (121 MB)
+- `/apk/HandymanPro-release.apk` - Release version (56 MB)
 
 ## 🏗️ Building Actual APK Files
 

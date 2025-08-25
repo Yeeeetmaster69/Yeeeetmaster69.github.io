@@ -8,8 +8,8 @@ This repository now contains fully functional, working APKs for the Handyman Pro
 
 **📍 APK Location**: [`/apk/` directory](./apk/) - **Easy Access Point**
 
-- **HandymanPro-debug.apk** (126 MB) - Debug version for testing
-- **HandymanPro-release.apk** (58 MB) - Optimized release version
+- **HandymanPro-debug.apk** (121 MB) - Debug version for testing
+- **HandymanPro-release.apk** (56 MB) - Optimized release version
 
 **🔗 Quick Links**:
 - [📁 Browse APK Directory](./apk/)
