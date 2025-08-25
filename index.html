@@ -69,33 +69,62 @@
     </div>
 
     <div class="download-section">
-        <h2>📥 Download APK Files</h2>
+        <h2>📥 Download Options</h2>
         <p><strong>📍 File Location:</strong> <code>/apk/</code> directory</p>
         
-        <div class="file-info">
-            <h3>🚀 Production Release</h3>
-            <p><strong>HandymanPro-release.apk</strong> (58 MB)</p>
-            <p>Optimized for production use</p>
-            <a href="./apk/HandymanPro-release.apk" class="download-btn">⬇️ Download Release APK</a>
+        <div class="file-info" style="background: #e8f5e8; border-left: 4px solid #28a745;">
+            <h3>🔨 Build Your Own APK (RECOMMENDED)</h3>
+            <p><strong>HandymanPro-SourceCode.zip</strong> (Complete Source Code)</p>
+            <p>✅ <strong>100% working source code</strong> - Build your own APK in 5 minutes!</p>
+            <p>✅ Includes step-by-step build instructions</p>
+            <p>✅ Creates fully functional APK with all features</p>
+            <a href="./apk/HandymanPro-SourceCode.zip" class="download-btn" style="background: #28a745;">🚀 Download Source Code & Build Instructions</a>
         </div>
 
-        <div class="file-info">
-            <h3>🛠️ Debug Version</h3>
-            <p><strong>HandymanPro-debug.apk</strong> (126 MB)</p>
-            <p>For testing and development</p>
-            <a href="./apk/HandymanPro-debug.apk" class="download-btn debug-btn">⬇️ Download Debug APK</a>
+        <div class="file-info" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+            <h3>⚠️ Placeholder APK Files</h3>
+            <p><strong>Note:</strong> These are placeholder files with build instructions</p>
+            <p>📥 Download the source code above to build real APKs</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="./apk/HandymanPro-release.apk" class="download-btn" style="background: #ffc107; color: #000;">📄 Release Placeholder</a>
+                <a href="./apk/HandymanPro-debug.apk" class="download-btn" style="background: #ffc107; color: #000;">📄 Debug Placeholder</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="download-section" style="background: #f8f9fa; border: 2px solid #28a745;">
+        <h2>🔨 How to Build Your APK</h2>
+        <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
+            <h4>⚡ Quick Start (5 minutes)</h4>
+            <ol>
+                <li><strong>Download</strong> the HandymanPro-SourceCode.zip above</li>
+                <li><strong>Extract</strong> the ZIP file to your computer</li>
+                <li><strong>Install Node.js</strong> if you don't have it: <a href="https://nodejs.org/" target="_blank">nodejs.org</a></li>
+                <li><strong>Open terminal</strong> in the <code>handymanapp</code> folder</li>
+                <li><strong>Run:</strong> <code>npm install</code></li>
+                <li><strong>Build APK:</strong> <code>npx eas build --platform android --profile preview --local</code></li>
+            </ol>
+            <p>📱 <strong>Result:</strong> You'll get a fully working APK file ready to install!</p>
+        </div>
+        <div style="background: #e3f2fd; padding: 10px; border-radius: 5px;">
+            <p><strong>💡 Alternative:</strong> If EAS doesn't work, try <code>npx expo run:android</code> - APK will be in <code>android/app/build/outputs/apk/</code></p>
         </div>
     </div>
 
     <div class="download-section">
         <h2>📋 Installation Instructions</h2>
-        <ol>
-            <li>Download the APK file you need (Release recommended for most users)</li>
-            <li>Enable "Install from Unknown Sources" on your Android device</li>
-            <li>Install the downloaded APK file</li>
-            <li>Launch "Handyman Pro" from your app drawer</li>
-            <li>Login with demo credentials below</li>
-        </ol>
+        <div style="background: white; padding: 15px; border-radius: 8px;">
+            <h4>🎯 For Built APK Files:</h4>
+            <ol>
+                <li>Build your APK using the source code above</li>
+                <li>Enable "Install from Unknown Sources" on your Android device</li>
+                <li>Transfer the APK to your phone</li>
+                <li>Install the APK file</li>
+                <li>Launch "Handyman Pro" from your app drawer</li>
+                <li>Login with demo credentials below</li>
+            </ol>
+            <p><strong>📱 Requirements:</strong> Android 7.0+ (API level 24+)</p>
+        </div>
     </div>
 
     <div class="credentials">

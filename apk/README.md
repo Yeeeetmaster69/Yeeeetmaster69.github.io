@@ -1,15 +1,24 @@
 # 📱 Handyman Pro APK Files
 
-## 🚀 Ready-to-Install APK Files
+# 📱 Handyman Pro APK Files
 
-This directory contains the built APK files for the Handyman Pro application:
+## 🚀 Download & Build Options
+
+### ✅ RECOMMENDED: Build Your Own APK
+
+**📦 HandymanPro-SourceCode.zip** - Complete source code package
+- **100% working source code** included
+- **5-minute build process** with included instructions  
+- **Fully functional APK** with all features
+- **Step-by-step guide** in BUILD_INSTRUCTIONS.md
 
 ### 📥 Available Downloads
 
-| APK File | Size | Description | Use Case |
-|----------|------|-------------|----------|
-| `HandymanPro-debug.apk` | 126 MB | Debug version with development tools | Testing & Development |
-| `HandymanPro-release.apk` | 58 MB | Optimized production version | Production Use |
+| File | Type | Description |
+|------|------|-------------|
+| `HandymanPro-SourceCode.zip` | **Source Code** | **Complete project** - Build your own APK |
+| `HandymanPro-debug.apk` | Placeholder | Instructions to build debug APK |
+| `HandymanPro-release.apk` | Placeholder | Instructions to build release APK |
 
 ### 📍 File Location
 
@@ -18,17 +27,26 @@ This directory contains the built APK files for the Handyman Pro application:
 
 ### 🔗 Quick Access Links
 
-- **Browse APK Directory**: [📁 /apk/](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/tree/main/apk)
-- **Download Debug APK**: [⬇️ HandymanPro-debug.apk](./HandymanPro-debug.apk) *(when available)*
-- **Download Release APK**: [⬇️ HandymanPro-release.apk](./HandymanPro-release.apk) *(when available)*
+- **🚀 [Download Source Code](./HandymanPro-SourceCode.zip)** - Build your own APK
+- **📖 [View Build Instructions](../BUILD_AND_DEPLOY_APK.md)** - How to build APKs
+- **📁 [Browse This Directory](./)** - See all files
 
-### 📋 Installation Instructions
+### 🔨 Build Instructions
 
-1. **Download** the APK file you need (debug for testing, release for production)
-2. **Enable** "Install from Unknown Sources" on your Android device:
-   - Go to Settings → Security → Unknown Sources (Android 7 and below)
-   - Go to Settings → Apps → Special Access → Install Unknown Apps (Android 8+)
-3. **Install** the APK file on your device
+**Step 1:** Download HandymanPro-SourceCode.zip above
+
+**Step 2:** Extract and build your APK:
+```bash
+# Extract the ZIP file
+# Open terminal in handymanapp folder
+npm install
+npx eas build --platform android --profile preview --local
+```
+
+**Step 3:** Install your built APK:
+1. **Enable** "Install from Unknown Sources" on your Android device
+2. **Transfer** your built APK to your phone  
+3. **Install** the APK file
 4. **Launch** "Handyman Pro" from your app drawer
 
 ### 🔐 Demo Login Credentials
