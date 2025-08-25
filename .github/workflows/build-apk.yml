@@ -32,7 +32,7 @@ jobs:
 
       - name: Expo Doctor
         working-directory: App V2
-        run: npx expo doctor
+        run: npx expo-doctor
 
       - name: Build APK with Expo CLI
         working-directory: App V2
