@@ -31,7 +31,7 @@ jobs:
         working-directory: App V2
         run: |
           # Prebuild to ensure Android project is properly configured
-          npx expo prebuild --platform android --clear
+          npx expo prebuild --platform android --clean
           
           # Build using Expo's build system which handles module configuration
           cd android
