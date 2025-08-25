@@ -1,4 +1,4 @@
-name: Build & Upload Release Asset
+name: Build & Upload Debug APK to Release
 on:
   workflow_dispatch:
     inputs:
