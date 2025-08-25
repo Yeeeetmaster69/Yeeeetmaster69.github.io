@@ -1,0 +1,68 @@
+# GitHub Pages Jekyll Configuration
+# This file configures Jekyll for the Handyman Pro GitHub Pages site
+
+# Site settings
+title: "Handyman Pro"
+description: "A complete handyman service management platform with role-based access, GPS tracking, and payment processing"
+url: "https://yeeeetmaster69.github.io"
+baseurl: ""
+
+# Build settings
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Exclude directories and files from processing
+exclude:
+  - handymanapp/node_modules/
+  - App V2/node_modules/
+  - HandymanMinimal/node_modules/
+  - node_modules/
+  - vendor/
+  - .bundle/
+  - .sass-cache/
+  - .jekyll-cache/
+  - .jekyll-metadata
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - BUILD_AND_DEPLOY_APK.md
+  - APK_BUILD_README.md
+  - APK_BUILD_VERIFICATION.txt
+  - APK_FILES_HERE.txt
+  - .git/
+  - .gitignore
+  - .github/
+  - handymanapp/package.json
+  - handymanapp/package-lock.json
+  - handymanapp/yarn.lock
+  - handymanapp/.expo/
+  - handymanapp/.git/
+  - handymanapp/dist/
+  - handymanapp/build/
+  - "App V2/lint-reports/"
+  - "App V2/run_lint.sh"
+  - "handymanapp/run_lint.sh"
+
+# Keep certain files that should be processed
+include:
+  - index.html
+  - assets/
+  - apk/
+
+# Permalink structure
+permalink: pretty
+
+# Sass/SCSS configuration
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Collections (if needed in the future)
+collections_dir: collections
+
+# Timezone
+timezone: America/New_York
