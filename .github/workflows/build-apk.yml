@@ -26,12 +26,19 @@ jobs:
         working-directory: App V2
         run: npm ci
 
-      # 👇 Building full-featured App V2 (125MB+ with all features)
-      - name: Build release APK
-        working-directory: App V2/android
+      # Use Expo CLI to build instead of direct Gradle
+      - name: Build APK with Expo CLI
+        working-directory: App V2
         run: |
+          # Prebuild to ensure Android project is properly configured
+          npx expo prebuild --platform android --clear
+          
+          # Build using Expo's build system which handles module configuration
+          cd android
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease --no-daemon --max-workers=1 -x lintVitalAnalyzeRelease
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx2048m -Dorg.gradle.daemon=false"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
