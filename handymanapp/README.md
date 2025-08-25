@@ -124,75 +124,51 @@ npm run deploy
 
 This project includes comprehensive testing infrastructure to ensure code quality, accessibility, and functionality.
 
-### Android Automated Tests
+### Testing Framework
 
-#### Unit Tests (SampleUnitTest.kt)
-Located at: `android/app/src/test/java/com/handyman/pro/SampleUnitTest.kt`
+This project uses modern testing approaches suitable for Expo managed projects.
 
-**Purpose**: Validate business logic and utility functions without requiring Android framework dependencies.
+#### Testing Strategy for Expo Managed Projects
 
-**Features tested**:
-- Job cost calculations with different scenarios
-- Time tracking and hour calculations
-- Worker rating calculations
-- Job status validation
-- Error handling for invalid inputs
+**Unit Testing**: 
+- Use Jest for testing business logic components
+- Test utility functions and calculations
+- Mock external dependencies
 
-**To run**:
+**Integration Testing**:
+- Test component interactions
+- Use React Native Testing Library
+- Mock navigation and external services
+
+**Accessibility Testing**:
+- Use development builds for accessibility validation
+- Follow WCAG guidelines
+- Test with screen readers
+
+**To set up testing**:
 ```bash
-# For native Android projects
-./gradlew test
+# Install testing dependencies
+npm install --save-dev jest @testing-library/react-native
 
-# For Expo managed projects (after eject)
-cd android && ./gradlew test
+# Add test script to package.json
+"test": "jest"
+
+# Run tests
+npm test
 ```
 
-#### Accessibility Tests (AccessibilityTest.kt)
-Located at: `android/app/src/androidTest/java/com/handyman/pro/AccessibilityTest.kt`
-
-**Purpose**: Ensure the app meets accessibility standards using Espresso's accessibility testing framework.
-
-**Features tested**:
-- Content descriptions for images and buttons
-- Minimum touch target sizes (48dp requirement)
-- Color contrast ratios
-- Keyboard navigation
-- Screen reader compatibility
-- Focus indicators
-
-**To run**:
-```bash
-# Requires connected Android device or emulator
-./gradlew connectedAndroidTest
-
-# Or run specific accessibility tests
-./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.handyman.pro.AccessibilityTest
-```
-
-**Prerequisites for Android tests**:
-Add these dependencies to your `android/app/build.gradle`:
-```gradle
-dependencies {
-    // Unit testing
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:4.6.1'
-    testImplementation 'org.mockito:mockito-inline:4.6.1'
-    
-    // Instrumented testing
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.5.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test:rules:1.5.0'
-    androidTestImplementation 'androidx.test:runner:1.5.2'
-}
-```
+**Accessibility Best Practices**:
+- Ensure all interactive elements have accessibility labels
+- Maintain sufficient color contrast ratios
+- Provide alternative text for images
+- Test with screen readers (TalkBack/VoiceOver)
 
 ### Lint Checks & Code Quality
 
 #### Android Lint Script (run_lint.sh)
 Located at: `run_lint.sh`
 
-**Purpose**: Comprehensive code quality checks including Android lint, ESLint, TypeScript compilation, and accessibility guidelines.
+**Purpose**: Comprehensive code quality checks including ESLint, TypeScript compilation, and accessibility guidelines for Expo managed projects.
 
 **Features**:
 - Automatically detects project type (native Android vs Expo managed)
@@ -218,8 +194,6 @@ chmod +x run_lint.sh
 
 **Generated Reports**:
 All reports are saved to `./lint-reports/` with timestamps:
-- `lint-report-[timestamp].html` - Android lint HTML report
-- `lint-report-[timestamp].xml` - Android lint XML report  
 - `eslint-report-[timestamp].txt` - ESLint results
 - `typescript-check-[timestamp].txt` - TypeScript compilation check
 - `accessibility-check-[timestamp].txt` - Accessibility guidelines checklist
@@ -237,8 +211,8 @@ All reports are saved to `./lint-reports/` with timestamps:
 2. **Before releases**:
    ```bash
    ./run_lint.sh
-   ./gradlew test  # Unit tests
-   ./gradlew connectedAndroidTest  # Accessibility tests
+   npm test  # Run any existing tests
+   npx expo export --platform android  # Test build process
    ```
 
 3. **Regular accessibility audits**:
@@ -246,8 +220,8 @@ All reports are saved to `./lint-reports/` with timestamps:
    # Review the accessibility checklist
    cat lint-reports/accessibility-check-*.txt
    
-   # Run accessibility tests
-   ./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.handyman.pro.AccessibilityTest
+   # For managed Expo projects, use development builds for accessibility testing
+   npx expo run:android --variant debug
    ```
 
 ### Adapting Tests for Your Project
@@ -269,14 +243,16 @@ To integrate these tests into your CI/CD pipeline:
   run: ./run_lint.sh
 
 - name: Run unit tests
-  run: ./gradlew test
+  run: npm test
 
-- name: Run accessibility tests
-  run: ./gradlew connectedAndroidTest
-  if: matrix.api-level >= 21
+- name: Run lint checks
+  run: ./run_lint.sh
+
+- name: Test build process
+  run: npx expo export --platform android
 ```
 
 For more testing best practices and detailed setup instructions, refer to the official documentation:
-- [Android Testing Guide](https://developer.android.com/training/testing)
-- [Espresso Accessibility Testing](https://developer.android.com/training/testing/espresso/accessibility-testing)
+- [Expo Testing Guide](https://docs.expo.dev/develop/unit-testing/)
 - [React Native Testing](https://reactnative.dev/docs/testing-overview)
+- [Accessibility Testing](https://docs.expo.dev/guides/accessibility/)
