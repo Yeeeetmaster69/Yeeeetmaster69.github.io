@@ -41,7 +41,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "export"
+      "output": "static"
     },
     "plugins": [
       "expo-notifications",
