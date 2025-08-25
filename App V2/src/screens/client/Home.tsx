@@ -61,6 +61,13 @@ export default function ClientHome({ navigation }: any) {
       onPress: () => navigation.navigate('ScheduleEstimate')
     },
     {
+      title: 'Subscriptions',
+      description: 'Manage recurring services',
+      icon: 'repeat',
+      color: '#673ab7',
+      onPress: () => navigation.navigate('Subscriptions')
+    },
+    {
       title: 'Chat Support',
       description: 'Talk to our team',
       icon: 'chat',

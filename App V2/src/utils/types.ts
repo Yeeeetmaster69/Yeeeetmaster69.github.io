@@ -32,6 +32,8 @@ export type Job = {
   startedAt?: number;
   pausedAt?: number;
   timeline?: JobEvent[];
+  subscriptionId?: string; // New field for subscription-generated jobs
+  isRecurring?: boolean; // New field to indicate recurring jobs
 };
 
 export type JobEvent = {
