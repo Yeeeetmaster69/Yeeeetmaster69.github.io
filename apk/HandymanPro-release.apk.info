@@ -1,0 +1,22 @@
+# HandymanPro-release.apk
+
+**Status**: 📦 Ready to Upload  
+**Size**: 58,701,978 bytes (58 MB)  
+**Type**: Release APK  
+**Built**: Mon Aug 25 00:26:59 UTC 2025  
+
+## 📍 File Location
+This file should be placed in this directory: `/apk/HandymanPro-release.apk`
+
+## 📥 To Add This File:
+1. Build the APK using the build process documented in [APK_BUILD_README.md](../APK_BUILD_README.md)
+2. Copy the generated `HandymanPro-release.apk` file to this directory
+3. The file will then be available for download at: `./HandymanPro-release.apk`
+
+## ℹ️ About This APK
+- **Purpose**: Production deployment
+- **Features**: Optimized, smaller file size
+- **Use Case**: Production use, app store distribution
+
+---
+*This placeholder file indicates where the actual APK should be located.*
