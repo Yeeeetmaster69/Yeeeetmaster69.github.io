@@ -20,15 +20,15 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: HandymanMinimal/package-lock.json
+          cache-dependency-path: App V2/package-lock.json
 
       - name: Install npm dependencies
-        working-directory: HandymanMinimal
+        working-directory: App V2
         run: npm ci
 
-      # 👇 Building HandymanMinimal (working build with Expo SDK 53)
+      # 👇 Building full-featured App V2 (125MB+ with all features)
       - name: Build release APK
-        working-directory: HandymanMinimal/android
+        working-directory: App V2/android
         run: |
           chmod +x gradlew
           ./gradlew assembleRelease
@@ -36,5 +36,5 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: handyman-pro-apk
-          path: HandymanMinimal/android/app/build/outputs/apk/release/app-release.apk
+          name: handyman-pro-full-apk
+          path: App V2/android/app/build/outputs/apk/release/app-release.apk

@@ -13,6 +13,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#111827"
     },
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 0
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -27,12 +31,37 @@
       "package": "com.handyman.pro",
       "permissions": [
         "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
-      ]
+        "ACCESS_COARSE_LOCATION",
+        "FOREGROUND_SERVICE",
+        "ACCESS_BACKGROUND_LOCATION"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyC67hd7nFUPyrwKmfQIIWw9mCDL9SXm9Ec"
+        }
+      }
     },
     "web": {
+      "bundler": "metro",
+      "output": "static",
       "favicon": "./assets/favicon.png"
     },
-    "plugins": []
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "c6f6c8c3-e58b-41c1-9d23-f37c7c5125f2"
+      },
+      "firebase": {
+        "apiKey": "AIzaSyDgto5b14cf1FATduNMWUn01qxySlD8YiE",
+        "authDomain": "handyman-c1eee.firebaseapp.com",
+        "projectId": "handyman-c1eee",
+        "storageBucket": "handyman-c1eee.firebasestorage.app",
+        "messagingSenderId": "26293725527",
+        "appId": "1:26293725527:web:31d81e346d5b1f2dc83612",
+        "measurementId": "G-5H02SSPNKL"
+      },
+      "functionsBaseUrl": "https://us-central1-handyman-c1eee.cloudfunctions.net",
+      "googleOAuthClientId": "26293725527-1848t2av0e2tmp38bidnec4mvc64ante.apps.googleusercontent.com"
+    }
   }
 }

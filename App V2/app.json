@@ -51,7 +51,8 @@
           "isAndroidBackgroundLocationEnabled": true,
           "locationAlwaysAndWhenInUsePermission": "Allow Handyman Pro to access your location"
         }
-      ]
+      ],
+      "expo-router"
     ],
     "extra": {
       "eas": {
