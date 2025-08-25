@@ -1,4 +1,4 @@
-name: Build Android APK (Artifact)
+name: Build Android Debug APK (Artifact)
 on:
   workflow_dispatch: {}
 
@@ -40,12 +40,16 @@ jobs:
           npx expo prebuild --platform android --clean
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --max-workers=1 --stacktrace -x lintVitalAnalyzeRelease
+          ./gradlew assembleDebug --no-daemon --max-workers=1 --stacktrace
         env:
           GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx2048m -Dorg.gradle.daemon=false"
+
+      - name: Rename APK to expected name
+        run: |
+          cp "App V2/android/app/build/outputs/apk/debug/app-debug.apk" "App V2/android/app/build/outputs/apk/debug/HandymanPro-debug.apk"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: handyman-pro-full-apk
-          path: App V2/android/app/build/outputs/apk/release/app-release.apk
+          name: handyman-pro-debug-apk
+          path: App V2/android/app/build/outputs/apk/debug/HandymanPro-debug.apk
