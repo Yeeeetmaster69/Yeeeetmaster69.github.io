@@ -74,3 +74,9 @@ cd android
 ```
 
 The APK will be generated at: `HandymanMinimal/android/app/build/outputs/apk/release/app-release.apk`
+
+**Build Requirements:**
+- Node.js 18+ 
+- Java 17 (Temurin distribution recommended)
+- Android SDK
+- Expo SDK 53.0.22 (included in project dependencies)

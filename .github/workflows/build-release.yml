@@ -24,14 +24,14 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: App V2/package-lock.json
+          cache-dependency-path: HandymanMinimal/package-lock.json
 
       - name: Install npm dependencies
-        working-directory: App V2
+        working-directory: HandymanMinimal
         run: npm ci
 
       - name: Build release APK
-        working-directory: App V2/android
+        working-directory: HandymanMinimal/android
         run: |
           chmod +x gradlew
           ./gradlew assembleRelease
@@ -41,4 +41,4 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.tag }}
           files: |
-            App V2/android/app/build/outputs/apk/release/app-release*.apk
+            HandymanMinimal/android/app/build/outputs/apk/release/app-release*.apk

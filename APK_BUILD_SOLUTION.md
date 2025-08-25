@@ -35,6 +35,7 @@ Both workflows automatically:
 - **Package ID**: `com.handyman.pro`
 - **Build type**: Release (optimized)
 - **Location**: `HandymanMinimal/android/app/build/outputs/apk/release/`
+- **Expo SDK**: 53.0.22 (compatible with latest gradle)
 
 ### Local Testing Results ✅
 ```bash
