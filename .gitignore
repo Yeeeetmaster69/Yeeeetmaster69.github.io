@@ -9,6 +9,10 @@ node_modules/
 android/app/build/
 ios/build/
 dist/
+android-bundle.js
+android-assets/
+test-dist/
+*.hbc
 
 # Environment files
 .env
