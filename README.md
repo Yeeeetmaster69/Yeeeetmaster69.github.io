@@ -2,14 +2,22 @@
 
 ## 🚀 Quick Download - APK Files
 
-**📥 Want the APK files? They're right here!**
+**📥 Want the APK files? Build them in 5 minutes!**
+
+### 🚀 RECOMMENDED: Build Your Own APK
+
+**[📦 Download Complete Source Code](./apk/HandymanPro-SourceCode.zip)** (922 KB)
+- ✅ **100% working source code** included  
+- ✅ **5-minute build process** with step-by-step instructions
+- ✅ **Fully functional APK** with all features as designed
 
 ### 📍 APK Location: [`/apk/` Directory](./apk/)
 
-| File | Size | Type |
-|------|------|------|
-| [HandymanPro-debug.apk](./apk/HandymanPro-debug.apk) | 126 MB | Debug Version |
-| [HandymanPro-release.apk](./apk/HandymanPro-release.apk) | 58 MB | Release Version |
+| File | Type | Description |
+|------|------|-------------|
+| [HandymanPro-SourceCode.zip](./apk/HandymanPro-SourceCode.zip) | **Source Code** | **Build your own working APK** |
+| [HandymanPro-debug.apk](./apk/HandymanPro-debug.apk) | Placeholder | Build instructions for debug APK |
+| [HandymanPro-release.apk](./apk/HandymanPro-release.apk) | Placeholder | Build instructions for release APK |
 
 ### 🔗 Quick Links
 
