@@ -6,7 +6,7 @@
 
 ### 🚀 RECOMMENDED: Build Your Own APK
 
-**[📦 Download Complete Source Code](./apk/HandymanPro-SourceCode.zip)** (134 KB)
+**[📦 Download Complete Source Code](./apk/HandymanPro-SourceCode.zip)** (922 KB)
 - ✅ **100% working source code** included  
 - ✅ **5-minute build process** with step-by-step instructions
 - ✅ **Fully functional APK** with all features as designed
