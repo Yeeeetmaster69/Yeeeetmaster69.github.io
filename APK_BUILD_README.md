@@ -5,8 +5,15 @@
 This repository now contains fully functional, working APKs for the Handyman Pro application:
 
 ### Generated APK Files
+
+**📍 APK Location**: [`/apk/` directory](./apk/) - **Easy Access Point**
+
 - **HandymanPro-debug.apk** (126 MB) - Debug version for testing
 - **HandymanPro-release.apk** (58 MB) - Optimized release version
+
+**🔗 Quick Links**:
+- [📁 Browse APK Directory](./apk/)
+- [📥 APK Download Guide](./apk/README.md)
 
 ### App Features
 The APK includes a complete Handyman Pro application with:
@@ -48,7 +55,10 @@ The APK includes a complete Handyman Pro application with:
 - **Android**: Minimum SDK 24, Target SDK 35
 
 ### Installation Instructions
-1. Download either `HandymanPro-debug.apk` or `HandymanPro-release.apk`
+
+**📥 Download Location**: [📁 APK Directory](./apk/)
+
+1. Download either `HandymanPro-debug.apk` or `HandymanPro-release.apk` from the [`/apk/` directory](./apk/)
 2. Enable "Install from Unknown Sources" on your Android device
 3. Install the APK file
 4. Launch "Handyman Pro" from your app drawer

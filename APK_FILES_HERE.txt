@@ -1,0 +1,26 @@
+🔔 ATTENTION: APK FILES LOCATION 🔔
+
+Your APK files are located in the /apk/ directory!
+
+📍 DIRECT PATH: /apk/
+
+📥 FILES TO LOOK FOR:
+- HandymanPro-debug.apk (126 MB)
+- HandymanPro-release.apk (58 MB)
+
+🔗 QUICK ACCESS:
+- Browse: https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/tree/main/apk
+- Download: Click into the /apk/ folder and download the files directly
+
+📋 INSTRUCTIONS:
+1. Go to the /apk/ directory in this repository
+2. Download the APK file you need
+3. Install on your Android device
+4. Use demo credentials to test
+
+🔐 DEMO LOGINS:
+- Admin: admin / admin123
+- Worker: worker / worker123  
+- Client: client / client123
+
+That's it! Your APK files are in /apk/ 📱

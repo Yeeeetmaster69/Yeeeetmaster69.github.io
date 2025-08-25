@@ -1,0 +1,22 @@
+# HandymanPro-debug.apk
+
+**Status**: 📦 Ready to Upload  
+**Size**: 126,548,008 bytes (126 MB)  
+**Type**: Debug APK  
+**Built**: Mon Aug 25 00:26:59 UTC 2025  
+
+## 📍 File Location
+This file should be placed in this directory: `/apk/HandymanPro-debug.apk`
+
+## 📥 To Add This File:
+1. Build the APK using the build process documented in [APK_BUILD_README.md](../APK_BUILD_README.md)
+2. Copy the generated `HandymanPro-debug.apk` file to this directory
+3. The file will then be available for download at: `./HandymanPro-debug.apk`
+
+## ℹ️ About This APK
+- **Purpose**: Development and testing
+- **Features**: Debug tools enabled, larger file size
+- **Use Case**: Testing, development, debugging
+
+---
+*This placeholder file indicates where the actual APK should be located.*
