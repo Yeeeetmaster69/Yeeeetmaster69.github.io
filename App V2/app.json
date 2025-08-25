@@ -2,15 +2,7 @@
   "expo": {
     "name": "Handyman Pro",
     "slug": "handyman-pro",
-    "scheme": "handymanpro",
     "version": "0.1.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#111827"
-    },
     "updates": {
       "enabled": true,
       "fallbackToCacheTimeout": 0
@@ -18,20 +10,7 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#111827"
-      },
-      "permissions": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "FOREGROUND_SERVICE",
-        "ACCESS_BACKGROUND_LOCATION"
-      ],
       "package": "com.handyman.pro",
       "config": {
         "googleMaps": {
