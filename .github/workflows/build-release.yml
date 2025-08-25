@@ -11,12 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - uses: actions/setup-java@v4
-        with: 
-          distribution: temurin
-          java-version: 17
-      
+        with: { distribution: temurin, java-version: 17 }
       - uses: android-actions/setup-android@v3
 
       - name: Setup Node.js
@@ -24,29 +20,25 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: App V2/package-lock.json
+          cache-dependency-path: HandymanMinimal/package-lock.json
 
       - name: Install npm dependencies
-        working-directory: App V2
+        working-directory: HandymanMinimal
         run: npm ci
 
-      # Use Expo CLI to build instead of direct Gradle
-      - name: Build APK with Expo CLI
-        working-directory: App V2
+      - name: Prebuild Android project
+        working-directory: HandymanMinimal
+        run: npx expo prebuild --platform android --clean
+
+      - name: Build release APK
+        working-directory: HandymanMinimal/android
         run: |
-          # Prebuild to ensure Android project is properly configured
-          npx expo prebuild --platform android --clean
-          
-          # Build using Expo's build system which handles module configuration
-          cd android
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --max-workers=1 -x lintVitalAnalyzeRelease
-        env:
-          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx2048m -Dorg.gradle.daemon=false"
+          ./gradlew assembleRelease
 
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.tag }}
           files: |
-            App V2/android/app/build/outputs/apk/release/app-release*.apk
+            HandymanMinimal/android/app/build/outputs/apk/release/app-release*.apk
