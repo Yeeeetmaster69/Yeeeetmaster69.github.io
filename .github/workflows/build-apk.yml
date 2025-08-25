@@ -26,17 +26,21 @@ jobs:
         working-directory: App V2
         run: npm ci
 
-      # Use Expo CLI to build instead of direct Gradle
+      - name: Ensure Expo native deps
+        working-directory: App V2
+        run: npx expo install
+
+      - name: Expo Doctor
+        working-directory: App V2
+        run: npx expo doctor
+
       - name: Build APK with Expo CLI
         working-directory: App V2
         run: |
-          # Prebuild to ensure Android project is properly configured
           npx expo prebuild --platform android --clean
-          
-          # Build using Expo's build system which handles module configuration
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --max-workers=1 -x lintVitalAnalyzeRelease
+          ./gradlew assembleRelease --no-daemon --max-workers=1 --stacktrace -x lintVitalAnalyzeRelease
         env:
           GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx2048m -Dorg.gradle.daemon=false"
 
