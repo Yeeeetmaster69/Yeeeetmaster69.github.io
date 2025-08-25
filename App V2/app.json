@@ -3,6 +3,8 @@
     "name": "Handyman Pro",
     "slug": "handyman-pro",
     "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "handymanpro",
     "updates": {
       "enabled": true,
       "fallbackToCacheTimeout": 0

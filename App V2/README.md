@@ -69,9 +69,6 @@ App will auto-fetch updates on next launch.
 - Photos use Firebase Storage (generous free tier). You can later swap to local-only storage if desired, but cloud is required for multi-device access.
 - Data monetization: collect **consented, anonymized** data only. Add a clear Privacy Policy and opt-in screens.
 
-### Native Code Configuration
-This project includes custom native Android code in the `/android` folder for enhanced functionality (custom splash screen, back button behavior). When native folders are present, some app.json configuration properties (scheme, orientation, icon, splash, ios, android, plugins) are not automatically synced by EAS Build. This is expected behavior and these settings should be configured directly in the native code when needed.
-
 Enjoy!
 
 ## AI-Powered Features (Roadmap)
