@@ -1,1 +1,0 @@
-Wrap all code examples containing double curly braces or Liquid-like syntax in {% raw %}...{% endraw %} blocks.

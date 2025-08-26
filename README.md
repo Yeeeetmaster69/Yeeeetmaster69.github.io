@@ -1,56 +1,158 @@
-# 📱 Handyman Pro - GitHub Pages Site
 
-## 🚀 Quick Download - APK Files
+# Handyman Pro (Fresh Build)
 
-**📥 Get Latest APKs via GitHub Actions!**
+A clean Expo + Firebase starter tailored for your Client / Worker / Admin app with OTA updates, role-based routing, GPS time & miles tracking, push notifications, and Cloud Functions for role claims.
 
-### 📱 RECOMMENDED: Build Fresh APKs
-- **[⚡ Build Latest APK](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-apk.yml)** - Debug version (~5 min build)
-- **[📦 Build Release APK](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-release.yml)** - Production version
+## What you get
+- **Expo (React Native)** app with **OTA updates** (EAS Updates ready)
+- **Role-based routing** via Firebase **custom claims** (admin/worker/client)
+- **Client**: requests, estimates, reviews, pricing, etc. (MVP stubs)
+- **Worker**: jobs list & self-assign, **Clock In/Out with GPS**, upload before/after photos, miles total
+- **Admin**: manage users/roles, jobs, pricing, push messages, theme customization
+- **Cloud Functions**: setRoleClaim endpoint, onUserCreate default claims, broadcast push
+- **Firestore Rules** (starter) and minimal schema
+- **In-app customization** (primary/accent colors)
+- **Safety & Compliance**: incident reporting, emergency SOS, background checks (see SAFETY_COMPLIANCE.md)
 
-### 🛠️ ALTERNATIVE: Build Your Own APK
+## Setup (10 steps)
+1) **Install**: Node 18+, `npm i -g expo-cli` (optional). Then:
+```bash
+npm install
+```
+2) **Firebase Project**: Use your existing `handyman-c1eee` or create new. In `app.json` replace `expo.extra.firebase` with your config.
 
-**[📦 Download Complete Source Code](./apk/HandymanPro-SourceCode.zip)** (922 KB)
-- ✅ **100% working source code** included  
-- ✅ **5-minute build process** with step-by-step instructions
-- ✅ **Fully functional APK** with all features as designed
+3) **Auth**: Enable Email/Password in Firebase Console.
 
-### 📍 APK Location: [`/apk/` Directory](./apk/)
+4) **Firestore**: Create database in production mode. Run rules:
+```bash
+firebase deploy --only firestore:rules
+```
+(or paste `firestore.rules` in console).
 
-| File | Type | Description |
-|------|------|-------------|
-| [HandymanPro-SourceCode.zip](./apk/HandymanPro-SourceCode.zip) | **Source Code** | **Build your own working APK** |
-| [⚡ GitHub Actions Build](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-apk.yml) | **Live APK Build** | Fresh APK generated on-demand (~5 min) |
-| [📦 Release Build](https://github.com/Yeeeetmaster69/Yeeeetmaster69.github.io/actions/workflows/build-release.yml) | **Production APK** | Optimized release version build |
+5) **Cloud Functions**: In `server/functions`:
+```bash
+cd server/functions
+npm install
+# Login + init if needed:
+# firebase login
+# firebase use <your-project-id>
+npm run deploy
+```
+Copy your function URL and replace `https://YOUR_REGION-YOUR_PROJECT.cloudfunctions.net/...` in Admin screens.
 
-### 🔗 Quick Links
+6) **Push Notifications**:
+- EAS project: set a real `extra.eas.projectId` in `app.json`.
+- App startup should request permissions and save token (you can write a small effect to store token to `pushTokens` in Firestore).
 
-- **📁 [Browse APK Directory](./apk/)** - Main download location
-- **📖 [APK Installation Guide](./apk/README.md)** - How to install
-- **📋 [Build Documentation](./APK_BUILD_README.md)** - Technical details
+7) **Run app**:
+```bash
+npm run start
+```
+Open on Android (best for background location).
 
-## 📱 App Information
+8) **Grant roles**:
+- After signup, open **Admin -> Users** and switch radio to `worker` or `admin`. This calls the function to set custom claims.
 
-**Handyman Pro** is a complete handyman service management platform with:
+9) **OTA Updates**:
+- Configure EAS Updates (run `eas init`). Then publish:
+```bash
+eas update --branch production --message "update"
+```
+App will auto-fetch updates on next launch.
 
-- 🔐 **Role-Based Access** (Admin, Worker, Client)
-- 📍 **GPS Tracking** for workers
-- 📸 **Photo Upload** capabilities
-- 💰 **Payment Processing** integration
-- 📊 **Job Management** system
+10) **Square Integration** (optional):
+- Use your Square APIs in `Estimates` & `Invoices` screens or generate PDFs server-side.
 
-### Demo Credentials
-- **Admin**: `admin` / `admin123`
-- **Worker**: `worker` / `worker123`
-- **Client**: `client` / `client123`
+## Notes
+- Background location requires device settings. On Android 10+, ensure "Allow all the time".
+- The rules are permissive for MVP; tighten before going live.
+- Photos use Firebase Storage (generous free tier). You can later swap to local-only storage if desired, but cloud is required for multi-device access.
+- Data monetization: collect **consented, anonymized** data only. Add a clear Privacy Policy and opt-in screens.
 
-## 🛠️ Technical Stack
+### Native Code Configuration
+This project includes custom native Android code in the `/android` folder for enhanced functionality (custom splash screen, back button behavior). When native folders are present, some app.json configuration properties (scheme, orientation, icon, splash, ios, android, plugins) are not automatically synced by EAS Build. This is expected behavior and these settings should be configured directly in the native code when needed.
 
-- **React Native** with Expo
-- **TypeScript** 
-- **Firebase** backend
-- **Android** support (SDK 24+)
+Enjoy!
+
+## AI-Powered Features (Roadmap)
+
+The application is designed to support advanced AI-powered features for enhanced automation and efficiency:
+
+### Planned Features
+- **Smart Job Routing**: Automatically assign jobs based on worker skills, proximity, and availability
+- **Predictive Scheduling**: Suggest optimal scheduling times using historical data and external factors
+- **Automated Quoting**: Generate quotes from client descriptions and uploaded images
+- **Chatbot Support**: 24/7 automated support for common client and worker inquiries
+
+### Documentation
+- [`AI_FEATURES_SPECIFICATION.md`](./AI_FEATURES_SPECIFICATION.md) - Detailed requirements and technical architecture
+- [`AI_IMPLEMENTATION_GUIDE.md`](./AI_IMPLEMENTATION_GUIDE.md) - Step-by-step implementation guide for developers
+
+These features are currently in the planning phase. See the specification documents for implementation details and timelines.
 
 ---
 
-**📥 Download APKs**: [📁 `/apk/` directory](./apk/)
+## Square Integration (Estimates & Invoices)
+
+1) In `server/functions`:
+```
+cd server/functions
+npm install
+# Add Square credentials
+firebase functions:config:set square.token="YOUR_SQUARE_ACCESS_TOKEN" square.env="production" square.location_id="YOUR_LOCATION_ID"
+npm run deploy
+```
+(You can also use environment variables `SQUARE_ACCESS_TOKEN`, `SQUARE_ENV`, and `SQUARE_LOCATION_ID` locally.)
+
+2) In the app, edit `src/services/square.ts` and replace `YOUR_REGION-YOUR_PROJECT` with your Cloud Functions domain.
+
+3) Use Admin → **Estimates** to create a **draft** (acts like an estimate) and publish/send it,
+or Admin → **Invoices** to create & send an invoice immediately. You can also make a quick **Payment Link**.
+
+Notes:
+- Square does not currently expose a dedicated public *Estimates API*. We implement estimates as **draft Invoices** that you publish when accepted.
+- Line items expect `amountCents` (e.g., `$150.00` → `15000`).
+
+
+
+## Job → Estimate / Invoice (one tap)
+- Admin → Jobs now has **Estimate** and **Invoice** buttons per job.
+- It prefills line items from **Admin → Pricing** (first item / name match) and links the Square order to the job via `order.referenceId = jobId`.
+
+## Client Payment Options (Square / Venmo / Cash App / Zelle / Cash)
+- Admin → Settings: set **Venmo username** (no @), **Cash App cashtag** (no $), **Zelle email/phone**.
+- Client → PaymentOptions screen supports:
+  - **Square** (invoice public URL)
+  - **Venmo** deep link
+  - **Cash App** web link
+  - **Zelle** (instructions)
+  - **Cash** (in-person note)
+
+## Square Webhooks
+1) In Square Dashboard, add a webhook subscription with events:
+   - `invoice.updated`, `payment.updated`
+   - Endpoint: `https://YOUR_REGION-YOUR_PROJECT.cloudfunctions.net/squareWebhook`
+2) Configure secret:
+```
+firebase functions:config:set square.webhook_secret="YOUR_WEBHOOK_SIGNATURE_KEY"
+npm run deploy
+```
+3) The webhook updates `jobs` with `invoiceId`, `orderId`, `invoiceStatus`, `paymentStatus`, and marks job `status: "done"` on `COMPLETED` payments.
+
+
+## Monetization & Marketplace Features
+
+🚀 **New in v2.1**: Advanced monetization features including subscription upgrades, ad network, and plugin marketplace.
+
+For comprehensive documentation on monetization features, see:
+- **[📋 Monetization Strategy](../MONETIZATION_STRATEGY.md)** - Business model, revenue streams, and strategic planning
+- **[🛠 Implementation Guide](../IMPLEMENTATION_GUIDE.md)** - Technical implementation details and code examples  
+- **[📖 Overview](../MONETIZATION_README.md)** - Quick start guide and feature summary
+
+### Key Features
+- **Subscription Tiers**: Free, Professional ($19.99), Business ($49.99), Enterprise ($99.99)
+- **Partner Ad Network**: Revenue sharing with local service providers
+- **Plugin Marketplace**: Third-party developer ecosystem with 30% platform fee
+- **Feature Gating**: Advanced features locked behind subscription tiers
+- **Analytics Dashboard**: Detailed business insights for premium users
+
