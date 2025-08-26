@@ -1,9 +1,0 @@
-*.apk
-index.backup.html
-bundle.js
-secrets.json
-
-**/node_modules/
-**/dist/
-**/lib/
-lint-reports/

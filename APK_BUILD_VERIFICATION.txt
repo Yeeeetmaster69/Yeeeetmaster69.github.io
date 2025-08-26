@@ -1,7 +1,0 @@
-HandymanPro-debug.apk (~126 MB expected) - Full-featured debug APK for user downloads
-- Contains complete app functionality with debugging symbols
-- Larger size due to unoptimized code and debug information
-- More stable for end users, less likely to crash
-- Built with: ./gradlew assembleDebug
-
-Note: We now prioritize debug builds for user downloads to ensure stability and proper functionality.
