@@ -10,6 +10,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "ios": {
+      "supportsTablet": true
+    },
     "android": {
       "package": "com.handyman.pro",
       "config": {
