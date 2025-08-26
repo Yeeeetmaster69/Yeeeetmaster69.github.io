@@ -11,6 +11,9 @@ import Miles from '../screens/worker/Miles';
 import EmergencyContact from '../screens/worker/EmergencyContact';
 import IncidentReporting from '../screens/shared/IncidentReporting';
 
+// New commercial-grade screens
+import GeofencedTimerScreen from '../screens/TimeTracking/GeofencedTimerScreen';
+
 const Stack = createNativeStackNavigator();
 
 export default function WorkerStack(){
@@ -25,6 +28,9 @@ export default function WorkerStack(){
       <Stack.Screen name="Miles" component={Miles} />
       <Stack.Screen name="EmergencyContact" component={EmergencyContact} options={{title:'Emergency & Safety'}} />
       <Stack.Screen name="IncidentReporting" component={IncidentReporting} options={{title:'Report Incident'}} />
+      
+      {/* Commercial-grade features */}
+      <Stack.Screen name="GeofencedTimer" component={GeofencedTimerScreen} options={{title:'GPS Time Tracking'}} />
     </Stack.Navigator>
   )
 }

@@ -65,18 +65,21 @@ export default function PermissionsScreen() {
         let granted = false;
         
         switch (permission.name) {
-          case 'Location':
+          case 'Location': {
             const locationStatus = await Location.getForegroundPermissionsAsync();
             granted = locationStatus.granted;
             break;
-          case 'Notifications':
+          }
+          case 'Notifications': {
             const notificationStatus = await Notifications.getPermissionsAsync();
             granted = notificationStatus.granted;
             break;
-          case 'Camera':
+          }
+          case 'Camera': {
             // Camera permission will be requested when needed
             granted = true; // Assume granted for now
             break;
+          }
         }
         
         return { ...permission, granted };

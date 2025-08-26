@@ -1,19 +1,19 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Text, Button, Surface, Card } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp as RouteType } from '@react-navigation/native';
 import { OnboardingStackParamList } from '../../navigation/OnboardingStack';
 
 type NavigationProp = StackNavigationProp<OnboardingStackParamList, 'FeaturesOverview'>;
-type RouteProp = RouteProp<OnboardingStackParamList, 'FeaturesOverview'>;
+type RouteProps = RouteType<OnboardingStackParamList, 'FeaturesOverview'>;
 
 const { width } = Dimensions.get('window');
 
 export default function FeaturesOverviewScreen() {
   const navigation = useNavigation<NavigationProp>();
-  const route = useRoute<RouteProp>();
+  const route = useRoute<RouteProps>();
   const { role } = route.params;
 
   const roleFeatures = {
