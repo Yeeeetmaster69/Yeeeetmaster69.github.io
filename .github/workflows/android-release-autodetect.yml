@@ -8,104 +8,160 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      # Secrets you already created
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      KEYSTORE_PASSWORD:       ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_ALIAS:               ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD:            ${{ secrets.KEY_PASSWORD }}
+      # New secret you must add in repo Settings → Secrets → Actions
+      GOOGLE_SERVICES_JSON:    ${{ secrets.GOOGLE_SERVICES_JSON }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1) Auto-detect app dir that looks like an Expo/React-Native project
+      # ─────────────────────────────────────────────────────────────
+      # 1) Find the app dir (the one that has package.json with RN/Expo)
+      # ─────────────────────────────────────────────────────────────
       - name: Detect app directory
         id: detect
         shell: bash
         run: |
           set -euo pipefail
           mapfile -t PKGS < <(find . -maxdepth 3 -type f -name package.json -not -path "*/node_modules/*")
-          best=""; best_score=-999
-          score () { # dir
+          best=""
+          bests=-999
+          score() {
             d="$1"; s=0
-            grep -q '"expo"'         "$d/package.json" && s=$((s+5))
+            [[ -f "$d/app.json"       ]] && s=$((s+3))
+            [[ -f "$d/app.config.js"  ]] && s=$((s+2))
+            grep -q '"expo"'        "$d/package.json" && s=$((s+5))
             grep -q '"react-native"' "$d/package.json" && s=$((s+4))
-            [[ -f "$d/app.json"      ]] && s=$((s+3))
-            [[ -f "$d/app.config.js" ]] && s=$((s+2))
-            [[ -f "$d/App.tsx"       ]] && s=$((s+2))
-            [[ -f "$d/App.js"        ]] && s=$((s+2))
-            [[ -d "$d/src"           ]] && s=$((s+1))
-            [[ -d "$d/assets"        ]] && s=$((s+1))
-            grep -q '"react-dom"' "$d/package.json" && ! grep -q '"expo"' "$d/package.json" && s=$((s-2))
             echo "$s"
           }
           for p in "${PKGS[@]}"; do
-            d="$(dirname "$p")"; sc=$(score "$d")
-            if (( sc > best_score )); then best="$d"; best_score=$sc; fi
+            dir="$(dirname "$p")"
+            sc="$(score "$dir")"
+            if (( sc > bests )); then best="$dir"; bests="$sc"; fi
           done
-          if [[ -z "$best" || "$best_score" -lt 0 ]]; then
-            echo "No valid Expo/React-Native project found"; exit 1
-          fi
-          echo "APP_DIR=$best" | tee -a "$GITHUB_ENV"
-          echo "Detected app dir: $best (score $best_score)"
+          echo "App dir: $best"
+          echo "app_dir=$best" >> "$GITHUB_OUTPUT"
 
-      # 2) Set up Node *after* detection so caching points to the right lockfile
-      - name: Set up Node
+      - name: Set APP_DIR env
+        run: echo "APP_DIR=${{ steps.detect.outputs.app_dir }}" >> $GITHUB_ENV
+
+      # ─────────────────────────────────────────────────────────────
+      # 2) Tooling
+      # ─────────────────────────────────────────────────────────────
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-          cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
 
-      - name: Install JS deps
-        run: |
-          cd "$APP_DIR"
-          if [ -f package-lock.json ]; then npm ci; else npm i; fi
-
-      - name: Install Expo CLI
-        run: npm i -g expo-cli
-
-      # 3) Generate native Android project
-      - name: Expo prebuild (Android)
-        run: |
-          cd "$APP_DIR"
-          npx expo prebuild --platform android --clean --non-interactive
-
-      # 4) JDK for Gradle
-      - name: Set up JDK 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
           cache: gradle
 
-      # 5) Restore keystore from secret
-      - name: Restore release keystore
+      # ─────────────────────────────────────────────────────────────
+      # 3) Install JS deps & prebuild Android
+      # ─────────────────────────────────────────────────────────────
+      - name: Install deps
+        working-directory: ${{ env.APP_DIR }}
         run: |
-          cd "$APP_DIR"
-          mkdir -p android/app
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/my-release-key.jks
+          if [ -f yarn.lock ]; then yarn --frozen-lockfile; else npm ci; fi
 
-      # 6) Inject signing props
-      - name: Configure Gradle signing
+      - name: Expo prebuild (Android)
+        working-directory: ${{ env.APP_DIR }}
+        run: npx expo prebuild --platform android --non-interactive --no-install
+
+      # ─────────────────────────────────────────────────────────────
+      # 4) PLACE google-services.json (THIS is what you asked for)
+      # ─────────────────────────────────────────────────────────────
+      - name: Create google-services.json
+        if: env.GOOGLE_SERVICES_JSON != ''
         run: |
-          cd "$APP_DIR"
-          cat >> android/gradle.properties <<'EOF'
+          mkdir -p "${APP_DIR}/android/app"
+          # write the content of the secret as the file
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > "${APP_DIR}/android/app/google-services.json"
+          echo "Wrote ${APP_DIR}/android/app/google-services.json"
+
+      # (Safety) ensure Gradle is configured to read it
+      - name: Ensure Google Services plugin is enabled
+        run: |
+          PROJECT="${APP_DIR}/android/build.gradle"
+          APPGRADLE="${APP_DIR}/android/app/build.gradle"
+
+          # Add classpath if missing
+          if ! grep -q "com.google.gms:google-services" "$PROJECT"; then
+            awk '
+              /buildscript[[:space:]]*\{/ {print; inbs=1; next}
+              inbs && /dependencies[[:space:]]*\{/ {print; print "        classpath '\''com.google.gms:google-services:4.4.2'\''"; inbs=0; next}
+              {print}
+            ' "$PROJECT" > "$PROJECT.tmp" && mv "$PROJECT.tmp" "$PROJECT"
+          fi
+
+          # Apply plugin at bottom if missing
+          if ! grep -q "com.google.gms.google-services" "$APPGRADLE"; then
+            echo -e "\napply plugin: 'com.google.gms.google-services'" >> "$APPGRADLE"
+          fi
+
+      # ─────────────────────────────────────────────────────────────
+      # 5) Android signing (keystore from secrets)
+      # ─────────────────────────────────────────────────────────────
+      - name: Decode keystore
+        run: |
+          mkdir -p "${APP_DIR}/android/app"
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "${APP_DIR}/android/app/my-release-key.jks"
+
+      - name: Inject signing values into Gradle
+        run: |
+          cat >> "${APP_DIR}/android/gradle.properties" <<'EOF'
           MYAPP_UPLOAD_STORE_FILE=my-release-key.jks
-          MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
-          MYAPP_UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS }}
-          MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+          MYAPP_UPLOAD_STORE_PASSWORD=${KEYSTORE_PASSWORD}
+          MYAPP_UPLOAD_KEY_ALIAS=${KEY_ALIAS}
+          MYAPP_UPLOAD_KEY_PASSWORD=${KEY_PASSWORD}
           EOF
 
-      - name: Make gradlew executable
-        run: |
-          cd "$APP_DIR/android"
-          chmod +x gradlew
+          # ensure app/build.gradle has signingConfig release block
+          APPGRADLE="${APP_DIR}/android/app/build.gradle"
+          if ! grep -q "signingConfigs" "$APPGRADLE"; then
+            awk '
+              /android[[:space:]]*\{/ && !done {
+                print; print "    signingConfigs {"; 
+                print "        release {"; 
+                print "            storeFile file(props.get(\"MYAPP_UPLOAD_STORE_FILE\"))";
+                print "            storePassword props.get(\"MYAPP_UPLOAD_STORE_PASSWORD\")";
+                print "            keyAlias props.get(\"MYAPP_UPLOAD_KEY_ALIAS\")";
+                print "            keyPassword props.get(\"MYAPP_UPLOAD_KEY_PASSWORD\")";
+                print "        }"; 
+                print "    }";
+                done=1; next
+              }
+              /buildTypes[[:space:]]*\{/ && !bt {
+                print; print "        release {"; 
+                print "            signingConfig signingConfigs.release";
+                print "            minifyEnabled false";
+                print "        }";
+                bt=1; next
+              }
+              {print}
+            ' "$APPGRADLE" > "$APPGRADLE.tmp" && mv "$APPGRADLE.tmp" "$APPGRADLE"
+          fi
 
-      # 7) Build signed release
-      - name: Assemble release
-        run: |
-          cd "$APP_DIR/android"
-          ./gradlew clean assembleRelease
+      # ─────────────────────────────────────────────────────────────
+      # 6) Build
+      # ─────────────────────────────────────────────────────────────
+      - name: Build release APK
+        working-directory: ${{ env.APP_DIR }}/android
+        run: ./gradlew --no-daemon assembleRelease
 
-      # 8) Upload signed APK
-      - name: Upload Release APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: ${{ env.APP_DIR }}/android/app/build/outputs/apk/release/app-release.apk
-          if-no-files-found: error
+          path: ${{ env.APP_DIR }}/android/app/build/outputs/apk/release/*.apk
