@@ -1,0 +1,115 @@
+name: Android Release APK (Auto-detect + Prebuild)
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # 1) Auto-detect the app root (prefers folders with expo/react-native and App.tsx/js)
+      - name: Detect app directory
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+          # search a few levels, ignore node_modules
+          mapfile -t PKGS < <(find . -maxdepth 3 -type f -name package.json -not -path "*/node_modules/*")
+          best=""
+          best_score=-999
+          score_dir () {
+            local d="$1"
+            local s=0
+            # signals
+            grep -q '"expo"'           "$d/package.json" && s=$((s+5))
+            grep -q '"react-native"'   "$d/package.json" && s=$((s+4))
+            [[ -f "$d/app.json"       ]] && s=$((s+3))
+            [[ -f "$d/app.config.js"  ]] && s=$((s+2))
+            [[ -f "$d/App.tsx"        ]] && s=$((s+2))
+            [[ -f "$d/App.js"         ]] && s=$((s+2))
+            [[ -d "$d/src"            ]] && s=$((s+1))
+            [[ -d "$d/assets"         ]] && s=$((s+1))
+            # penalize likely web-only
+            grep -q '"react-dom"' "$d/package.json" && ! grep -q '"expo"' "$d/package.json" && s=$((s-2))
+            echo "$s"
+          }
+          for p in "${PKGS[@]}"; do
+            dir="$(dirname "$p")"
+            sc=$(score_dir "$dir")
+            if (( sc > best_score )); then best_score=$sc; best="$dir"; fi
+          done
+          if [[ -z "$best" || "$best_score" -lt 0 ]]; then
+            echo "No valid Expo/React-Native project found."; exit 1
+          fi
+          echo "APP_DIR=$best" >> "$GITHUB_ENV"
+          echo "Detected app dir: $best (score: $best_score)"
+
+      - name: Install JS dependencies
+        run: |
+          cd "$APP_DIR"
+          if [ -f package-lock.json ]; then npm ci; else npm i; fi
+
+      - name: Install Expo CLI (runner)
+        run: npm i -g expo-cli
+
+      # 2) Generate native Android project from your Expo config
+      - name: Expo prebuild (Android)
+        run: |
+          cd "$APP_DIR"
+          npx expo prebuild --platform android --clean --non-interactive
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      # 3) Restore your keystore from secret
+      - name: Restore release keystore
+        run: |
+          cd "$APP_DIR"
+          mkdir -p android/app
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/my-release-key.jks
+
+      # 4) Inject signing props for Gradle (values pulled from GitHub Secrets)
+      - name: Configure Gradle signing
+        run: |
+          cd "$APP_DIR"
+          cat >> android/gradle.properties <<'EOF'
+          MYAPP_UPLOAD_STORE_FILE=my-release-key.jks
+          MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+          MYAPP_UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS }}
+          MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+          EOF
+
+      - name: Make gradlew executable
+        run: |
+          cd "$APP_DIR/android"
+          chmod +x gradlew
+
+      # 5) Build signed release APK
+      - name: Assemble release
+        run: |
+          cd "$APP_DIR/android"
+          ./gradlew clean assembleRelease
+
+      # 6) Upload signed APK
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: ${{ env.APP_DIR }}/android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
