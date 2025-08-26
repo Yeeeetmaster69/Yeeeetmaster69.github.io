@@ -17,6 +17,10 @@ import Settings from '../screens/admin/Settings';
 
 import { AnalyticsDashboard, ChurnDashboard, SentimentDashboard } from '../screens/admin/analytics';
 
+// New commercial-grade screens
+import AdminPortalScreen from '../screens/Admin/AdminPortalScreen';
+import InvoiceListScreen from '../screens/Invoices/InvoiceListScreen';
+import CreateEstimateScreen from '../screens/Invoices/CreateEstimateScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +45,10 @@ export default function AdminStack(){
       <Stack.Screen name="ChurnDashboard" component={ChurnDashboard} options={{title:'Churn Prediction'}}/>
       <Stack.Screen name="SentimentDashboard" component={SentimentDashboard} options={{title:'Sentiment Analysis'}}/>
 
+      {/* Commercial-grade features */}
+      <Stack.Screen name="AdminPortal" component={AdminPortalScreen} options={{title:'Admin Portal'}}/>
+      <Stack.Screen name="InvoiceList" component={InvoiceListScreen} options={{title:'Invoice Management'}}/>
+      <Stack.Screen name="CreateEstimate" component={CreateEstimateScreen} options={{title:'Create Estimate'}}/>
     </Stack.Navigator>
   )
 }
