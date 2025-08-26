@@ -2,18 +2,31 @@
   "expo": {
     "name": "Handyman Pro",
     "slug": "handyman-pro",
-    "version": "1.0.0",
+    "version": "1.1.4",
     "userInterfaceStyle": "light",
     "newArchEnabled": false,
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
-      "package": "com.handyman.pro"
+      "package": "com.handyman.pro",
+      "versionCode": 114,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "INTERNET", 
+        "CAMERA",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": []
+    "plugins": [],
+    "extra": {
+      "firebaseApiKey": "demo-key",
+      "firebaseProjectId": "handyman-demo",
+      "stripeKey": "demo-stripe-key",
+      "baseApiUrl": "https://api.handyman.demo"
+    }
   }
 }
