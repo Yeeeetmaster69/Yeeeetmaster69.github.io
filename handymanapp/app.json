@@ -6,6 +6,7 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "platforms": ["ios", "android", "web"],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -19,7 +20,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundler": "metro"
     },
     "android": {
       "adaptiveIcon": {
@@ -33,6 +35,7 @@
         "ACCESS_BACKGROUND_LOCATION"
       ],
       "package": "com.handyman.pro",
+      "bundler": "metro",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyC67hd7nFUPyrwKmfQIIWw9mCDL9SXm9Ec"

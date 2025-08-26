@@ -3,6 +3,7 @@
     "name": "Handyman Pro",
     "slug": "handyman-pro",
     "version": "0.1.0",
+    "platforms": ["ios", "android", "web"],
     "updates": {
       "enabled": true,
       "fallbackToCacheTimeout": 0
@@ -11,10 +12,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundler": "metro"
     },
     "android": {
       "package": "com.handyman.pro",
+      "bundler": "metro",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyC67hd7nFUPyrwKmfQIIWw9mCDL9SXm9Ec"
