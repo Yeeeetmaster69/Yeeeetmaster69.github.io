@@ -1,0 +1,119 @@
+name: Android APK (auto-detect + attach to Releases)
+
+on:
+  push:
+    branches: [ main ]
+    tags: ['*']        # if you push a tag like 1.1.5, it will also publish assets to the Release
+  workflow_dispatch:   # allows manual “Run workflow”
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Find RN project root
+        id: findroot
+        shell: bash
+        run: |
+          set -e
+          # Candidates you’ve used before
+          CANDS=("." "handymanapp" "App V2")
+          FOUND=""
+          for c in "${CANDS[@]}"; do
+            if [ -f "$c/android/gradlew" ] || [ -f "$c/android/gradlew.bat" ]; then
+              FOUND="$c"
+              break
+            fi
+          done
+          if [ -z "$FOUND" ]; then
+            # Fallback: scan repo
+            FOUND=$(find . -maxdepth 3 -type f -name gradlew -path "*/android/gradlew" | sed 's#/android/gradlew##' | head -n1)
+          fi
+          if [ -z "$FOUND" ]; then
+            echo "Could not find a React Native android project (gradlew)."
+            exit 1
+          fi
+          # normalize relative path
+          FOUND=$(echo "$FOUND" | sed 's#^\./##')
+          echo "root=$FOUND" >> $GITHUB_OUTPUT
+          echo "Detected RN root: $FOUND"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: |
+            ${{ steps.findroot.outputs.root }}/package-lock.json
+            ${{ steps.findroot.outputs.root }}/package.json
+
+      - name: Install dependencies
+        working-directory: ${{ steps.findroot.outputs.root }}
+        run: |
+          npm ci || npm i
+
+      - name: Ensure assets folder
+        working-directory: ${{ steps.findroot.outputs.root }}
+        run: mkdir -p android/app/src/main/assets
+
+      - name: Detect entry file
+        id: entry
+        working-directory: ${{ steps.findroot.outputs.root }}
+        run: |
+          if [ -f "index.tsx" ]; then echo "file=index.tsx" >> $GITHUB_OUTPUT;
+          elif [ -f "index.js" ]; then echo "file=index.js" >> $GITHUB_OUTPUT;
+          else echo "Missing index.(js|tsx) at project root"; exit 1; fi
+
+      - name: Bundle JS into APK assets (offline release)
+        working-directory: ${{ steps.findroot.outputs.root }}
+        run: |
+          npx react-native bundle \
+            --platform android \
+            --dev false \
+            --entry-file "${{ steps.entry.outputs.file }}" \
+            --bundle-output android/app/src/main/assets/index.android.bundle \
+            --assets-dest android/app/src/main/res
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Grant Gradle rights
+        working-directory: ${{ steps.findroot.outputs.root }}/android
+        run: chmod +x gradlew
+
+      - name: Build Debug APK
+        working-directory: ${{ steps.findroot.outputs.root }}/android
+        run: ./gradlew clean assembleDebug --no-daemon
+
+      - name: Upload Debug APK (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug.apk
+          path: ${{ steps.findroot.outputs.root }}/android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Build Release (unsigned)
+        working-directory: ${{ steps.findroot.outputs.root }}/android
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Upload Release (unsigned) (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-unsigned.apk
+          path: ${{ steps.findroot.outputs.root }}/android/app/build/outputs/apk/release/app-release-unsigned.apk
+
+      # If this run was triggered by a tag push, also attach APKs to the GitHub Release page.
+      - name: Attach APKs to Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          draft: false
+          files: |
+            ${{ steps.findroot.outputs.root }}/android/app/build/outputs/apk/debug/app-debug.apk
+            ${{ steps.findroot.outputs.root }}/android/app/build/outputs/apk/release/app-release-unsigned.apk
