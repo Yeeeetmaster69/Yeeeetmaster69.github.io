@@ -22,21 +22,30 @@ export default function App() {
   ];
 
   const handleLogin = () => {
-    const user = mockUsers.find(u => u.username === username && u.password === password);
-    if (user) {
-      setCurrentUser({ username: user.username, role: user.role });
-      setIsLoggedIn(true);
-      Alert.alert('Success', `Welcome ${user.username}! Role: ${user.role}`);
-    } else {
-      Alert.alert('Error', 'Invalid credentials');
+    try {
+      const user = mockUsers.find(u => u.username === username && u.password === password);
+      if (user) {
+        setCurrentUser({ username: user.username, role: user.role });
+        setIsLoggedIn(true);
+        Alert.alert('Success', `Welcome ${user.username}! Role: ${user.role}`);
+      } else {
+        Alert.alert('Error', 'Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert('Error', 'An error occurred during login');
     }
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setCurrentUser(null);
-    setUsername('');
-    setPassword('');
+    try {
+      setIsLoggedIn(false);
+      setCurrentUser(null);
+      setUsername('');
+      setPassword('');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const renderDashboard = () => {

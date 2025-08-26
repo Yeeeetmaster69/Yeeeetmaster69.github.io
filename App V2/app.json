@@ -2,9 +2,9 @@
   "expo": {
     "name": "Handyman Pro",
     "slug": "handyman-pro",
-    "version": "0.1.0",
+    "version": "1.1.4",
     "updates": {
-      "enabled": true,
+      "enabled": false,
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
@@ -15,11 +15,22 @@
     },
     "android": {
       "package": "com.handyman.pro",
+      "versionCode": 114,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyC67hd7nFUPyrwKmfQIIWw9mCDL9SXm9Ec"
         }
-      }
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "INTERNET",
+        "CAMERA", 
+        "WRITE_EXTERNAL_STORAGE",
+        "RECORD_AUDIO",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",
