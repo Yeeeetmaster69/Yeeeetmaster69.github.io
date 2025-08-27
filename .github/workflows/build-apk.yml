@@ -20,22 +20,17 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: App V2/package-lock.json
 
       - name: Install npm dependencies
-        working-directory: App V2
         run: npm ci
 
       - name: Ensure Expo native deps
-        working-directory: App V2
         run: npx expo install
 
       - name: Expo Doctor
-        working-directory: App V2
         run: npx expo-doctor
 
       - name: Build APK with Expo CLI
-        working-directory: App V2
         run: |
           npx expo prebuild --platform android --clean
           cd android
@@ -46,10 +41,10 @@ jobs:
 
       - name: Rename APK to expected name
         run: |
-          cp "App V2/android/app/build/outputs/apk/debug/app-debug.apk" "App V2/android/app/build/outputs/apk/debug/HandymanPro-debug.apk"
+          cp "android/app/build/outputs/apk/debug/app-debug.apk" "android/app/build/outputs/apk/debug/HandymanPro-debug.apk"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: handyman-pro-debug-apk
-          path: App V2/android/app/build/outputs/apk/debug/HandymanPro-debug.apk
+          path: android/app/build/outputs/apk/debug/HandymanPro-debug.apk
