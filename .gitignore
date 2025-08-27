@@ -49,3 +49,8 @@ coverage/
 # Temporary folders
 tmp/
 temp/*.apk
+
+# Firebase
+server/functions/lib/
+.firebase/
+*.cache
