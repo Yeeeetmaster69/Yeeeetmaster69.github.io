@@ -12,8 +12,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundler": "metro"
+      "supportsTablet": true
     },
     "android": {
       "package": "com.handyman.pro",
