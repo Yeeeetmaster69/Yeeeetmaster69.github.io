@@ -187,11 +187,11 @@ export class AnimationUtils {
    * Page transition animations
    */
   static pageTransition = {
-    fadeInOut: (progress: Animated.AnimatedAddition) => ({
+    fadeInOut: (progress: Animated.AnimatedAddition<number>) => ({
       opacity: progress,
     }),
     
-    slideLeftRight: (progress: Animated.AnimatedAddition, screenWidth: number) => ({
+    slideLeftRight: (progress: Animated.AnimatedAddition<number>, screenWidth: number) => ({
       transform: [
         {
           translateX: progress.interpolate({
@@ -202,7 +202,7 @@ export class AnimationUtils {
       ],
     }),
     
-    scaleFromCenter: (progress: Animated.AnimatedAddition) => ({
+    scaleFromCenter: (progress: Animated.AnimatedAddition<number>) => ({
       opacity: progress,
       transform: [
         {

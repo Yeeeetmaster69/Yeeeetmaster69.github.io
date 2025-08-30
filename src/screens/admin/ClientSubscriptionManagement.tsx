@@ -415,8 +415,9 @@ const ClientSubscriptionManagement: React.FC<ClientSubscriptionManagementProps> 
                     </Text>
                   )}
                   <Text style={styles.detailText}>
-                    Preferred Time: {subscription.preferredTimeSlot?.charAt(0).toUpperCase() + 
-                                   subscription.preferredTimeSlot?.slice(1)}
+                    Preferred Time: {subscription.preferredTimeSlot 
+                      ? subscription.preferredTimeSlot.charAt(0).toUpperCase() + subscription.preferredTimeSlot.slice(1)
+                      : 'Not specified'}
                   </Text>
                   <Text style={styles.detailText}>
                     Payment Status: {subscription.paymentStatus?.toUpperCase()}

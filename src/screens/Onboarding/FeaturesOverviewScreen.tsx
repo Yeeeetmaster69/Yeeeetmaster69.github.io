@@ -2,11 +2,11 @@ import React from 'react';
 import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Text, Button, Surface, Card } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp as RouteType } from '@react-navigation/native';
 import { OnboardingStackParamList } from '../../navigation/OnboardingStack';
 
-type NavigationProp = StackNavigationProp<OnboardingStackParamList, 'FeaturesOverview'>;
+type NavigationProp = NativeStackNavigationProp<OnboardingStackParamList, 'FeaturesOverview'>;
 type RouteProps = RouteType<OnboardingStackParamList, 'FeaturesOverview'>;
 
 const { width } = Dimensions.get('window');

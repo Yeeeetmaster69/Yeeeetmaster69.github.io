@@ -4,5 +4,8 @@
     "strict": true,
     "jsx": "react",
     "baseUrl": "."
-  }
+  },
+  "exclude": [
+    "server/**/*"
+  ]
 }

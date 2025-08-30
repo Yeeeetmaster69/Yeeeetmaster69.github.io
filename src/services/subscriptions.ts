@@ -233,9 +233,13 @@ export async function getSubscriptionJobs(subscriptionId?: string): Promise<Subs
 }
 
 // Utility functions
-export function calculateNextJobDate(subscription: ClientSubscription): number {
-  const frequency = subscription.customFrequency || 
-    (subscription.subscriptionPlanId ? subscription.customFrequency : 'weekly');
+export function calculateNextJobDate(subscription: ClientSubscription, plan?: SubscriptionPlan): number {
+  const frequency = subscription.customFrequency || plan?.frequency || 'weekly';
+  
+  // If it's a one-time service, there's no next date
+  if (frequency === 'one-time') {
+    return subscription.startDate; // No next date for one-time
+  }
   
   const startDate = subscription.lastJobDate || subscription.startDate;
   const date = new Date(startDate);
@@ -256,8 +260,6 @@ export function calculateNextJobDate(subscription: ClientSubscription): number {
     case 'semi-annual':
       date.setMonth(date.getMonth() + 6);
       break;
-    case 'one-time':
-      return subscription.startDate; // No next date for one-time
     default:
       date.setDate(date.getDate() + 7); // Default to weekly
   }

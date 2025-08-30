@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Dimensions, Platform } from 'react-native';
 import { Text, Button, Surface, Card } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { OnboardingStackParamList } from '../../navigation/OnboardingStack';
 import * as Location from 'expo-location';
 import * as Notifications from 'expo-notifications';
 import { useAuth } from '../../context/AuthContext';
 
-type NavigationProp = StackNavigationProp<OnboardingStackParamList, 'Permissions'>;
+type NavigationProp = NativeStackNavigationProp<OnboardingStackParamList, 'Permissions'>;
 
 const { width } = Dimensions.get('window');
 

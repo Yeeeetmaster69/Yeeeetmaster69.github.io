@@ -27,7 +27,7 @@ export default function Settings(){
     })();
   },[]);
 
-  const saveTheme = ()=> setThemeConfig({primary:p, accent:a});
+  const saveTheme = ()=> setThemeConfig({...themeConfig, primary:p, accent:a});
   const savePay = async ()=>{
     await setDoc(doc(db,'config','payments'), { venmo, cashTag, zelle, currency: 'USD' }, { merge: true });
     alert('Saved payment handles');
