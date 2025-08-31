@@ -15,15 +15,18 @@ import {
   HelperText,
   FAB
 } from 'react-native-paper';
+import EmergencyService from '../../services/emergency';
 
 interface EmergencyContact {
-  id: string;
+  id?: string;
+  userId: string;
   name: string;
   phoneNumber: string;
   relationship: string;
   email?: string;
   isPrimary: boolean;
-  notificationMethods: ('sms' | 'call' | 'email')[];
+  notificationMethods: ('sms' | 'call' | 'email' | 'push')[];
+  isActive: boolean;
 }
 
 export default function EmergencyContactsScreen() {
@@ -51,12 +54,14 @@ export default function EmergencyContactsScreen() {
       setContacts([
         {
           id: '1',
+          userId: 'current-user-id',
           name: 'Jane Smith',
           phoneNumber: '+1-555-0123',
           relationship: 'Spouse',
           email: 'jane@example.com',
           isPrimary: true,
-          notificationMethods: ['sms', 'call', 'email']
+          notificationMethods: ['sms', 'call', 'email'],
+          isActive: true
         }
       ]);
     } catch (error) {
@@ -70,24 +75,31 @@ export default function EmergencyContactsScreen() {
       return;
     }
 
+    // Validate phone number format
+    const phoneRegex = /^[\+]?[\d\s\-\(\)]{10,}$/;
+    if (!phoneRegex.test(newContact.phoneNumber)) {
+      Alert.alert('Error', 'Please enter a valid phone number');
+      return;
+    }
+
     try {
-      // TODO: Add contact to Firestore
-      // 1. Validate phone number format
-      // 2. Generate unique ID
-      // 3. Save to emergency_contacts collection
-      // 4. Update local state
-      
-      const contact: EmergencyContact = {
-        id: Date.now().toString(),
+      const contact: Omit<EmergencyContact, 'id'> = {
+        userId: 'current-user-id', // TODO: Get from auth context
         name: newContact.name!,
         phoneNumber: newContact.phoneNumber!,
         relationship: newContact.relationship || 'Other',
         email: newContact.email,
         isPrimary: newContact.isPrimary || false,
-        notificationMethods: newContact.notificationMethods || ['sms', 'call']
+        notificationMethods: newContact.notificationMethods || ['sms', 'call'],
+        isActive: true
       };
 
-      setContacts([...contacts, contact]);
+      const contactId = await EmergencyService.addEmergencyContact(contact);
+      
+      // Add to local state with the generated ID
+      setContacts([...contacts, { ...contact, id: contactId }]);
+      
+      // Reset form
       setNewContact({
         name: '',
         phoneNumber: '',
@@ -97,6 +109,9 @@ export default function EmergencyContactsScreen() {
         notificationMethods: ['sms', 'call']
       });
       setIsAddingContact(false);
+      
+      Alert.alert('Success', 'Emergency contact added successfully');
+      
     } catch (error) {
       console.error('Error adding emergency contact:', error);
       Alert.alert('Error', 'Failed to add emergency contact');
@@ -125,7 +140,7 @@ export default function EmergencyContactsScreen() {
     );
   };
 
-  const handleTestSOS = () => {
+  const handleTestSOS = async () => {
     Alert.alert(
       'Test Emergency System',
       'This will send a test notification to your emergency contacts. Continue?',
@@ -133,12 +148,18 @@ export default function EmergencyContactsScreen() {
         { text: 'Cancel', style: 'cancel' },
         { 
           text: 'Send Test', 
-          onPress: () => {
-            // TODO: Implement test SOS functionality
-            // 1. Create test SOS event
-            // 2. Send test notifications
-            // 3. Show confirmation
-            Alert.alert('Test Sent', 'Test notifications sent to emergency contacts');
+          onPress: async () => {
+            try {
+              const success = await EmergencyService.testEmergencySystem('current-user-id'); // TODO: Get from auth context
+              if (success) {
+                Alert.alert('Test Sent', 'Test notifications sent to emergency contacts');
+              } else {
+                Alert.alert('Test Failed', 'Failed to send test notifications');
+              }
+            } catch (error) {
+              console.error('Error testing emergency system:', error);
+              Alert.alert('Error', 'Failed to test emergency system');
+            }
           }
         }
       ]
@@ -174,7 +195,7 @@ export default function EmergencyContactsScreen() {
               <IconButton
                 icon="delete"
                 iconColor="#d32f2f"
-                onPress={() => handleRemoveContact(contact.id)}
+                onPress={() => contact.id && handleRemoveContact(contact.id)}
               />
             </View>
             <View style={styles.notificationMethods}>
@@ -314,8 +335,7 @@ export default function EmergencyContactsScreen() {
         style={styles.sosButton}
         icon="phone-alert"
         label="Emergency SOS"
-        onPress={() => {
-          // TODO: Implement SOS activation
+        onPress={async () => {
           Alert.alert(
             'Activate Emergency SOS',
             'This will immediately notify your emergency contacts. Continue?',
@@ -324,9 +344,14 @@ export default function EmergencyContactsScreen() {
               { 
                 text: 'Activate SOS', 
                 style: 'destructive',
-                onPress: () => {
-                  // Implement SOS functionality
-                  console.log('SOS activated');
+                onPress: async () => {
+                  try {
+                    await EmergencyService.activateSOS('current-user-id', 'worker'); // TODO: Get from auth context
+                    Alert.alert('SOS Activated', 'Emergency contacts have been notified');
+                  } catch (error) {
+                    console.error('SOS activation failed:', error);
+                    Alert.alert('Error', 'Failed to activate SOS. Please call emergency services directly.');
+                  }
                 }
               }
             ]
