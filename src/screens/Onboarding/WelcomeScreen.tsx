@@ -2,10 +2,10 @@ import React from 'react';
 import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import { Text, Button, Surface } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { OnboardingStackParamList } from '../../navigation/OnboardingStack';
 
-type NavigationProp = StackNavigationProp<OnboardingStackParamList, 'Welcome'>;
+type NavigationProp = NativeStackNavigationProp<OnboardingStackParamList, 'Welcome'>;
 
 const { width, height } = Dimensions.get('window');
 

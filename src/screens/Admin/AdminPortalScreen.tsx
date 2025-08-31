@@ -77,7 +77,7 @@ export default function AdminPortalScreen() {
 
   const handleGoHome = () => {
     if (webViewRef.current) {
-      webViewRef.current.loadUrl(APP_CONFIG.adminPortalUrl);
+      webViewRef.current.reload();
     }
     setShowMenu(false);
   };
@@ -218,8 +218,8 @@ export default function AdminPortalScreen() {
           scalesPageToFit={true}
           bounces={false}
           scrollEnabled={true}
-          // Allow file downloads
-          allowFileDownload={true}
+          // Allow file downloads (using onFileDownload event handler instead)
+          onFileDownload={() => true}
           // Security settings
           mixedContentMode="compatibility"
           allowsInlineMediaPlayback={true}

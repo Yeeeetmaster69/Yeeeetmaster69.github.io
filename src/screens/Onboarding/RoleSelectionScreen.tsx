@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { Text, Button, Surface, RadioButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { OnboardingStackParamList } from '../../navigation/OnboardingStack';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../config/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { functionUrl } from '../../config/env';
 
-type NavigationProp = StackNavigationProp<OnboardingStackParamList, 'RoleSelection'>;
+type NavigationProp = NativeStackNavigationProp<OnboardingStackParamList, 'RoleSelection'>;
 
 const { width } = Dimensions.get('window');
 

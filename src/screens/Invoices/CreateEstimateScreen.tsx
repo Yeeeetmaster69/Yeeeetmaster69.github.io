@@ -65,7 +65,7 @@ export default function CreateEstimateScreen() {
       item[field] = Number(value) || 0;
       item.total = item.quantity * item.unitPrice;
     } else {
-      item[field] = value as string;
+      (item as any)[field] = value as string;
     }
     
     newItems[index] = item;

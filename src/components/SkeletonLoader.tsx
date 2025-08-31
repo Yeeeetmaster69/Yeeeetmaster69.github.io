@@ -55,7 +55,7 @@ export default function SkeletonLoader({
           height,
           borderRadius,
           backgroundColor,
-        },
+        } as any,
         style,
       ]}
     />
